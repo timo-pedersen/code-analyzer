@@ -1,0 +1,37 @@
+﻿<Window x:Class="WpfAnalyserGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfAnalyserGUI"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="27"/>
+      <RowDefinition/>
+    </Grid.RowDefinitions>
+
+    <Grid.Background>
+      <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FFCECECE"/>
+        <GradientStop Color="White" Offset="1"/>
+        <GradientStop Color="#FFEAEAEA" Offset="0.414"/>
+      </LinearGradientBrush>
+    </Grid.Background>
+
+    <StackPanel Orientation="Horizontal">
+      <Label VerticalContentAlignment="Center">SolutionPath:</Label>
+      <TextBox VerticalContentAlignment="Center" MinWidth="200px" Margin="2,2,0,2" Name="textb_ProjectPath">Enter Path</TextBox>
+      <Button Padding="5,0,5,0" Margin="0,2,0,2" Name="BtnBrowse" Click="BtnBrowse_Click">…</Button>
+      <Button Padding="5,0,5,0" Margin="10,2,0,2" Name="BtnAnalyze" Click="BtnAnalyze_Click">Analyse</Button>
+    </StackPanel>
+    <Grid Grid.Row="1" Margin="0,5,0,0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="133*"/>
+        <ColumnDefinition Width="267*"/>
+      </Grid.ColumnDefinitions>
+      <TreeView Grid.Column="0"/>
+    </Grid>
+  </Grid>
+</Window>

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Blend for Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfAnalyserGUI", "WpfAnalyserGUI\WpfAnalyserGUI.csproj", "{CC10616A-D98D-4F90-909F-5352D075E354}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeAnalyzer", "CodeAnalyzer\CodeAnalyzer.csproj", "{56E72BF6-6F85-4A41-9D6B-75C3FBC9920B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC10616A-D98D-4F90-909F-5352D075E354}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC10616A-D98D-4F90-909F-5352D075E354}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC10616A-D98D-4F90-909F-5352D075E354}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC10616A-D98D-4F90-909F-5352D075E354}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56E72BF6-6F85-4A41-9D6B-75C3FBC9920B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56E72BF6-6F85-4A41-9D6B-75C3FBC9920B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56E72BF6-6F85-4A41-9D6B-75C3FBC9920B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56E72BF6-6F85-4A41-9D6B-75C3FBC9920B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DB1C2E60-A470-4C96-B7E0-3D17D6229EDE}
+	EndGlobalSection
+EndGlobal
