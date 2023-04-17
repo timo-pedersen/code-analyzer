@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WpfAnalyserGUI
+namespace WpfAnalyzerGUI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -24,17 +24,6 @@ namespace WpfAnalyserGUI
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void BtnBrowse_Click(object sender, RoutedEventArgs e)
-        {
-            (string path, bool ok) = Util.OpenFolderBrowser(textb_ProjectPath.Text);
-            if(ok) textb_ProjectPath.Text = path;
-        }
-
-        private void BtnAnalyze_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
