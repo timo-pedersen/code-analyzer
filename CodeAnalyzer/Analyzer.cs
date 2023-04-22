@@ -50,7 +50,15 @@ public static class Analyzer
         SolutionData solutionData = new SolutionData { SolutionPath = solutionPath };
         foreach (var project in sln.Projects)
         {
-            //var compilation = project.GetCompilationAsync().Result;
+            var prjCompilation = project.GetCompilationAsync().Result;
+
+            string assemblyName = "System";
+            var usingsInProject = prjCompilation.SyntaxTrees
+                .First(/*x => x.FilePath.Contains("MainVM")*/)
+                ?.GetCompilationUnitRoot()
+                .Usings
+                .Where(x => x.ToString().Contains(assemblyName))
+                ?.Select(y => y.Name);
 
             ProjectData projectData = new ProjectData
             {
@@ -61,19 +69,26 @@ public static class Analyzer
             {
                 DocumentData docData = new DocumentData { Name = document.Name };
 
-                var tree = document.GetSyntaxTreeAsync().Result;
+                SyntaxTree? tree = document.GetSyntaxTreeAsync().Result;
                 //Microsoft.CodeAnalysis.CSharp.Kind
+                // https://learn.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntaxkind?view=roslyn-dotnet-4.3.0
+                //SyntaxTriviaList? xxx = tree?
+                //    .GetRoot()
+                //    .ChildNodes()
+                //    .FirstOrDefault(x => x.RawKind == 8842)? // ns decl
+                //    .ChildNodes()
+                //    .FirstOrDefault(y => y.RawKind == 8855)? // class decl
+                //    .GetLeadingTrivia();
+
                 var xxx = tree?
                     .GetRoot()
-                    .ChildNodes()
-                    .FirstOrDefault(x => x.RawKind == 8842)? // ns decl
-                    .ChildNodes()
-                    .FirstOrDefault(y => y.RawKind == 8855)? // class decl
-                    .GetLeadingTrivia();
+                    .ChildNodes();
+                    //.ChildNodes(x => x.RawKind == 8373)
+      
 
                 if (xxx != null)
                 {
-                    foreach (SyntaxTrivia syntaxTrivia in xxx)
+                    foreach (var syntaxTrivia in xxx)
                     {
                         switch ((SyntaxKind)syntaxTrivia.RawKind)
                         {

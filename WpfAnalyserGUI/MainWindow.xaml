@@ -29,15 +29,15 @@
     <StackPanel Orientation="Horizontal">
       <Label VerticalContentAlignment="Center">SolutionPath:</Label>
       <TextBox VerticalContentAlignment="Center" MinWidth="200px" Margin="2,2,0,2" Text="{Binding FolderPath}" />
-      <Button Padding="5,0,5,0" Margin="0,2,0,2" Name="BtnBrowse" Command="{Binding BrowseFolderCommand}">…</Button>
-      <Button Padding="5,0,5,0" Margin="10,2,0,2" Name="BtnAnalyze" >Analyze</Button>
+      <Button Padding="5,0,5,0" Margin="0,2,0,2" Command="{Binding BrowseFolderCommand}">…</Button>
+      <Button Padding="5,0,5,0" Margin="10,2,0,2" Command="{Binding ScanCommand}">Scan</Button>
     </StackPanel>
     <Grid Grid.Row="1" Margin="0,5,0,0">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="133*"/>
         <ColumnDefinition Width="267*"/>
       </Grid.ColumnDefinitions>
-      <TreeView Grid.Column="0"/>
+      <TreeView Grid.Column="0" ItemsSource="{Binding SolutionsFiles}"/>
     </Grid>
   </Grid>
 </Window>
