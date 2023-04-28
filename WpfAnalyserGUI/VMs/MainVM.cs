@@ -10,6 +10,8 @@ using System.Diagnostics;
 using System;
 using System.Linq;
 using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Interop;
 using CodeAnalyzer;
 
 namespace WpfAnalyzerGUI.VMs;
@@ -56,18 +58,25 @@ internal class MainVM : INotifyPropertyChanged
 
     private void Scan(object? o)
     {
+        Stopwatch sw = Stopwatch.StartNew();
+
         if (ScanCommand is null)
             return;
 
         List<System.IO.FileInfo> solutions = Fs.GetFilesInFolder(FolderPath, true, "*.sln").ToList();
         solutions.ForEach(solution => { SolutionsFiles.Add(solution.FullName); });
 
+        string collectedMsg = "";
         solutions.ForEach(solution =>
         {
-            SolutionData data = Analyzer.AnalyzeSolution(solution.FullName);
-            Solutions.Add(data);
+            (SolutionData? data, string msg) = Analyzer.AnalyzeSolution(solution.FullName);
+            if(data != null)
+                Solutions.Add(data);
+            
+            collectedMsg += "\r" + msg;
         });
-
+        sw.Stop();
+        MessageBox.Show($"Took {sw.ElapsedMilliseconds / 1000} seconds.\r" + collectedMsg);
     }
 
     private bool ScanCanExecute(object? o)

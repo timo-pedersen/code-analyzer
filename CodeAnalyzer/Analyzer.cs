@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,13 +15,62 @@ namespace CodeAnalyzer;
 
 public static class Analyzer
 {
+    public static List<string> RhinoDocuments { get; } = new();
+
     static Analyzer()
     {
         // Needs to be here b/c MEF
         MSBuildLocator.RegisterDefaults();
     }
 
-    public static SolutionData? AnalyzeSolution(string solutionPath)
+    public static (SolutionData?, string) AnalyzeSolution(string solutionPath)
+    {
+        Stopwatch sw = Stopwatch.StartNew();
+
+        var workspace = MSBuildWorkspace.Create();
+        Solution sln;
+
+        try
+        {
+            sln = workspace.OpenSolutionAsync(solutionPath).Result;
+        }
+        catch (Exception ex)
+        {
+            return (null, $"Could not open sln: {ex.Message}");
+        }
+
+        foreach (var project in sln.Projects.Where(x => x.FilePath != null && x.FilePath.EndsWith(".csproj")))
+        {
+            // If needed:
+            // var prjCompilation = project.GetCompilationAsync().Result;
+            
+            foreach (Document document in project.Documents)
+            {
+                //document.TryGetSyntaxTree(out SyntaxTree? syntaxTree);
+
+                SyntaxTree? syntaxTree = document.GetSyntaxTreeAsync().Result;
+
+                if (syntaxTree is null)
+                    continue;
+
+                CompilationUnitSyntax root = syntaxTree.GetCompilationUnitRoot();
+
+                var collector = new Walkers.SpecificUsingCollector("Rhino.Mocks");
+                collector.Visit(root);
+
+                if (!collector.Usings.Any())
+                    continue; // Nothing to see here - move on
+
+                if (document.FilePath != null) 
+                    RhinoDocuments.Add(document.FilePath);
+            }
+            
+        }
+        sw.Stop();
+        return (null, $"Stopwatch (s): {(sw.ElapsedMilliseconds / (double)1000)}");
+    }
+
+    public static SolutionData? AnalyzeSolutionOld(string solutionPath)
     {
         // Currently only analyzes class comments
 
@@ -153,4 +203,5 @@ public static class Analyzer
 
         return solutionData;
     }
+
 }
