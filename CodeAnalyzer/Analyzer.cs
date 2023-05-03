@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.Diagnostics;
+using CodeAnalyzer.Data;
 using Microsoft.Build.Locator; // Finding MsBuild on system
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp; // Roslyn analysis
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.MSBuild;
+using Document = Microsoft.CodeAnalysis.Document;
+using Solution = Microsoft.CodeAnalysis.Solution;
 
 namespace CodeAnalyzer;
 
 public static class Analyzer
 {
-    public static List<string> RhinoDocuments { get; } = new();
+    public static List<string> MatchedDocuments { get; } = new();
 
     static Analyzer()
     {
@@ -23,31 +20,34 @@ public static class Analyzer
         MSBuildLocator.RegisterDefaults();
     }
 
-    public static (SolutionData?, string) AnalyzeSolution(string solutionPath)
+    public static (Data.Solution, string) AnalyzeSolution(string solutionPath)
     {
         Stopwatch sw = Stopwatch.StartNew();
 
         var workspace = MSBuildWorkspace.Create();
         Solution sln;
 
+        Data.Solution solutionData = new(solutionPath);
+
         try
         {
             sln = workspace.OpenSolutionAsync(solutionPath).Result;
+            solutionData.Loaded = true;
         }
         catch (Exception ex)
         {
-            return (null, $"Could not open sln: {ex.Message}");
+            return (solutionData, $"Could not open sln: {ex.Message}");
         }
 
         foreach (var project in sln.Projects.Where(x => x.FilePath != null && x.FilePath.EndsWith(".csproj")))
         {
             // If needed:
             // var prjCompilation = project.GetCompilationAsync().Result;
-            
+
+            Data.Project projectData = new Data.Project(project.FilePath);
+
             foreach (Document document in project.Documents)
             {
-                //document.TryGetSyntaxTree(out SyntaxTree? syntaxTree);
-
                 SyntaxTree? syntaxTree = document.GetSyntaxTreeAsync().Result;
 
                 if (syntaxTree is null)
@@ -61,16 +61,22 @@ public static class Analyzer
                 if (!collector.Usings.Any())
                     continue; // Nothing to see here - move on
 
-                if (document.FilePath != null) 
-                    RhinoDocuments.Add(document.FilePath);
+                if (document.FilePath != null)
+                {
+                    Data.Document documentData = new Data.Document(document.FilePath);
+                    documentData.SyntaxNodes.AddRange(collector.Usings);
+
+                    projectData.Documents.Add(documentData);
+                }
             }
             
         }
         sw.Stop();
-        return (null, $"Stopwatch (s): {(sw.ElapsedMilliseconds / (double)1000)}");
+        solutionData.TimeToLoad = sw.ElapsedMilliseconds / (double)1000;
+        return (solutionData, $"");
     }
 
-    public static SolutionData? AnalyzeSolutionOld(string solutionPath)
+    public static Data.Solution? AnalyzeSolutionOld(string solutionPath)
     {
         // Currently only analyzes class comments
 
@@ -97,7 +103,7 @@ public static class Analyzer
 
         Dictionary<int, int> triviaKinds = new Dictionary<int, int>(); // <kind, count>
 
-        SolutionData solutionData = new SolutionData { SolutionPath = solutionPath };
+        Data.Solution solutionData = new Data.Solution(solutionPath);
         foreach (var project in sln.Projects)
         {
             var prjCompilation = project.GetCompilationAsync().Result;
@@ -110,14 +116,11 @@ public static class Analyzer
                 .Where(x => x.ToString().Contains(assemblyName))
                 ?.Select(y => y.Name);
 
-            ProjectData projectData = new ProjectData
-            {
-                Name = project.Name,
-            };
+            Data.Project projectData = new Data.Project(project.FilePath);
 
             foreach (var document in project.Documents)
             {
-                DocumentData docData = new DocumentData { Name = document.Name };
+                Data.Document docData = new Data.Document(document.FilePath);
 
                 SyntaxTree? tree = document.GetSyntaxTreeAsync().Result;
                 //Microsoft.CodeAnalysis.CSharp.Kind
@@ -149,11 +152,11 @@ public static class Analyzer
                                 string trivia = syntaxTrivia.ToFullString();
                                 if (!string.IsNullOrWhiteSpace(trivia))
                                 {
-                                    docData.Trivia.Add(new TriviaData
-                                    {
-                                        FullText = trivia,
-                                        RawKind = syntaxTrivia.RawKind,
-                                    });
+                                    //docData.Trivia.Add(new TriviaData
+                                    //{
+                                    //    FullText = trivia,
+                                    //    RawKind = syntaxTrivia.RawKind,
+                                    //});
 
                                 }
 
@@ -167,11 +170,11 @@ public static class Analyzer
                                 string trivia = syntaxTrivia.ToFullString();
                                 if (!string.IsNullOrWhiteSpace(trivia))
                                 {
-                                    docData.Trivia.Add(new TriviaData
-                                    {
-                                        FullText = trivia,
-                                        RawKind = syntaxTrivia.RawKind,
-                                    });
+                                    //docData.Trivia.Add(new TriviaData
+                                    //{
+                                    //    FullText = trivia,
+                                    //    RawKind = syntaxTrivia.RawKind,
+                                    //});
 
                                 }
 
@@ -196,10 +199,9 @@ public static class Analyzer
 
         workspace.Dispose();
 
-        solutionData.ProjectCount = projectCount;
-        solutionData.DocumentCount = documentCount;
-        solutionData.DocumentWithTriviaCount = documentsWithTrivia;
-        solutionData.DocumentWithDocumentationTriviaCount = documentsWithDocumentationTrivia;
+        //solutionData.DocumentCount = documentCount;
+        //solutionData.DocumentWithTriviaCount = documentsWithTrivia;
+        //solutionData.DocumentWithDocumentationTriviaCount = documentsWithDocumentationTrivia;
 
         return solutionData;
     }

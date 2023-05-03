@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using WpfAnalyserGUI.Annotations;
@@ -7,11 +8,11 @@ using Utils;
 using WinFormUtils;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System;
 using System.Linq;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Interop;
 using CodeAnalyzer;
 
 namespace WpfAnalyzerGUI.VMs;
@@ -21,8 +22,9 @@ internal class MainVM : INotifyPropertyChanged
     public ICommand BrowseFolderCommand { get; }
     public ICommand ScanCommand { get; }
 
-    public ObservableCollection<SolutionData> Solutions { get; } = new ObservableCollection<SolutionData>();
-    public ObservableCollection<string> SolutionsFiles { get; } = new ObservableCollection<string>();
+    public ObservableCollection<CodeAnalyzer.Data.Solution> Solutions { get; } = new ();
+
+    public int ProgressValue { get; set; }
 
     public MainVM()
     {
@@ -31,7 +33,7 @@ internal class MainVM : INotifyPropertyChanged
     }
 
     //private string _folderPath = "d:\\git3\\iXDeveloper\\";
-    private string _folderPath = "E:\\git_tpp\\code-analyzer\\";
+    private string _folderPath = "D:\\git4\\iXDeveloper\\";
     public string FolderPath
     {
         get => _folderPath;
@@ -56,25 +58,36 @@ internal class MainVM : INotifyPropertyChanged
         if(ok) FolderPath = path;
     }
 
-    private void Scan(object? o)
+    private async void Scan(object? o)
     {
+        IProgress<int> progress = new Progress<int>(percent => { ProgressValue = percent; });
+
         Stopwatch sw = Stopwatch.StartNew();
 
-        if (ScanCommand is null)
-            return;
-
-        List<System.IO.FileInfo> solutions = Fs.GetFilesInFolder(FolderPath, true, "*.sln").ToList();
-        solutions.ForEach(solution => { SolutionsFiles.Add(solution.FullName); });
+        List<FileInfo> solutionFiles = Fs.GetFilesInFolder(FolderPath, true, "*.sln").ToList();
 
         string collectedMsg = "";
-        solutions.ForEach(solution =>
+
+        int p = 0;
+        var tasks = new List<Task>();
+
+        foreach (FileInfo solution in solutionFiles)
         {
-            (SolutionData? data, string msg) = Analyzer.AnalyzeSolution(solution.FullName);
-            if(data != null)
-                Solutions.Add(data);
-            
-            collectedMsg += "\r" + msg;
-        });
+            tasks.Add(Task.Run(() =>
+                {
+                    (CodeAnalyzer.Data.Solution slnData, string msg) = Analyzer.AnalyzeSolution(solution.FullName);
+                    Solutions.Add(slnData);
+                }
+            ));
+        }
+
+        await Task.WhenAll(tasks);
+
+        ProgressValue = p++;
+        //if(msg.Length > 0) {
+        //    collectedMsg += "\r" + msg;
+        //}
+
         sw.Stop();
         MessageBox.Show($"Took {sw.ElapsedMilliseconds / 1000} seconds.\r" + collectedMsg);
     }

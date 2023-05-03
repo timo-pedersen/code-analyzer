@@ -14,7 +14,6 @@ namespace CodeAnalyzer
         public string? SolutionPath { get; init; }
 
         // Some stats
-        public int ProjectCount { get; set; }
         public int DocumentCount { get; set; }
         public int DocumentWithTriviaCount { get; set; }
         public int DocumentWithDocumentationTriviaCount { get; set; }
@@ -30,7 +29,7 @@ namespace CodeAnalyzer
     public class ProjectData
     {
         public string? Name { get; init; }
-        public List<DocumentData> Documents { get; set; } = new List<DocumentData>();
+        public List<DocumentData> Documents { get; set; } = new();
 
         public override string ToString()
         {
@@ -42,7 +41,7 @@ namespace CodeAnalyzer
     {
         public string? Name { get; init; }
         public bool HasTrivia => Trivia.Any();
-        public List<TriviaData> Trivia { get; set; } = new List<TriviaData>();
+        public List<TriviaData> Trivia { get; set; } = new();
 
         public override string ToString()
         {
