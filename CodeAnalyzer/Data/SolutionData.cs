@@ -14,7 +14,8 @@ namespace CodeAnalyzer.Data
         public string Name { get => System.IO.Path.GetFileNameWithoutExtension(Path); }
 
         public bool Loaded { get; set; } = false;
-        public ObservableCollection<Project> Projects = new();
+        public string Message { get; set; } = string.Empty;
+        public readonly ObservableCollection<Project> Projects = new();
 
         /// <summary>
         /// Time to load in seconds

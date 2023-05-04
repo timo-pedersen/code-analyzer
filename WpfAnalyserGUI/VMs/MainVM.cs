@@ -24,12 +24,59 @@ internal class MainVM : INotifyPropertyChanged
 
     public ObservableCollection<CodeAnalyzer.Data.Solution> Solutions { get; } = new ();
 
-    public int ProgressValue { get; set; }
+    private int _progressMax1;
+
+    public int ProgressMax1
+    {
+        get => _progressMax1;
+        set
+        {
+            _progressMax1 = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private int _progressValue1;
+    public int ProgressValue1
+    {
+        get => _progressValue1;
+        set
+        {
+            _progressValue1 = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private int _progressMax2;
+    public int ProgressMax2
+    {
+        get => _progressMax2;
+        set
+        {
+            _progressMax2 = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private int _progressValue2;
+    public int ProgressValue2
+    {
+        get => _progressValue2;
+        set
+        {
+            _progressValue2 = value;
+            OnPropertyChanged();
+        }
+    }
 
     public MainVM()
     {
         BrowseFolderCommand = new RelayCommand(BrowseFolder);
         ScanCommand = new RelayCommand(Scan, ScanCanExecute);
+        ProgressMax1 = 100;
+        ProgressValue1 = 0;
+        ProgressMax2 = 100;
+        ProgressValue2 = 0;
     }
 
     //private string _folderPath = "d:\\git3\\iXDeveloper\\";
@@ -60,36 +107,53 @@ internal class MainVM : INotifyPropertyChanged
 
     private async void Scan(object? o)
     {
-        IProgress<int> progress = new Progress<int>(percent => { ProgressValue = percent; });
+        IProgress<int> progress1 = new Progress<int>(val => { ProgressValue1 = val; });
+        IProgress<int> progress2 = new Progress<int>(_ => { ProgressValue2++; });
+        IProgress<int> progressMax2 = new Progress<int>(val => { ProgressMax2 += val; });
 
         Stopwatch sw = Stopwatch.StartNew();
 
-        List<FileInfo> solutionFiles = Fs.GetFilesInFolder(FolderPath, true, "*.sln").ToList();
+        List<FileInfo> solutionFiles = await GetSolutionFiles(FolderPath);
 
         string collectedMsg = "";
 
-        int p = 0;
+        int p = 1;
+        progress1.Report(p);
         var tasks = new List<Task>();
 
         foreach (FileInfo solution in solutionFiles)
         {
             tasks.Add(Task.Run(() =>
                 {
-                    (CodeAnalyzer.Data.Solution slnData, string msg) = Analyzer.AnalyzeSolution(solution.FullName);
+                    CodeAnalyzer.Data.Solution slnData = Analyzer.AnalyzeSolution(solution.FullName, progress2, progressMax2);
+                    progress1.Report(p++);
                     Solutions.Add(slnData);
+                    if (slnData.Message.Length > 0)
+                    {
+                        collectedMsg += "\r" + slnData.Message;
+                    }
                 }
             ));
         }
 
         await Task.WhenAll(tasks);
 
-        ProgressValue = p++;
-        //if(msg.Length > 0) {
-        //    collectedMsg += "\r" + msg;
-        //}
-
         sw.Stop();
         MessageBox.Show($"Took {sw.ElapsedMilliseconds / 1000} seconds.\r" + collectedMsg);
+    }
+
+    private async Task<List<FileInfo>> GetSolutionFiles(string path)
+    {
+        Task <List<FileInfo>> t =  Task.Run(() =>
+        {
+            List<FileInfo> solutionFiles = Fs.GetFilesInFolder(path, true, "*.sln").ToList();
+            ProgressMax1 = solutionFiles.Count;
+            ProgressValue1 = 0;
+            return solutionFiles;
+        });
+
+        await t;
+        return t.Result;
     }
 
     private bool ScanCanExecute(object? o)

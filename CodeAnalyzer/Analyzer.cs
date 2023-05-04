@@ -13,6 +13,7 @@ namespace CodeAnalyzer;
 public static class Analyzer
 {
     public static List<string> MatchedDocuments { get; } = new();
+    private static object locker = new();
 
     static Analyzer()
     {
@@ -20,7 +21,7 @@ public static class Analyzer
         MSBuildLocator.RegisterDefaults();
     }
 
-    public static (Data.Solution, string) AnalyzeSolution(string solutionPath)
+    public static Data.Solution AnalyzeSolution(string solutionPath, IProgress<int> progress, IProgress<int> progressMax)
     {
         Stopwatch sw = Stopwatch.StartNew();
 
@@ -31,13 +32,19 @@ public static class Analyzer
 
         try
         {
-            sln = workspace.OpenSolutionAsync(solutionPath).Result;
-            solutionData.Loaded = true;
+            lock (locker)
+            {
+                sln = workspace.OpenSolutionAsync(solutionPath).Result;
+                solutionData.Loaded = true;
+            }
         }
         catch (Exception ex)
         {
-            return (solutionData, $"Could not open sln: {ex.Message}");
+            solutionData.Message = $"Could not open sln: {ex.Message}";
+            return solutionData;
         }
+        
+        progressMax.Report(sln.Projects.Count());
 
         foreach (var project in sln.Projects.Where(x => x.FilePath != null && x.FilePath.EndsWith(".csproj")))
         {
@@ -73,7 +80,7 @@ public static class Analyzer
         }
         sw.Stop();
         solutionData.TimeToLoad = sw.ElapsedMilliseconds / (double)1000;
-        return (solutionData, $"");
+        return solutionData;
     }
 
     public static Data.Solution? AnalyzeSolutionOld(string solutionPath)
