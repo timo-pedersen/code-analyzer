@@ -23,9 +23,9 @@ internal class MainVM : INotifyPropertyChanged
     public ICommand ScanCommand { get; }
 
     public ObservableCollection<CodeAnalyzer.Data.Solution> Solutions { get; } = new ();
-
+    
+    #region Observables =========================================================
     private int _progressMax1;
-
     public int ProgressMax1
     {
         get => _progressMax1;
@@ -69,6 +69,7 @@ internal class MainVM : INotifyPropertyChanged
         }
     }
 
+    #endregion ============================================================
     public MainVM()
     {
         BrowseFolderCommand = new RelayCommand(BrowseFolder);
