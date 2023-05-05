@@ -15,7 +15,7 @@ namespace CodeAnalyzer.Data
 
         public bool Loaded { get; set; } = false;
         public string Message { get; set; } = string.Empty;
-        public readonly ObservableCollection<Project> Projects = new();
+        public ObservableCollection<Project> Projects { get; } = new();
 
         /// <summary>
         /// Time to load in seconds

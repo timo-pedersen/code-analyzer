@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfAnalyzerGUI"
         xmlns:vm="clr-namespace:WpfAnalyzerGUI.VMs"
+        xmlns:data="clr-namespace:CodeAnalyzer.Data;assembly=CodeAnalyzer"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
   <Window.Resources>
@@ -35,14 +36,43 @@
         <ProgressBar Foreground="BlueViolet" Margin="0,5,0,1" Value="{Binding ProgressValue1}" Maximum="{Binding ProgressMax1}"/>
         <ProgressBar Foreground="LimeGreen" Margin="0,1,0,5" Value="{Binding ProgressValue2}" Maximum="{Binding ProgressMax2}"/>
       </StackPanel>
+      <Label Content="{Binding Solutions.Count}"/>
+      <Label Content="solutions scanned"/>
     </StackPanel>
+    
     <Grid Grid.Row="1" Margin="0,5,0,0">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="133*"/>
         <ColumnDefinition Width="267*"/>
       </Grid.ColumnDefinitions>
-      <TreeView Grid.Column="0" ItemsSource="{Binding SolutionsFiles}">
-
+      <TreeView Grid.Column="0" ItemsSource="{Binding Solutions}">
+        <TreeView.Resources>
+          <HierarchicalDataTemplate DataType="{x:Type data:Solution}" ItemsSource="{Binding Projects}">
+            <StackPanel Orientation="Horizontal">
+              <Label Foreground="DarkMagenta" IsEnabled="{Binding Loaded}">#</Label>
+              <Label Content="{Binding Name}" />
+            </StackPanel>
+          </HierarchicalDataTemplate>
+          <HierarchicalDataTemplate DataType="{x:Type data:Project}" ItemsSource="{Binding Documents}">
+            <TextBlock Text="{Binding Name}" />
+          </HierarchicalDataTemplate>
+          <DataTemplate DataType="{x:Type data:Document}">
+            <TextBlock Text="{Binding Name}" />
+          </DataTemplate>
+        </TreeView.Resources>
+        <!--
+        <TreeView Grid.Column="0" ItemsSource="{Binding Solutions}">
+          <TreeView.ItemTemplate>
+          <DataTemplate>
+            <TreeViewItem Header="{Binding Name}" IsEnabled="{Binding Loaded}">
+              <TreeViewItem.ItemTemplate>
+                <DataTemplate>
+                  <Label Content="{Binding ProjectCount}" />
+                </DataTemplate>
+              </TreeViewItem.ItemTemplate>
+            </TreeViewItem>
+          </DataTemplate>
+        </TreeView.ItemTemplate>-->
       </TreeView>
     </Grid>
   </Grid>

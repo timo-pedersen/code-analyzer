@@ -11,7 +11,7 @@ namespace CodeAnalyzer.Data
     {
         public string Path { get; }
         public string Name { get => System.IO.Path.GetFileNameWithoutExtension(Path); }
-        public ObservableCollection<Document> Documents = new();
+        public ObservableCollection<Document> Documents { get; } = new();
 
         public int Matches
         {

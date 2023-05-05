@@ -14,6 +14,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using CodeAnalyzer;
+using System.Windows.Threading;
 
 namespace WpfAnalyzerGUI.VMs;
 
@@ -115,6 +116,9 @@ internal class MainVM : INotifyPropertyChanged
         Stopwatch sw = Stopwatch.StartNew();
 
         List<FileInfo> solutionFiles = await GetSolutionFiles(FolderPath);
+        /*------------------------------------*/
+        // NOTE Neo is removed
+        /*------------------------------------*/
 
         string collectedMsg = "";
 
@@ -122,13 +126,14 @@ internal class MainVM : INotifyPropertyChanged
         progress1.Report(p);
         var tasks = new List<Task>();
 
+        var dispatcher = Dispatcher.CurrentDispatcher;
         foreach (FileInfo solution in solutionFiles)
         {
             tasks.Add(Task.Run(() =>
                 {
                     CodeAnalyzer.Data.Solution slnData = Analyzer.AnalyzeSolution(solution.FullName, progress2, progressMax2);
                     progress1.Report(p++);
-                    Solutions.Add(slnData);
+                    dispatcher.Invoke(() => Solutions.Add(slnData));
                     if (slnData.Message.Length > 0)
                     {
                         collectedMsg += "\r" + slnData.Message;
@@ -147,7 +152,9 @@ internal class MainVM : INotifyPropertyChanged
     {
         Task <List<FileInfo>> t =  Task.Run(() =>
         {
-            List<FileInfo> solutionFiles = Fs.GetFilesInFolder(path, true, "*.sln").ToList();
+            List<FileInfo> solutionFiles = Fs.GetFilesInFolder(path, true, "*.sln")
+                //.Where(x => x.Name.Contains("Neo.sln"))
+                .ToList();
             ProgressMax1 = solutionFiles.Count;
             ProgressValue1 = 0;
             return solutionFiles;
