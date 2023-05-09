@@ -1,0 +1,2 @@
+# Copy files listen in files.txt into folder Files, preserving folder structure
+cp --parents $(<files.txt) Files

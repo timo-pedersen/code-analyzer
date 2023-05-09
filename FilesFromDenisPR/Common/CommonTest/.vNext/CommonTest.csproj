@@ -1,0 +1,151 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0-windows;net48</TargetFrameworks>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>True</UseWPF>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>Neo.ApplicationFramework.Common</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;VNEXT_TARGET;VNEXT_TARGET_NEEDS_REIMPLEMENTATION;VNEXT_TARGET_INCLUDED;VNEXT_TARGET_STRUCTURE_DIFFERENCE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;VNEXT_TARGET;VNEXT_TARGET_NEEDS_REIMPLEMENTATION;VNEXT_TARGET_INCLUDED;VNEXT_TARGET_STRUCTURE_DIFFERENCE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="obj\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <None Remove="obj\**" />
+
+    <Compile Remove="..\obj\**" />
+    <EmbeddedResource Remove="..\obj\**" />
+    <None Remove="..\obj\**" />
+
+    <!--<Compile Include="..\**\*.cs" />-->
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Assertion\AssertTest.cs" Link="Assertion\AssertTest.cs" />
+    <Compile Include="..\Boundary\ComparerFactoryTest.cs" Link="Boundary\ComparerFactoryTest.cs" />
+    <Compile Include="..\Boundary\DecimalComparerTest.cs" Link="Boundary\DecimalComparerTest.cs" />
+    <Compile Include="..\Boundary\DoubleComparerTest.cs" Link="Boundary\DoubleComparerTest.cs" />
+    <Compile Include="..\Boundary\IntComparerTest.cs" Link="Boundary\IntComparerTest.cs" />
+    <Compile Include="..\Brand\BrandToolResourceDocumentationTest.cs" Link="Brand\BrandToolResourceDocumentationTest.cs" />
+    <Compile Include="..\Collections\ExtendedBindingListTest.cs" Link="Collections\ExtendedBindingListTest.cs" />
+    <Compile Include="..\Collections\FilteredListTests.cs" Link="Collections\FilteredListTests.cs" />
+    <Compile Include="..\Collections\OwnedListTests.cs" Link="Collections\OwnedListTests.cs" />
+    <Compile Include="..\Collections\StringComparableListTest.cs" Link="Collections\StringComparableListTest.cs" />
+    <Compile Include="..\Collections\ThreadSafeQueueTests.cs" Link="Collections\ThreadSafeQueueTests.cs" />
+    <Compile Include="..\Converters\BooleanToStretchConverterTest.cs" Link="Converters\BooleanToStretchConverterTest.cs" />
+    <Compile Include="..\Converters\DateTimeToStringWithDateTimePatternConverterTest.cs" Link="Converters\DateTimeToStringWithDateTimePatternConverterTest.cs" />
+    <Compile Include="..\Data\ControlStub.cs" Link="Data\ControlStub.cs" />
+    <Compile Include="..\Data\DataItemProxyFactoryTest.cs" Link="Data\DataItemProxyFactoryTest.cs" />
+    <Compile Include="..\Data\DataItemProxyTest.cs" Link="Data\DataItemProxyTest.cs" />
+    <Compile Include="..\Data\DynamicBindingTest.cs" Link="Data\DynamicBindingTest.cs" />
+    <Compile Include="..\Data\DynamicControlBindingsCollectionTest.cs" Link="Data\DynamicControlBindingsCollectionTest.cs" />
+    <Compile Include="..\Data\NotifyPropertyChangedHelperBaseTest.cs" Link="Data\NotifyPropertyChangedHelperBaseTest.cs" />
+    <Compile Include="..\Data\NotifyPropertyChangedHelperTest.cs" Link="Data\NotifyPropertyChangedHelperTest.cs" />
+    <Compile Include="..\Data\PropertyConnectionCollectionTest.cs" Link="Data\PropertyConnectionCollectionTest.cs" />
+    <Compile Include="..\Data\PropertyConnectionTest.cs" Link="Data\PropertyConnectionTest.cs" />
+    <Compile Include="..\Database\DBNullValidationTest.cs" Link="Database\DBNullValidationTest.cs" />
+    <Compile Include="..\Dynamics\DynamicStringTest.cs" Link="Dynamics\DynamicStringTest.cs" />
+    <Compile Include="..\Dynamics\LinearConverterTest.cs" Link="Dynamics\LinearConverterTest.cs" />
+    <Compile Include="..\Dynamics\MessageLibraryDynamicsConverterTest.cs" Link="Dynamics\MessageLibraryDynamicsConverterTest.cs" />
+    <Compile Include="..\EnsureReferences.cs" Link="EnsureReferences.cs" />
+    <Compile Include="..\Extensions\System\ActionExtensionsTest.cs" Link="Extensions\System\ActionExtensionsTest.cs" />
+    <Compile Include="..\Extensions\System\Collections\Generic\ICollectionExtensionsTest.cs" Link="Extensions\System\Collections\Generic\ICollectionExtensionsTest.cs" />
+    <Compile Include="..\Extensions\System\Collections\Generic\IEnumerableExtensionsTest.cs" Link="Extensions\System\Collections\Generic\IEnumerableExtensionsTest.cs" />
+    <Compile Include="..\Extensions\System\ICloneableExtensionsTest.cs" Link="Extensions\System\ICloneableExtensionsTest.cs" />
+    <Compile Include="..\Extensions\System\Linq\Expressions\ExpressionExtensionsTest.cs" Link="Extensions\System\Linq\Expressions\ExpressionExtensionsTest.cs" />
+    <Compile Include="..\Extensions\System\StringExtensionsTest.cs" Link="Extensions\System\StringExtensionsTest.cs" />
+    <Compile Include="..\Extensions\System\Windows\Media\BrushExtensionsTest.cs" Link="Extensions\System\Windows\Media\BrushExtensionsTest.cs" />
+    <Compile Include="..\FileLogic\FilePathLogicCFTest.cs" Link="FileLogic\FilePathLogicCFTest.cs" />
+    <Compile Include="..\Graphics\BitmapHelperTest.cs" Link="Graphics\BitmapHelperTest.cs" />
+    <Compile Include="..\Graphics\AnimatedGifHelperTest.cs" Link="Graphics\AnimatedGifHelperTest.cs" />
+    <Compile Include="..\Keyboard\KeyboardLayoutInfoTest.cs" Link="Keyboard\KeyboardLayoutInfoTest.cs" />
+    <Compile Include="..\Logic\ArcLogicTest.cs" Link="Logic\ArcLogicTest.cs" />
+    <Compile Include="..\MultiLanguage\StringIntervalsSynchronizerTest.cs" Link="MultiLanguage\StringIntervalsSynchronizerTest.cs" />
+    <Compile Include="..\NotifyPropertyChangedHelperTest.cs" Link="NotifyPropertyChangedHelperTest.cs" />
+    <Compile Include="..\ObjectDumper.cs" Link="ObjectDumper.cs" />
+    <Compile Include="..\Printer\GdiPrinter\ColumnWidthCalculatorTest.cs" Link="Printer\GdiPrinter\ColumnWidthCalculatorTest.cs" />
+    <Compile Include="..\Printer\GdiPrinter\GdiPrinterCFTest.cs" Link="Printer\GdiPrinter\GdiPrinterCFTest.cs" />
+    <Compile Include="..\Printer\SerialPrinter\SerialPortRecorder.cs" Link="Printer\SerialPrinter\SerialPortRecorder.cs" />
+    <Compile Include="..\Printer\SerialPrinter\SerialPrinterCFTest.cs" Link="Printer\SerialPrinter\SerialPrinterCFTest.cs" />
+    <Compile Include="..\RectangleDTest.cs" Link="RectangleDTest.cs" />
+    <Compile Include="..\RelaxedStreamComparer\RelaxedStreamComparerAllowingOnePercentDifferenceTest.cs" Link="RelaxedStreamComparer\RelaxedStreamComparerAllowingOnePercentDifferenceTest.cs" />
+    <Compile Include="..\RelaxedStreamComparer\RelaxedStreamComparerTest.cs" Link="RelaxedStreamComparer\RelaxedStreamComparerTest.cs" />
+    <Compile Include="..\Runtime\GlobalsBaseTest.cs" Link="Runtime\GlobalsBaseTest.cs" />
+    <Compile Include="..\ServiceRegistration\InterceptTestHelper.cs" Link="ServiceRegistration\InterceptTestHelper.cs" />
+    <Compile Include="..\ServiceRegistration\InterceptTests.cs" Link="ServiceRegistration\InterceptTests.cs" />
+    <Compile Include="..\TestDispatcherHelper.cs" Link="TestDispatcherHelper.cs" />
+    <Compile Include="..\TestHelpers\Fixtures\KeyFixtures.cs" Link="TestHelpers\Fixtures\KeyFixtures.cs" />
+    <Compile Include="..\TestHelpers\FrameworkElementEventExtensions.cs" Link="TestHelpers\FrameworkElementEventExtensions.cs" />
+    <Compile Include="..\TestHelpers\RoutedEventsTestHelper.cs" Link="TestHelpers\RoutedEventsTestHelper.cs" />
+    <Compile Include="..\Threshold\BoundaryMonitorTest.cs" Link="Threshold\BoundaryMonitorTest.cs" />
+    <Compile Include="..\TypeValidation\ComplexDefaultValueTests.cs" Link="TypeValidation\ComplexDefaultValueTests.cs" />
+    <Compile Include="..\Utilities\BEDATATYPEConverterTest.cs" Link="Utilities\BEDATATYPEConverterTest.cs" />
+    <Compile Include="..\Utilities\BlockRecursionScopeTest.cs" Link="Utilities\BlockRecursionScopeTest.cs" />
+    <Compile Include="..\Utilities\BrushFactoryTest.cs" Link="Utilities\BrushFactoryTest.cs" />
+    <Compile Include="..\Utilities\CFFormExtensionMethodsTest.cs" Link="Utilities\CFFormExtensionMethodsTest.cs" />
+    <Compile Include="..\Utilities\ComponentPropertyBinderTest.cs" Link="Utilities\ComponentPropertyBinderTest.cs" />
+    <Compile Include="..\Utilities\DependencyObjectPropertyBinderTest.cs" Link="Utilities\DependencyObjectPropertyBinderTest.cs" />
+    <Compile Include="..\Utilities\DependencyObjectPropertyBinderTests\BoolDataSourceTest.cs" Link="Utilities\DependencyObjectPropertyBinderTests\BoolDataSourceTest.cs" />
+    <Compile Include="..\Utilities\DependencyObjectPropertyBinderTests\DateTimeDataSourceTest.cs" Link="Utilities\DependencyObjectPropertyBinderTests\DateTimeDataSourceTest.cs" />
+    <Compile Include="..\Utilities\DependencyObjectPropertyBinderTests\DependencyObjectPropertyBinderTestBase.cs" Link="Utilities\DependencyObjectPropertyBinderTests\DependencyObjectPropertyBinderTestBase.cs" />
+    <Compile Include="..\Utilities\DependencyObjectPropertyBinderTests\DoubleDataSourceTest.cs" Link="Utilities\DependencyObjectPropertyBinderTests\DoubleDataSourceTest.cs" />
+    <Compile Include="..\Utilities\DependencyObjectPropertyBinderTests\IntDataSourceTest.cs" Link="Utilities\DependencyObjectPropertyBinderTests\IntDataSourceTest.cs" />
+    <Compile Include="..\Utilities\DependencyObjectPropertyBinderTests\MockObjects\FrameworkElementMock.cs" Link="Utilities\DependencyObjectPropertyBinderTests\MockObjects\FrameworkElementMock.cs" />
+    <Compile Include="..\Utilities\DependencyObjectPropertyBinderTests\ShortDataSourceTest.cs" Link="Utilities\DependencyObjectPropertyBinderTests\ShortDataSourceTest.cs" />
+    <Compile Include="..\Utilities\DependencyObjectPropertyBinderTests\SingleDataSourceTest.cs" Link="Utilities\DependencyObjectPropertyBinderTests\SingleDataSourceTest.cs" />
+    <Compile Include="..\Utilities\DependencyObjectPropertyBinderTests\StringDataSourceTest.cs" Link="Utilities\DependencyObjectPropertyBinderTests\StringDataSourceTest.cs" />
+    <Compile Include="..\Utilities\ElementHelperTest.cs" Link="Utilities\ElementHelperTest.cs" />
+    <Compile Include="..\Utilities\FileHelperTest.cs" Link="Utilities\FileHelperTest.cs" />
+    <Compile Include="..\Utilities\NaturalSortComparerTest.cs" Link="Utilities\NaturalSortComparerTest.cs" />
+    <Compile Include="..\Utilities\NeoZipFileFolderTest.cs" Link="Utilities\NeoZipFileFolderTest.cs" />
+    <Compile Include="..\Utilities\Threading\TaskTest.cs" Link="Utilities\Threading\TaskTest.cs" />
+    <Compile Include="..\Utilities\Threading\ThreadPoolTaskSchedulerTest.cs" Link="Utilities\Threading\ThreadPoolTaskSchedulerTest.cs" />
+    <Compile Include="..\Utilities\ThreadPoolHelperCFTest.cs" Link="Utilities\ThreadPoolHelperCFTest.cs" />
+    <Compile Include="..\VariantValueTest.cs" Link="VariantValueTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\Graphics\animated clock.gif" Link="Graphics\animated clock.gif" />
+    <EmbeddedResource Include="..\Graphics\animated dog.gif" Link="Graphics\animated dog.gif" />
+    <EmbeddedResource Include="..\Graphics\animated writing process composition.png" Link="Graphics\animated writing process composition.png" />
+    <EmbeddedResource Include="..\Graphics\animated writing process.gif" Link="Graphics\animated writing process.gif" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    <PackageReference Include="NSubstitute" Version="4.2.2" />
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+    <PackageReference Include="coverlet.collector" Version="1.3.0" />
+  </ItemGroup>
+
+  
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Controls\Controls\.vNext\Controls.csproj" />
+    <ProjectReference Include="..\..\..\Interfaces\InterfacesCF\.vNext\InterfacesCF.csproj" />
+    <ProjectReference Include="..\..\..\Test\TestUtilities\.vNext\TestUtilities.csproj" />
+    <ProjectReference Include="..\..\..\Tools\Tools\.vNext\Tools.csproj" />
+    <ProjectReference Include="..\..\CommonCF\.vNext\CommonCF.csproj" />
+    <ProjectReference Include="..\..\Common\.vNext\Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DataSourceInterop">
+      <HintPath>..\..\..\..\ixDeveloperWithoutCore\Interop\DataSource\BeDataSource2\Interop\DataSourceInterop.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,77 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0-windows;net48</TargetFrameworks>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>false</UseWPF> <!--Since the port is all about Winforms now, exclude WPF-->
+    <UseVNextImport>true</UseVNextImport>
+    <!--System.Resources.Extensions + GenerateResourceUsePreserializedResources true fixes resource issue -->
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+    <Configurations>Debug;Release</Configurations>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <RootNamespace>Neo.ApplicationFramework.Common</RootNamespace>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies><!-- required to copy BeHwApiProvider.dll to Runtime\dotnet\net6.0-windows -->
+  </PropertyGroup>
+
+	<ItemGroup>
+		
+		<Compile Remove="Runtime\dotnet\**" />
+		<EmbeddedResource Remove="Runtime\dotnet\**" />
+		<None Remove="Runtime\dotnet\**" />
+		<Compile Include="..\..\..\Applications\NeoIDE\NeoIDE\Properties\VersionInfo.cs" Link="Properties\VersionInfo.cs" />
+		<Compile Include="..\..\..\Applications\NeoIDE\NeoIDE\Properties\SolutionInfo.cs" Link="Properties\SolutionInfo.cs" />
+	</ItemGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Babel.Obfuscator" Version="9.7.4">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+	<PackageReference Include="CoreCF.Component.Engine" Version="3.0.99" />
+    <PackageReference Include="BeHwApi.NET" Version="1.0.13" />
+    <PackageReference Include="Storage.Api.Net" Version="1.0.0" />
+    <PackageReference Include="DriversDataSourceInterop" Version="9.0.5">
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\.vNext\Stubs\vNextStubs.csproj" />
+    <ProjectReference Include="..\..\..\Attributes\AttributesCF\.vNext\AttributesCF.csproj" />
+    <ProjectReference Include="..\..\..\Interfaces\InterfacesCF\.vNext\InterfacesCF.csproj" />
+    <ProjectReference Include="..\..\..\Resources\ResourcesCF\.vNext\ResourcesCF.csproj" />
+    <ProjectReference Include="..\..\..\SignatureInterfaces\SignatureInterfacesCF\.vNext\SignatureInterfacesCF.csproj" />
+    <ProjectReference Include="..\..\CommonCF.Utilities\.vNext\CommonCF.Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="..\Brand\BrandToolResource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BrandToolResource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="..\Brand\BrandToolResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>BrandToolResource.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Neo.ApplicationFramework.Common.Brand</CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup Condition="$(BrandName)!=''">
+    <Compile Remove="..\Brand\BrandConstants.cs" />
+    <Compile Include="..\..\..\Brands\$(BrandName)\Resources\BrandConstants.cs" />
+  </ItemGroup>
+
+  <Import Project="..\..\..\Obfuscation\CommonCF.targets" />
+
+</Project>

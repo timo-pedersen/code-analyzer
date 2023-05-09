@@ -1,0 +1,1192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <Import Project="..\..\ThirdParty\NUnit3TestAdapter.4.0.0-beta.2\build\net35\NUnit3TestAdapter.props" Condition="Exists('..\..\ThirdParty\NUnit3TestAdapter.4.0.0-beta.2\build\net35\NUnit3TestAdapter.props')" />
+  <Import Project="..\..\ThirdParty\NUnit.3.13.2\build\NUnit.props" Condition="Exists('..\..\ThirdParty\NUnit.3.13.2\build\NUnit.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{F8080EFB-48B3-4D0D-82D8-D03F37E94D5F}</ProjectGuid>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <RootNamespace>Neo.ApplicationFramework.Tools</RootNamespace>
+    <AssemblyName>ToolsTest</AssemblyName>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>library</OutputType>
+    <!-- Most people will use Publish dialog in Visual Studio to increment this -->
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn />
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn />
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\Output\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <NoWarn>
+    </NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>..\..\Output\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ApplicationFramework, Version=2.20.346.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BuildingBlocks\lib\ApplicationFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="ApplicationFrameworkCF, Version=2.20.346.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BuildingBlocks\lib\ApplicationFrameworkCF.dll</HintPath>
+    </Reference>
+    <Reference Include="ApplicationFrameworkIde, Version=2.20.346.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BuildingBlocks\lib\ApplicationFrameworkIde.dll</HintPath>
+    </Reference>
+    <Reference Include="AsyncWinLib, Version=1.0.3828.37451, Culture=neutral, PublicKeyToken=0729ddcc11ef0a2d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\DotNetRemoting\AsyncWinLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CommunicationServerProtocols, Version=2.0.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Install\Shared\Dependencies\CommunicationServerProtocols.dll</HintPath>
+    </Reference>
+    <Reference Include="Core.Api, Version=0.0.4.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.0.0.4\lib\net48\Core.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="Core.CodeGenerationUtilities, Version=1.0.0.1, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.CodeGenerationUtilities.0.0.4\lib\net48\Core.CodeGenerationUtilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Core.Controls.Api, Version=0.0.4.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.0.0.4\lib\net48\Core.Controls.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="Core.Controls.Engine, Version=0.0.4.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.0.0.4\lib\net48\Core.Controls.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="Core.TestUtilities, Version=0.0.4.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.TestUtilities.0.0.4\lib\net48\Core.TestUtilities.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreCF.Api, Version=0.0.4.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.0.0.4\lib\net48\CoreCF.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreCF.Component.Api, Version=0.0.4.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.0.0.4\lib\net48\CoreCF.Component.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreCF.Component.Engine, Version=1.0.0.1, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.0.0.4\lib\net48\CoreCF.Component.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreCF.Controls.Api, Version=0.0.4.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.0.0.4\lib\net48\CoreCF.Controls.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreCF.Engine, Version=0.0.4.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.0.0.4\lib\net48\CoreCF.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreIde.Api, Version=0.0.4.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.0.0.4\lib\net48\CoreIde.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreIde.Component.Api, Version=0.0.4.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.0.0.4\lib\net48\CoreIde.Component.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreIde.Component.Engine, Version=1.0.0.1, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.0.0.4\lib\net48\CoreIde.Component.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreIde.Controls.Api, Version=0.0.4.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.0.0.4\lib\net48\CoreIde.Controls.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreIde.Controls.Engine, Version=0.0.4.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.0.0.4\lib\net48\CoreIde.Controls.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreIde.Engine, Version=0.0.4.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.0.0.4\lib\net48\CoreIde.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="DataSourceInterop, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Interop\DataSource\BeDataSource2\Interop\DataSourceInterop.dll</HintPath>
+    </Reference>
+    <Reference Include="DevComponents.DotNetBar2, Version=7.6.0.3, Culture=neutral, PublicKeyToken=7eb7c3a35b91de04, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\DotNetBar\DevComponents.DotNetBar2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Data.Desktop.v20.1, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.Data.Desktop.20.1.7\lib\net452\DevExpress.Data.Desktop.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Data.v20.1, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.Data.20.1.7\lib\net452\DevExpress.Data.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Office.v20.1.Core, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.Office.Core.20.1.7\lib\net452\DevExpress.Office.v20.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Pdf.v20.1.Core, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.Pdf.Core.20.1.7\lib\net452\DevExpress.Pdf.v20.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Pdf.v20.1.Drawing, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.Pdf.Drawing.20.1.7\lib\net452\DevExpress.Pdf.v20.1.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.PivotGrid.v20.1.Core, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.PivotGrid.Core.20.1.7\lib\net452\DevExpress.PivotGrid.v20.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Printing.v20.1.Core, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.Printing.Core.20.1.7\lib\net452\DevExpress.Printing.v20.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.RichEdit.v20.1.Core, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.RichEdit.Core.20.1.7\lib\net452\DevExpress.RichEdit.v20.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.RichEdit.v20.1.Export, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.RichEdit.Export.20.1.7\lib\net452\DevExpress.RichEdit.v20.1.Export.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Sparkline.v20.1.Core, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.Sparkline.Core.20.1.7\lib\net452\DevExpress.Sparkline.v20.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Utils.v20.1, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.Utils.20.1.7\lib\net452\DevExpress.Utils.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraBars.v20.1, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.Win.Navigation.20.1.7\lib\net452\DevExpress.XtraBars.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraEditors.v20.1, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.Win.Navigation.20.1.7\lib\net452\DevExpress.XtraEditors.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraGrid.v20.1, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.Win.Grid.20.1.7\lib\net452\DevExpress.XtraGrid.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraLayout.v20.1, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.Win.Navigation.20.1.7\lib\net452\DevExpress.XtraLayout.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraNavBar.v20.1, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.Win.20.1.7\lib\net452\DevExpress.XtraNavBar.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraPivotGrid.v20.1, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.Win.PivotGrid.20.1.7\lib\net452\DevExpress.XtraPivotGrid.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraPrinting.v20.1, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.Win.Printing.20.1.7\lib\net452\DevExpress.XtraPrinting.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraTreeList.v20.1, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.Win.TreeList.20.1.7\lib\net452\DevExpress.XtraTreeList.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraVerticalGrid.v20.1, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.Win.VerticalGrid.20.1.7\lib\net452\DevExpress.XtraVerticalGrid.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraWizard.v20.1, Version=20.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DevExpress.Win.20.1.7\lib\net452\DevExpress.XtraWizard.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetZip, Version=1.13.5.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DotNetZip.1.13.5\lib\net40\DotNetZip.dll</HintPath>
+    </Reference>
+    <Reference Include="FlexCelCF, Version=5.8.0.0, Culture=neutral, PublicKeyToken=cb8f6080e6d5a4d6, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\FlexCel\FlexCelCF.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\log4net\bin\netcf\2.0\release\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MSBuildBeijerElectronicsTasks">
+      <HintPath>..\..\ThirdParty\MSBuildBeijerElectronicsTasks\lib\MSBuildBeijerElectronicsTasks.dll</HintPath>
+    </Reference>
+    <Reference Include="NeoNativeSignature">
+      <HintPath>..\..\OutputNeoNative\Release\NeoNativeSignature.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NSubstitute, Version=4.2.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\NSubstitute.4.2.2\lib\net46\NSubstitute.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.13.2.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\NUnit.3.13.2\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Opc.Ua.Client, Version=1.1.333.0, Culture=neutral, PublicKeyToken=22186a540fc0b044, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\OPCFoundation\OpcClient\Opc.Ua.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Opc.Ua.Core, Version=1.1.333.0, Culture=neutral, PublicKeyToken=22186a540fc0b044, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\OPCFoundation\OpcClient\Opc.Ua.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Prism, Version=6.3.0.0, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\Prism.Core.6.3.0\lib\net45\Prism.dll</HintPath>
+    </Reference>
+    <Reference Include="Prism.Wpf, Version=6.3.0.0, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\Prism.Wpf.6.3.0\lib\net45\Prism.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Rebex.Common, Version=2.5.6586.0, Culture=neutral, PublicKeyToken=1c4638788972655d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\RebexTotalPack\lib\netcf-3.5\Rebex.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Rebex.Http, Version=1.0.6586.0, Culture=neutral, PublicKeyToken=1c4638788972655d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\RebexTotalPack\lib\netcf-3.5\Rebex.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="Rebex.Networking, Version=3.5.6586.0, Culture=neutral, PublicKeyToken=1c4638788972655d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\RebexTotalPack\lib\netcf-3.5\Rebex.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="RibbonControlsLibrary, Version=4.0.0.11019, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\Microsoft Ribbon for WPF\RibbonControlsLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="SignatureInterfaces, Version=2.20.346.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BuildingBlocks\lib\SignatureInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="SignatureInterfacesCF, Version=2.20.346.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BuildingBlocks\lib\SignatureInterfacesCF.dll</HintPath>
+    </Reference>
+    <Reference Include="SignatureInterfacesIde, Version=2.20.346.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BuildingBlocks\lib\SignatureInterfacesIde.dll</HintPath>
+    </Reference>
+    <Reference Include="SqlCeDatabaseCF">
+      <HintPath>..\..\BuildingBlocks\lib\SqlCeDatabaseCF.dll</HintPath>
+    </Reference>
+    <Reference Include="StorageCF, Version=2.20.265.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BuildingBlocks\lib\StorageCF.dll</HintPath>
+    </Reference>
+    <Reference Include="StoreSoftwareManagerLibrary, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\StoreSoftwareManagerLibrary.1.0.7\lib\netstandard2.0\StoreSoftwareManagerLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="syncfusion.core, Version=4.102.0.62, Culture=neutral, PublicKeyToken=632609b4d040f6b4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\Syncfusion\Essential Studio\Assemblies\syncfusion.core.dll</HintPath>
+    </Reference>
+    <Reference Include="syncfusion.diagram.base, Version=4.102.0.62, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\Syncfusion\Essential Studio\Assemblies\syncfusion.diagram.base.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\System.Threading.Tasks.Extensions.4.5.2\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\Expression.Blend.Sdk.1.0.2\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WatiN.Core">
+      <HintPath>..\..\ThirdParty\WatiN\bin\net35\WatiN.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Applications\NeoIDE\NeoIDE\Properties\SolutionInfo.cs">
+      <Link>Properties\SolutionInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Applications\NeoIDE\NeoIDE\Properties\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
+    <Compile Include=".vNext\GapServiceTest.cs" />
+    <Compile Include="Action\ActionEditors\ViewModels\ExecuteScriptViewModelTest.cs" />
+    <Compile Include="About\FeatureConfigurationFacadeTest.cs" />
+    <Compile Include="About\FeatureConfigurationViewModelTest.cs" />
+    <Compile Include="Action\ActionEditors\ViewModels\GenerateReportViewModelTest.cs" />
+    <Compile Include="Action\ActionParameterInfoTest.cs" />
+    <Compile Include="Action\ActionTest.cs" />
+    <Compile Include="Action\AliasActionExtensionsTest.cs" />
+    <Compile Include="Action\CodeGeneratedActionParameterInfoPositionTest.cs" />
+    <Compile Include="Action\Validation\InvalidActionValidatorTest.cs" />
+    <Compile Include="AddressBook\AddressBookTest.cs" />
+    <Compile Include="AddressBook\AddressBookValidationHelperTest.cs" />
+    <Compile Include="AddressBook\ContactTest.cs" />
+    <Compile Include="AlarmDistributorServer\RegexFilterGeneratorTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AlarmDistributorServer\RouteManagerTest.cs" />
+    <Compile Include="Alarm\AlarmComparerTest.cs" />
+    <Compile Include="Alarm\AlarmEventTest.cs" />
+    <Compile Include="Alarm\AlarmEventDynamicsTest.cs" />
+    <Compile Include="Alarm\AlarmItemAcknowledgedTest.cs" />
+    <Compile Include="Alarm\AlarmItemEntryTest.cs" />
+    <Compile Include="Alarm\AlarmItemSorterTest.cs" />
+    <Compile Include="Alarm\AlarmItemTest.cs" />
+    <Compile Include="Alarm\AlarmServerTest.cs" />
+    <Compile Include="Alarm\RemoteAlarmClientTest.cs" />
+    <Compile Include="Alarm\TransferAlarmEventTest.cs" />
+    <Compile Include="AuditTrail\AuditTrailToolIdeTest.cs" />
+    <Compile Include="AuditTrail\UserChangedAuditTrailToolCFTest.cs" />
+    <Compile Include="Build\BuildManager\BitmapHelperStub.cs" />
+    <Compile Include="Build\BuildManager\ProjectValidation\ServerProjectValidatorTest.cs" />
+    <Compile Include="Build\BuildManager\Validators\AllDataItemsBelongToATagTest.cs" />
+    <Compile Include="Build\BuildManager\Validators\CyclicExpressionValidatorTest.cs" />
+    <Compile Include="Build\BuildManager\Validators\DeprecatedTargetValidatorTest.cs" />
+    <Compile Include="Build\BuildManager\Validators\ReferencedAssemblyValidatorTest.cs" />
+    <Compile Include="Build\BuildManager\Validators\TagsInScriptExtractorTest.cs" />
+    <Compile Include="Build\BuildManager\Validators\CrossReferenceValidatorTest.cs" />
+    <Compile Include="Build\BuildManager\Validators\ValidateStructuredTagsInSynchWithStructuredTypeTest.cs" />
+    <Compile Include="CommonPropertyPages\ServerPropertyPageTest.cs" />
+    <Compile Include="Configurations\PropertyConfigurationTest.cs" />
+    <Compile Include="Configurations\TimeZoneTest.cs" />
+    <Compile Include="ControllerManager\ServerBrowserProvider\NamespaceSynchronizerTest.cs" />
+    <Compile Include="ControllerManager\ServerBrowserProvider\Synchronization\StructuredTagCrossReferenceMapperTest.cs" />
+    <Compile Include="AuditTrail\AuditStorableItemTest.cs" />
+    <Compile Include="AuditTrail\AuditTrailServiceTest.cs" />
+    <Compile Include="Alarm\DistributorTest.cs" />
+    <Compile Include="CrossReference\Finders\DatabaseServiceActionCrossReferenceFinderTest.cs" />
+    <Compile Include="CrossReference\Finders\DataItemReferenceFinderTests.cs" />
+    <Compile Include="CrossReference\Finders\ScriptTagCrossReferenceFinderTest.cs" />
+    <Compile Include="CrossReference\Rebinder\DatabaseServiceCrossReferenceRebinderTest.cs" />
+    <Compile Include="CrossReference\Resources\FileResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FileResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="CrossReference\CrossReferenceRenameServiceTest.cs" />
+    <Compile Include="Database\BackupDatabasesViewModelTest.cs" />
+    <Compile Include="Database\ImportExportServiceTest.cs" />
+    <Compile Include="Database\DatabaseExportActionDialogTest.cs" />
+    <Compile Include="Database\DatabaseExportTest.cs" />
+    <Compile Include="DataLogger\DataLoggerPropertyTest.cs" />
+    <Compile Include="DataLogger\DataLoggerStorageReservedNameHelperTest.cs" />
+    <Compile Include="DateTimeEdit\DateTimeEditServiceCeTest.cs" />
+    <Compile Include="DateTimeEdit\TimeSynchronizationProjectValidatorTest.cs" />
+    <Compile Include="DateTimeEdit\TimeZoneComparerTest.cs" />
+    <Compile Include="Event\DeadSubscriptionsRemoverTest.cs" />
+    <Compile Include="Help\DriverHelpToolTest.cs" />
+    <Compile Include="Help\HelpFileTest.cs" />
+    <Compile Include="Help\ExpressionParserTest.cs" />
+    <Compile Include="Help\SectionTreeTest.cs" />
+    <Compile Include="Help\XmlParserTest.cs" />
+    <Compile Include="ImportExport\AliasImportExportTest.cs" />
+    <Compile Include="InformationDesignerImport\Converters\AlarmDynamicTextConverterTest.cs" />
+    <Compile Include="InformationDesignerImport\Converters\AnalogDynamicsPropertyConverterTest.cs" />
+    <Compile Include="InformationDesignerImport\InformationDesignerImportSettingsServiceTest.cs" />
+    <Compile Include="InformationDesignerImport\UI\ViewModels\ImportFinishedViewModelTest.cs" />
+    <Compile Include="InformationDesignerImport\UI\ViewModels\ImportOptionsViewModelTest.cs" />
+    <Compile Include="Localization\MultiLanguageValidatorTest.cs" />
+    <Compile Include="MultiLanguage\UniscribeHelperCFTest.cs" />
+    <Compile Include="OpcClient\DataSourceContainerIsPublicTest.cs" />
+    <Compile Include="OpcClient\DataSourceOpcUaTest.cs" />
+    <Compile Include="OpcClient\ExposureExtenderProviderTest.cs" />
+    <Compile Include="OpcClient\GlobalDataItemInDesignModeTest.cs" />
+    <Compile Include="OpcClient\ConnectableTagTest.cs" />
+    <Compile Include="OpcClient\LightweightTagCreatorTest.cs" />
+    <Compile Include="OpcClient\LightweightTagTest.cs" />
+    <Compile Include="OpcClient\LookupIndex\TagPathLookupIndexTest.cs" />
+    <Compile Include="OpcClient\TagPathLookupIndexIdeTest.cs" />
+    <Compile Include="OpcUaClient\OpcUaClientSettingsPropertyPageViewModelTest.cs" />
+    <Compile Include="OpcUaClient\PasswordEncryptionValidatorTest.cs" />
+    <Compile Include="OpcUa\OpcUaNodeTreeViewItemsViewModelTest.cs" />
+    <Compile Include="OpcUa\SdkLicenseComplianceTest.cs" />
+    <Compile Include="ProjectManager\ChangeAllScreenCachingTest.cs" />
+    <Compile Include="ProjectManager\MemoryManagementSettingsTest.cs" />
+    <Compile Include="ProjectManager\CompressedProjectGeneratorTest.cs" />
+    <Compile Include="ProjectManager\ProjectManagerTimeSynchronizationTest.cs" />
+    <Compile Include="Recipe\RecipeArrays\RecipeArrayConverterHelperBaseTest.cs" />
+    <Compile Include="Recipe\RecipeConverter\GeneralImportRecipeConverterTest.cs" />
+    <Compile Include="Recipe\RecipeExportTest.cs" />
+    <Compile Include="Reporting\Generating\ReportGeneratorCFTest.cs" />
+    <Compile Include="Reporting\ReportViewModelTest.cs" />
+    <Compile Include="Design\DesignViewControlServiceTest.cs" />
+    <Compile Include="Recipe\RecipeTestStorageDependent.cs" />
+    <Compile Include="ScreenObjectDecorator\ScreenObjectDecoratorServiceTest.cs" />
+    <Compile Include="Design\Bindings\LocalPropertyBindingSourceProviderTest.cs" />
+    <Compile Include="MessageBox\MessageBoxLayoutHelperTest.cs" />
+    <Compile Include="MultiLanguage\LanguageInfoValidatorTest.cs" />
+    <Compile Include="OpcClient\Bindings\TagBindingProviderTests.cs" />
+    <Compile Include="OpcClient\Bindings\TagBindingSourceProviderTest.cs" />
+    <Compile Include="OpcClient\StructuredTagsControlViewModelTest.cs" />
+    <Compile Include="OpcClient\StructuredTagViewModelTest.cs" />
+    <Compile Include="OpcClient\StructuredTypesViewModelsTests.cs" />
+    <Compile Include="OpcClient\StructuredTypesControlViewModelTest.cs" />
+    <Compile Include="OpcClient\TagSynchIdAssignmentTest.cs" />
+    <Compile Include="OpcUaServer\OpcUaServerDataManagerTest.cs" />
+    <Compile Include="OpcUa\OpcUaConvertionFakeData.cs" />
+    <Compile Include="OpcUa\OpcUaNodeTest.cs" />
+    <Compile Include="OpcUa\OpcUaNodeToStructuredReferenceBaseConverterTest.cs" />
+    <Compile Include="OpcUa\OpcUaNodeToStructuredTypeConverterTest.cs" />
+    <Compile Include="OpcUa\OpcUaNodeValidatorTest.cs" />
+    <Compile Include="OpcUa\OpcUaTestUtilities.cs" />
+    <Compile Include="OpcUaServer\OpcUaServerConfigurationManagerTest.cs" />
+    <Compile Include="ProjectManager\ProjectExplorer\ScreenGroupsTest.cs" />
+    <Compile Include="ProjectManager\ScreenGroupProjectItemTest.cs" />
+    <Compile Include="Screen\Bindings\LocalPropertyBindingProviderTests.cs" />
+    <Compile Include="Build\BuildManager\RenderableControlResourcesGeneratorTest.cs" />
+    <Compile Include="Build\BuildManager\Validators\ScreenIDsValidatorTest.cs" />
+    <Compile Include="Build\DataBindingsCodeChangerTest.cs" />
+    <Compile Include="ControllerManager\ControllerManagerTest.cs" />
+    <Compile Include="CreateSeries\CreateSeriesTest.cs" />
+    <Compile Include="CrossReference\CrossReferenceStorageTest.cs" />
+    <Compile Include="DataLogger\DataLoggerTest.cs" />
+    <Compile Include="Design\CodeGenerationHelperTest.cs" />
+    <Compile Include="Design\EventPropertyDescriptorTest.cs" />
+    <Compile Include="EventMapper\EventMapperServiceTest.cs" />
+    <Compile Include="FileUtilities\FileSettingsToolTest.cs" />
+    <Compile Include="FontUsageManager\FontServiceTest.cs" />
+    <Compile Include="GarbageCollectionHelper.cs" />
+    <Compile Include="ImportExport\AlarmItemImportInfoTest.cs" />
+    <Compile Include="ImportExport\ListManagerTest.cs" />
+    <Compile Include="ImportExport\MessageItemImportInfoTest.cs" />
+    <Compile Include="Localization\LocalizationOptionsTest.cs" />
+    <Compile Include="MessageLibrary\MessageImportExportTest.cs" />
+    <Compile Include="MessageRecorder\MessageRecorderServiceWithMessagesTest.cs" />
+    <Compile Include="MessageRecorder\MessageRecorderServiceWithoutMessagesTest.cs" />
+    <Compile Include="MiniToolbar\MiniToolbarLogicTest.cs" />
+    <Compile Include="MultiLanguage\LanguageInfoTest.cs" />
+    <Compile Include="MultiLanguage\MultiLanguageExporterTest.cs" />
+    <Compile Include="MultiLanguage\MultiLanguageImportByKeyStrategyTest.cs" />
+    <Compile Include="MultiLanguage\MultiLanguageImporterTest.cs" />
+    <Compile Include="MultiLanguage\MultiLanguageImportStrategyBaseTest.cs" />
+    <Compile Include="MultiLanguage\MultiLanguageServerTest.cs" />
+    <Compile Include="MultiLanguage\MultiLanguageServiceIdeTest.cs" />
+    <Compile Include="MultiLanguage\MultiLanguageServiceCFTest.cs" />
+    <Compile Include="MultiLanguage\ResourceItemTest.cs" />
+    <Compile Include="MultiLanguage\TestStrategy.cs" />
+    <Compile Include="NavigationManager\NavigationModelTest.cs" />
+    <Compile Include="ObjectBrowser\ElementObjectTest.cs" />
+    <Compile Include="ObjectBrowser\ObjectBrowserServiceTest.cs" />
+    <Compile Include="OpcClient\BatchServiceTest.cs" />
+    <Compile Include="OpcClient\Bindings\TagBindingSourceDescriptionProviderWpfTest.cs" />
+    <Compile Include="OpcClient\DataItemLogicTest.cs" />
+    <Compile Include="OpcClient\DataItemTest.cs" />
+    <Compile Include="OpcClient\AddingDataItemToDataSourceTest.cs" />
+    <Compile Include="OpcClient\DataTriggerTest.cs" />
+    <Compile Include="OpcClient\GlobalControllerTest.cs" />
+    <Compile Include="OpcClient\GlobalDataItemTest.cs" />
+    <Compile Include="ImportExport\DataItemImportInfoTest.cs" />
+    <Compile Include="OpcClient\PollGroupTest.cs" />
+    <Compile Include="OpcClient\SystemDataItemTest.cs" />
+    <Compile Include="OpcUaClient\OpcUaNodeNameResolverTest.cs" />
+    <Compile Include="OpcClient\VariantValueSerializationTest.cs" />
+    <Compile Include="OptionsManager\IDEOptionsServiceTest.cs" />
+    <Compile Include="OptionsManager\OptionsToolTest.cs" />
+    <Compile Include="OptionsManager\TestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OptionsManager\TestForm.Designer.cs">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Printer\PrinterDeviceTest.cs" />
+    <Compile Include="Printer\PrinterTest.cs" />
+    <Compile Include="ProjectManager\DesignerProjectItemTest.cs" />
+    <Compile Include="ProjectManager\FallbackPathLookupIndexGetObjectTest.cs" />
+    <Compile Include="ProjectManager\FallbackPathLookupIndexTest.cs" />
+    <Compile Include="ProjectManager\GroupProjectItemTest.cs" />
+    <Compile Include="ProjectManager\LoadOnDemand\CombinationUnloadStrategyTest.cs" />
+    <Compile Include="RegistryAccess\MRUListTest.cs" />
+    <Compile Include="ProjectManager\ProjectFactoryTest.cs" />
+    <Compile Include="ProjectManager\ProjectItemFactoryTest.cs" />
+    <Compile Include="ProjectManager\ProjectItemTest.cs" />
+    <Compile Include="ProjectManager\ProjectManagerCommandsTest.cs" />
+    <Compile Include="ProjectManager\ProjectTest.cs" />
+    <Compile Include="ProjectManager\TestDesigner.cs" />
+    <Compile Include="SdCardCeServiceTest\SdCardServiceTest.cs" />
+    <Compile Include="Security\SecurityDesignerHelperTest.cs" />
+    <Compile Include="Security\PasswordValidatorTest.cs" />
+    <Compile Include="Serialization\Converters\AddScreenCacheDefaultToProjectFileConverterTest.cs" />
+    <Compile Include="Serialization\Converters\PopupScreenIsNotCacheableConverterTest.cs" />
+    <Compile Include="Serialization\Converters\RemoveExtendedDemoTimeFeatureConverterTest.cs" />
+    <Compile Include="Serialization\Converters\Script\ScriptChanges230Test.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\Changes230NoChanges.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\Changes230WithChanges.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\Changes230WithChangesValidate.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\TagsValueChanged240Validate.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\TagsValueChangedOnlyPartial240.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\TagsValueChangedOnlyPartial240Validate.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\HintNamespaces.script.cs" />
+    <Compile Include="Serialization\Converters\Script\ScriptConversionInfoTest.cs" />
+    <Compile Include="Serialization\Converters\Script\ScriptConversionRegexTest.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\Namespaces.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\NamespacesValidate.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\Screen3CustomRulesValidate.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\Screen3CustomRules.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\TagsPredicate240.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\TagsPredicate240Validate.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\ReplaceUsing.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\ReplaceUsingValidate.script.cs" />
+    <Compile Include="Serialization\Converters\Script\ScriptSamples\ScriptFiles.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ScriptFiles.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Serialization\Converters\XamlActionHelperTest.cs" />
+    <Compile Include="Serialization\Converters\XamlCircularMeterRemoveMinMaxDynamicsConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlDisparateBackupActionsConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlGenerateReportActionConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlRemoveRecipeActionParameterConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlTrendViewerTimeScaleConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XmlAuditTrailDatabaseBackupActionConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XmlAuditTrailWithNewDefaultSettingForCyclicLoggingConverterTest.cs" />
+    <Compile Include="Serialization\Converters\RemoveJastramNeedleFeatureRequirementConverterTest.cs" />
+    <Compile Include="Serialization\Converters\SetSqLiteStorageProviderConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlSchedulerDatabaseActionConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XmlConverterVersionImmutabilityTest.cs" />
+    <Compile Include="Serialization\Converters\XmlDisparateBackupActionsConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XmlGenerateReportActionTagConverterTest.cs" />
+    <Compile Include="Storage\StorageSettingsViewModelPropertyPageTest.cs" />
+    <Compile Include="Tag\TagUsageValidatorTest.cs" />
+    <Compile Include="Terminal\TerminalManagerTest.cs" />
+    <Compile Include="Terminal\TerminalTest.cs" />
+    <Compile Include="Transfer\Target\SocketServer.cs" />
+    <Compile Include="TrendViewer\TrendViewerValidatorTest.cs" />
+    <Compile Include="TypeList\TypeListServiceTest.cs" />
+    <Compile Include="TypeReference\TypeReferenceManagerTest.cs" />
+    <Compile Include="UpdateManager\UpdateManagerTest.cs" />
+    <Compile Include="UpdateManager\UpdateSoftwareDialogViewModelTest.cs" />
+    <Compile Include="VncServer\VncMonitorServiceTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyGrid\ObjectPropertyServiceTest.cs" />
+    <Compile Include="Registration\KeyValidatorTest.cs" />
+    <Compile Include="Reporting\Generating\GdiManualTest.cs" />
+    <Compile Include="Reporting\Generating\SerialManualTest.cs" />
+    <Compile Include="Reporting\ReportHandlingCFTest.cs" />
+    <Compile Include="Reporting\ReportItemsTest.cs" />
+    <Compile Include="Reporting\ReportsTest.cs" />
+    <Compile Include="Reporting\ReportTest.cs" />
+    <Compile Include="Reporting\Generating\ExcelToFlowDocumentConverterTest.cs" />
+    <Compile Include="RibbonManager\GotoDefaultRibbonStrategyTest.cs" />
+    <Compile Include="RibbonManager\RibbonStrategyBaseTest.cs" />
+    <Compile Include="RibbonManager\SimpleRibbonStrategyTest.cs" />
+    <Compile Include="RibbonManager\RibbonContentSelectionChangesTest.cs" />
+    <Compile Include="Run\RunServiceTest.cs" />
+    <Compile Include="Run\RunToolTest.cs" />
+    <Compile Include="Scheduler\SchedulerJobTest.cs" />
+    <Compile Include="Scheduler\SchedulerTest.cs" />
+    <Compile Include="Recipe\RecipeItemTest.cs" />
+    <Compile Include="Recipe\RecipeTest.cs" />
+    <Compile Include="Screen\Bindings\LocalPropertyBindingSourceDescriptionProviderWpfTest.cs" />
+    <Compile Include="Screen\CrossReference\AliasCrossReferenceFacadeTests.cs" />
+    <Compile Include="Screen\CrossReference\AliasCrossReferenceServiceBuilderTest.cs" />
+    <Compile Include="Screen\CrossReference\AliasInstanceRenamerTests.cs" />
+    <Compile Include="Screen\CrossReference\AliasDefinitionRenamerTests.cs" />
+    <Compile Include="Screen\CrossReference\AliasToDataItemReferenceUpdaterTests.cs" />
+    <Compile Include="Screen\NavigationStackManagerTest.cs" />
+    <Compile Include="Screen\PrintScreenServiceTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Input\KeyCommandInvokerTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Input\ScreenEditorCommandsTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Layout\AdornedElementResizerTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Layout\AdornedLineResizerTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Layout\ElementDrawerTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Layout\LayoutObjectAdapterForViewboxTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Layout\LayoutObjectAdapterLineTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Layout\LayoutObjectAdapterPictureTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Layout\LayoutObjectAdapterPolylineTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Layout\LayoutObjectAdapterTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Layout\LayoutObjectAdapterWithDynamicsMoveTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Layout\LineDrawerTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Layout\ZIndexManagerTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Properties\Resources.Designer.cs" />
+    <Compile Include="Screen\ScreenEditor\Properties\Settings.Designer.cs" />
+    <Compile Include="Screen\ScreenEditor\Snap\NoGridStategyTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Snap\SnapGridStategyTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Snap\SnapLineProviderTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Snap\SnapLineStategyTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Snap\SnapLineTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Snap\SnapManagerTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Tools\FormatPainterToolTest.cs" />
+    <Compile Include="Screen\ScreenEditor\Undo\UndoUnitTest.cs" />
+    <Compile Include="Screen\ScreenIDServiceTest.cs" />
+    <Compile Include="Screen\ScreenIDXmlFileReaderTest.cs" />
+    <Compile Include="ScriptEditor\CSharpScriptGeneratorTest.cs" />
+    <Compile Include="ScriptEditor\ScriptEventServiceTest.cs" />
+    <Compile Include="Security\PasswordComplexityTest.cs" />
+    <Compile Include="Security\PasswordTextBoxLogicTest.cs" />
+    <Compile Include="Security\SecurityGroupTest.cs" />
+    <Compile Include="Security\SecurityManagerTest.cs" />
+    <Compile Include="Security\SecurityManagerToolCFTest.cs" />
+    <Compile Include="Security\SecurityManagerToolFXTest.cs" />
+    <Compile Include="Security\SecurityManagerToolTest.cs">
+    </Compile>
+    <Compile Include="Security\SecurityManagerToolTestBase.cs" />
+    <Compile Include="Security\SecurityUserSerializerTest.cs" />
+    <Compile Include="Serialization\Converters\RemoveMacroExtensionsCFReferencedAssemblyConverterTest.cs" />
+    <Resource Include="Serialization\Converters\Samples\AuditTrailWithCyclicLoggingTrue.xml" />
+    <Resource Include="Serialization\Converters\Samples\AuditTrailWithNoCyclicLoggingAttribute.xml" />
+    <Resource Include="Serialization\Converters\Samples\PopupCacheSampleScreens.xml">
+      <SubType>Designer</SubType>
+    </Resource>
+    <Resource Include="Serialization\Converters\Samples\AlarmServerWith240Actions.xml" />
+    <Content Include="Serialization\Converters\Samples\CircularMeterDynamicsConverter\CEProject.xml" />
+    <Content Include="Serialization\Converters\Samples\CircularMeterDynamicsConverter\PCProject.xml" />
+    <Content Include="Serialization\Converters\Samples\CircularMeterDynamicsConverter\ScreenWithOneCircularMeterAndNoDynamicsAtAll.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Serialization\Converters\Samples\CircularMeterDynamicsConverter\ScreenWithOneCircularMeterAndOnlyGeneralDynamics.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Serialization\Converters\Samples\CircularMeterDynamicsConverter\ScreenWithTwoCircularMeterAndWithMinMaxDynamics.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Serialization\Converters\Samples\ProjectWith4000TagsFeatures.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Compile Include="Serialization\Converters\Script\ScriptRegexParserTest.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\Screen2.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\Screen2Validate.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\SimpleScreen1InnerUsing.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\NoChangesScreen.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\SimpleScreen1InnerUsingValidate.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\Screen1.script.cs" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\Screen1Validate.script.cs" />
+    <Compile Include="Serialization\Converters\SecurityManagerNewVisibilityDefaultSettingConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlAlarmServerMaxNumberOfAlarmsConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlDatabaseExportActionFileExceededOptionsXamlConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlDatabaseExportActionMillisecondXamlConverterTest.cs" />
+    <Compile Include="Serialization\Converters\AddAndUpdateProjectGuidConverterTest.cs" />
+    <Compile Include="Serialization\Converters\AddParentScreenToProjectFileTest.cs" />
+    <Compile Include="Serialization\Converters\XamlDataloggerMaxNumberOfLogItemsConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlVisibilityDynamicsConverterFixTest.cs" />
+    <Compile Include="Serialization\Converters\Samples\FileResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FileResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Serialization\Converters\XamlIsEnabledFalseConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlVisibilityHiddenConverterTest.cs" />
+    <Compile Include="Serialization\Converters\ScreenImageSizeConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlLabelMultiTextConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlRemoveNonBoundLabelValueConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XmlLogItemsBindingDirectionConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlMoveExpressionNameOnCurvesConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlVeryOldTrendsConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlTrendToTrendViewerAndDataloggerConverterTest.cs" />
+    <Compile Include="Serialization\Converters\SecurityGroupsInScreenWindowConverterTest.cs" />
+    <Compile Include="Serialization\Converters\SetAnalogForcedConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlBevelBitmapEffectConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlBevelRemoveEmptyBitmapEffectPropertiesTest.cs" />
+    <Compile Include="Serialization\Converters\XamlBindingsConverterKeyConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlCanvasBackgroundToWindowBackgroundConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlEventHandlerInfoConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlNeoElementCanvasConverterTest.cs" />
+    <Compile Include="Serialization\Converters\VirtualKeyboardConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlActionsConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlAnalogNumericConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlButtonImageAlignmentConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlConverterBaseTest.cs" />
+    <Compile Include="Serialization\Converters\XamlMeterConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XamlMultiSymbolConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XmlArrayTagsConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XmlConverterManagerTest.cs" />
+    <Compile Include="Serialization\Converters\XmlHardCodedKeyboardLayoutSIPConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XmlPrinterDeviceSettingsSplitConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XmlProjectCurrentPlatformVersionConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XmlRemove4000TagsFeaturesConverterTest.cs" />
+    <Compile Include="Serialization\Converters\XmlRemoveTableNameInDataLoggersTest.cs" />
+    <Compile Include="Serialization\Converters\XmlTagActionDatabaseNameConverterTest.cs" />
+    <Compile Include="Serialization\OldTypeObjectSerializerTest.cs" />
+    <Compile Include="Serialization\PropertyDescriptorCollectionExtensionTest.cs" />
+    <Compile Include="Selection\SelectionServicesTest.cs" />
+    <Compile Include="SMS\SMSTest.cs" />
+    <Compile Include="SplashService\SplashServiceTests.cs" />
+    <Compile Include="Storage\StorageTableVersionComparerTests.cs" />
+    <Compile Include="StructuredTags\EntitySymmetryTest.cs" />
+    <Compile Include="StructuredTags\StructuredTagRootRenamerTest.cs" />
+    <Compile Include="StructuredTags\StructuredTagServiceTests.cs" />
+    <Compile Include="StructuredTags\StructuredTagsViewerFacadeTest.cs" />
+    <Compile Include="StructuredTags\CountStructuredTagsTests.cs" />
+    <Compile Include="StructuredTags\OpcUaNodeIdAddressDescriptorTests.cs" />
+    <Compile Include="StructuredTags\StructuredTypesViewerFacadeTests.cs" />
+    <Compile Include="StructuredTags\TypeNameValidatorTests.cs" />
+    <Compile Include="StructuredTags\StructuredTypeServiceTests.cs" />
+    <Compile Include="StructuredTags\Common\StructuredTagsTestBase.cs" />
+    <Compile Include="Symbol\SymbolInfoFactoryTest.cs" />
+    <Compile Include="Symbol\SymbolServiceIdeTest.cs" />
+    <Compile Include="SystemTag\SystemDataItemConverterTest.cs" />
+    <Compile Include="SystemTag\SystemTagServiceCFTest.cs" />
+    <Compile Include="SystemTag\SystemTagServiceIdeTest.cs" />
+    <Compile Include="TestHelperExtensions.cs" />
+    <Compile Include="TestHelpers\Fixtures\SystemTagInfoFixtures.cs" />
+    <Compile Include="TextID\TextIDValidatorTest.cs" />
+    <Compile Include="Toolbox\Model\ControlBrowserTest.cs" />
+    <Compile Include="ToolManager\ToolViewSiteTest.cs" />
+    <Compile Include="Transfer\Target\CommandParserTest.cs" />
+    <Compile Include="Transfer\Target\CommandRecievedEventArgs.cs" />
+    <Compile Include="Transfer\Target\CommunicationServerEmulator.cs" />
+    <Compile Include="Transfer\Target\ReplyEventArgs.cs" />
+    <Compile Include="Transfer\Target\TargetEmulator.cs" />
+    <Compile Include="TrendViewer\CurveDataCacheTest.cs" />
+    <Compile Include="TrendViewer\TrendDataServiceCFTest.cs" />
+    <Compile Include="TrendViewer\CurveDataCacheManagerTest.cs" />
+    <Compile Include="TrendViewer\TrendViewerToolIdeTest.cs" />
+    <Compile Include="TypeNames\TestClassAvailablity.cs" />
+    <Compile Include="UndoManager\ParentUndoUnitTest.cs" />
+    <Compile Include="UndoManager\SizeConstrainedStackTest.cs" />
+    <Compile Include="UndoManager\UndoManagerTest.cs" />
+    <Compile Include="UndoManager\UndoServiceTest.cs" />
+    <Compile Include="UndoManager\UndoUnitWithRedo.cs" />
+    <Compile Include="WebServer\JavascriptHelper\NQUnit.cs" />
+    <Compile Include="WebServer\JavascriptHelper\NUnitQUnit.cs" />
+    <Compile Include="WebServer\JavascriptHelper\QUnitParser.cs" />
+    <Compile Include="WebServer\JavascriptHelper\QUnitParserHelpers.cs" />
+    <Compile Include="WebServer\JavascriptHelper\QUnitTest.cs" />
+    <Compile Include="WebServer\WebFramework\Authentication\Forms\FormsAuthenticationTest.cs" />
+    <Compile Include="WebServer\WebFramework\Authentication\Forms\LoginHandlerTest.cs" />
+    <Compile Include="WebServer\WebFramework\Authentication\Forms\LogoutHandlerTest.cs" />
+    <Compile Include="WebServer\WebFramework\Authentication\SessionManagerTest.cs" />
+    <Compile Include="WebServer\WebFramework\Authentication\SessionTest.cs" />
+    <Compile Include="WebServer\WebFramework\Codecs\ErrorPageWriterTest.cs" />
+    <Compile Include="WebServer\WebFramework\Codecs\JsonCodecTest.cs" />
+    <Compile Include="WebServer\WebFramework\Codecs\WwwUrlFormReaderTest.cs" />
+    <Compile Include="WebServer\WebFramework\IRequestExtensionsTest.cs" />
+    <Compile Include="WebServer\WebFramework\Codecs\MediaWriterSelectorTest.cs" />
+    <Compile Include="WebServer\WebFramework\OperationModel\InputMemberTest.cs" />
+    <Compile Include="WebServer\WebFramework\OperationModel\MethodNameFilterTest.cs" />
+    <Compile Include="WebServer\WebFramework\OperationModel\OperationCreatorTest.cs" />
+    <Compile Include="WebServer\WebFramework\OperationModel\OperationTest.cs" />
+    <Compile Include="WebServer\WebFramework\OperationModel\UriParametersFilterTest.cs" />
+    <Compile Include="WebServer\WebFramework\Pipeline\Contributor\CommunicationContextFixture.cs" />
+    <Compile Include="WebServer\WebFramework\Pipeline\Contributor\InputMemberFixture.cs" />
+    <Compile Include="WebServer\WebFramework\Pipeline\Contributor\OperationCandidateGeneratorTest.cs" />
+    <Compile Include="WebServer\WebFramework\Pipeline\Contributor\OperationFixture.cs" />
+    <Compile Include="WebServer\WebFramework\Pipeline\Contributor\OperationInvokerTest.cs" />
+    <Compile Include="WebServer\WebFramework\Pipeline\Contributor\RequestDecoderTest.cs" />
+    <Compile Include="WebServer\WebFramework\Pipeline\Contributor\ResponseCoderTest.cs" />
+    <Compile Include="WebServer\WebFramework\Pipeline\Contributor\SessionResolverTest.cs" />
+    <Compile Include="WebServer\WebFramework\Pipeline\Contributor\UserAuthenticationTest.cs" />
+    <Compile Include="WebServer\WebFramework\Pipeline\PipelineRunnerTest.cs" />
+    <Compile Include="WebServer\WebFramework\Pipeline\ReflectionHelperTest.cs" />
+    <Compile Include="WebServer\WebFramework\Pipeline\Contributor\RouteResolverTest.cs" />
+    <Compile Include="WebServer\Website\Assets\BrowserApiTest.cs" />
+    <Compile Include="WebServer\WebFramework\Codecs\ApplicationOctetStreamCodecTest.cs" />
+    <Compile Include="WebServer\WebFramework\UriTemplateMatcherTest.cs" />
+    <Compile Include="WebServer\Website\JsonWithTagOptimizationCodecTest.cs" />
+    <Compile Include="WebServer\Website\Shared\EmbeddedFileReaderTest.cs" />
+    <Compile Include="WebServer\Website\Shared\FileReaderTest.cs" />
+    <Compile Include="WebServer\Website\Tags\BatchTagsHandlerTest.cs" />
+    <Compile Include="WebServer\Website\Tags\CachedDataItemServiceTest.cs" />
+    <Compile Include="WebServer\Website\Tags\TagsHandlerTest.cs" />
+    <Compile Include="Wizards\CreateNewProjectWizadTest\BrandInfoTest.cs" />
+    <Compile Include="Wizards\TerminalComparerTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Attributes\AttributesCF\AttributesCF.csproj">
+      <Project>{B5C40A38-F695-4EC8-BA8B-47EACAA97ED0}</Project>
+      <Name>AttributesCF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Attributes\Attributes\Attributes.csproj">
+      <Project>{27A0554A-AC7D-4FC0-B140-3C458947C486}</Project>
+      <Name>Attributes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\CommonCF\CommonCF.csproj">
+      <Project>{86D35348-3E3B-40E7-8AF2-C0B537BDCAA9}</Project>
+      <Name>CommonCF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\CommonIde\CommonIde.csproj">
+      <Project>{85F7588F-D7C2-4152-A8F3-3C1961CEB975}</Project>
+      <Name>CommonIde</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Common\Common.csproj">
+      <Project>{4A3C1C33-9D29-4AB8-BB96-0B81D24453AB}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Controls\ControlsCF\ControlsCF.csproj">
+      <Project>{72912BC1-2E9D-40B4-8173-1C31F4D74A4F}</Project>
+      <Name>ControlsCF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Controls\ControlsIde\ControlsIde.csproj">
+      <Project>{bb038f4e-8d28-438e-94f2-06687e64de02}</Project>
+      <Name>ControlsIde</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Controls\Controls\Controls.csproj">
+      <Project>{D3337796-50E6-4506-97AE-31EA3185EE4A}</Project>
+      <Name>Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Interfaces\InterfacesCF\InterfacesCF.csproj">
+      <Project>{c0123242-c353-44e2-b2ef-8ac1713e5dc6}</Project>
+      <Name>InterfacesCF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Interfaces\InterfacesIde\InterfacesIde.csproj">
+      <Project>{538a33e0-747a-4ceb-bf4c-435c582c68c5}</Project>
+      <Name>InterfacesIde</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Interfaces\Interfaces\Interfaces.csproj">
+      <Project>{8c0345e1-eef0-4ffc-81e8-e601d6666bf7}</Project>
+      <Name>Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Resources\ResourcesCF\ResourcesCF.csproj">
+      <Project>{6FF2C21A-5A31-439B-8933-16D045374ED4}</Project>
+      <Name>ResourcesCF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Resources\ResourcesIde\ResourcesIde.csproj">
+      <Project>{76910A0E-5D47-414D-B9AB-9EDD74D5D4AA}</Project>
+      <Name>ResourcesIde</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Test\TestUtilities\TestUtilities.csproj">
+      <Project>{643f4799-56a0-4fed-9d6f-cdcd68a425d1}</Project>
+      <Name>TestUtilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ThirdPartyExtensions\RhinoMocks.Extensions\RhinoMocks.Extensions.csproj">
+      <Project>{31AD6D97-F9E7-4CE8-B9AD-729C4E8D25BE}</Project>
+      <Name>RhinoMocks.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ToolsCF\ToolsCF.csproj">
+      <Project>{F6CDB96A-8C6A-472D-A603-2DB47529A612}</Project>
+      <Name>ToolsCF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ToolsIde\ToolsIde.csproj">
+      <Project>{0FCA8999-23A3-419D-952F-720929141D86}</Project>
+      <Name>ToolsIde</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools\Tools.csproj">
+      <Project>{C150CB77-2E28-4206-BC23-487101B492FF}</Project>
+      <Name>Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TransferClientTool\TransferClientToolsIde.csproj">
+      <Project>{6bea514f-ccfe-4fc0-8761-1f80a147e5ce}</Project>
+      <Name>TransferClientToolsIde</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CrossReference\Resources\FileResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>FileResources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OptionsManager\TestForm.resx">
+      <DependentUpon>TestForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Reporting\Generating\ExampleReports\2sheet5x5.xls">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\Generating\ExampleReports\landscapeSheetWithHPageBreak.xls" />
+    <EmbeddedResource Include="Reporting\Generating\ExampleReports\ColumnWidth.xls">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\Generating\ExampleReports\ReportExample1.xls" />
+    <EmbeddedResource Include="Reporting\Generating\ExampleReports\ReportExample2.xls" />
+    <EmbeddedResource Include="Reporting\Generating\ExampleReports\ReportExample3.xls" />
+    <EmbeddedResource Include="Reporting\Generating\ExampleReports\ReportExample4.xls" />
+    <EmbeddedResource Include="Reporting\Generating\ExampleReports\ReportExample5.xls" />
+    <EmbeddedResource Include="Reporting\Generating\ExampleReports\ReportExample6.xls" />
+    <EmbeddedResource Include="Reporting\Generating\ExampleReports\ReportForSerialDevice.xls">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\Generating\ExampleReports\UnicodeExample.xls" />
+    <Content Include="CrossReference\Resources\CrossReferencesNoTextLibraryCategory.xml" />
+    <None Include="..\..\.nuget\NuGet.Config">
+      <Link>NuGet.Config</Link>
+    </None>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Screen\ScreenEditor\Properties\Settings.settings" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\FileResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>FileResources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Serialization\Converters\Samples\TrendToTrendViewer\ScreenRefWithTrend.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\TagsValueChanged240.script.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Run\Testbat.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\ToolsCF\WebServer\Website\Assets\iX.js">
+      <Link>WebServer\Website\Assets\iX.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Serialization\Converters\Samples\ProjectWithScreen.xml" />
+    <Resource Include="Serialization\Converters\Samples\ScreenWithBoundAndUnBoundLabelValues.xml" />
+    <Resource Include="OpcUa\OpcUaTestData.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\ScreenWithVisibilityHiddenIsEnabledFalseNoDynamicsValues.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Serialization\Converters\Samples\Scheduler.xml" />
+    <None Include="Serialization\Converters\Samples\SecurityDefaultVisibilityOnAccessDenied.xml" />
+    <None Include="Serialization\Converters\Samples\SecurityDisabledVisibilityOnAccessDenied.xml" />
+    <Resource Include="Serialization\Converters\Samples\DataLoggerWithTableName.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\ProjectWithoutCurrentPlatformVersion.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\AlarmServerWithMinimumItemsToSave.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\AlarmServerWithoutMinimumItemsToSave.xml" />
+    <None Include="Serialization\Converters\Samples\ConvertedWithMacroAsyOnly.xml" />
+    <None Include="Serialization\Converters\Samples\ConvertedWithMultipleAsy.xml" />
+    <None Include="Serialization\Converters\Samples\ConvertedWithoutMacroAsy.xml" />
+    <None Include="Serialization\Converters\Samples\UnconvertedWithMacroAsyOnly.xml" />
+    <None Include="Serialization\Converters\Samples\UnconvertedWithMultipleAsy.xml" />
+    <None Include="Serialization\Converters\Samples\UnconvertedWithNoRefAsy.xml" />
+    <None Include="Serialization\Converters\Samples\UnconvertedWithoutMacroAsy.xml" />
+    <Resource Include="Serialization\Converters\Samples\DataLoggerMinItemsToSaveSample.xml" />
+    <Resource Include="Serialization\Converters\Samples\TagActionDatabasNameSample.xml" />
+    <Resource Include="Serialization\Converters\Samples\ProjectWithSqlCeIn220.xml" />
+    <Resource Include="Serialization\Converters\Samples\ProjectWithSqLiteIn220.xml" />
+    <None Include="Serialization\Converters\Samples\Scheduler_DBActions_210SP3.xml" />
+    <None Include="Serialization\Converters\Samples\Scheduler_DBActions_210SP3To220.xml" />
+    <Resource Include="Serialization\Converters\Samples\ProjectWith4000TagsFeaturesInChinese.xml" />
+    <Resource Include="Serialization\Converters\Samples\ProjectWith4000TagsFeaturesWithNewPTxFName.xml" />
+    <Resource Include="Serialization\Converters\Samples\ProjectWith4000TagsFeaturesWithNewPTxFNameInChinese.xml" />
+    <Resource Include="Serialization\Converters\Samples\ProjectWith4000TagsFeaturesWithOldPT5FNameInChineseAndSpaceAtBeginning.xml" />
+    <None Include="Serialization\Converters\Samples\ProjectWithJastramFeatureEnabled.xml" />
+    <None Include="Serialization\Converters\Samples\ProjectWithNoFeatureEanbled.xml" />
+    <None Include="Serialization\Converters\Samples\ProjectWithoutJastramFeatureEnabled.xml" />
+    <Resource Include="Serialization\Converters\Samples\ProjectWithExtendedDemoTimeFeatureEnabled.xml" />
+    <Resource Include="Serialization\Converters\Samples\ProjectWithoutExtendedDemoTimeFeatureEnabled.xml" />
+    <None Include="Serialization\Converters\Samples\TagsNeoWithDbExport.xml" />
+    <None Include="Serialization\Converters\Samples\ScreenXamlWithDbExport.xml" />
+    <None Include="Serialization\Converters\Samples\UnconvertedGenerateReportAction.xml" />
+    <None Include="Serialization\Converters\Samples\UnconvertedGenerateReportMultiAction.xml" />
+    <None Include="Serialization\Converters\Samples\UnconvertedGenerateReportActionTagsWithoutParameters.xml" />
+    <EmbeddedResource Include="TypeReference\TypeReferenceManagerTestWithNoAttribute.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TypeReference\TypeReferenceManagerTestWithOneAttribute.xml" />
+    <EmbeddedResource Include="TypeReference\TypeReferenceManagerTestWithMultipleAttributes.xml" />
+    <None Include="Serialization\Converters\Samples\XmlDesignerBackupActionsConverterSample.neo" />
+    <None Include="Serialization\Converters\Samples\XmlAuditTrailDatabaseBackupActionConverterSample.neo" />
+    <Content Include="WebServer\Website\Assets\SetterElementTests.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebServer\Website\Assets\GetterElementTests.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebServer\Website\Assets\TagTests.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebServer\Website\Assets\TestFramework\sinon-qunit-0.8.0.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebServer\Website\Assets\TestFramework\jquery-1.7.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebServer\Website\Assets\TestFramework\qunit.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebServer\Website\Assets\TestFramework\qunit.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebServer\Website\Assets\TestFramework\sinon-1.2.0.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebServer\Website\Assets\TestFramework\sinon-ie-1.2.0.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebServer\Website\Assets\TestRunner.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Serialization\Converters\Script\ScriptSamples\ScriptFiles.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>ScriptFiles.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transfer\Target\TargetInformation\PCClean.xml" />
+    <EmbeddedResource Include="Transfer\Target\TargetInformation\PCWithProject.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transfer\Target\TargetInformation\T150Clean.xml" />
+    <EmbeddedResource Include="Transfer\Target\TargetInformation\T150WithProject.xml" />
+    <EmbeddedResource Include="Transfer\Target\TargetInformation\TA70Clean.xml" />
+    <EmbeddedResource Include="Transfer\Target\TargetInformation\TA70WithProject.xml" />
+    <EmbeddedResource Include="Transfer\Target\TargetPrepareInfo\T150WithProject.xml" />
+    <EmbeddedResource Include="TrendViewer\TestFiles\TrendDataConfigTest.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screen\ScreenEditor\Properties\Resources.resx" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\ScreenWithMultiSymbolSample.xml" />
+    <Content Include="Serialization\Converters\Samples\AlarmServerWithActionsSample.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <EmbeddedResource Include="Serialization\Converters\Samples\ScreenWithActionsSample.xml">
+      <SubType>
+      </SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Serialization\Converters\Samples\ScreenWithAnalogNumericOutOfRangeColorSample.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\ScreenWithButtonSample.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Serialization\Converters\Samples\CircularMeterWithMinimumAndMaximumNotDefaultValues.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\ProjectWithKeyboardDisabled.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\ProjectWithMSSoftwareInputPanel.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\ProjectWithOnScreenKeyboard.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\ScreenWithNeoElementCanvasSample.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\ScreenWithEventHandlerInfoSample.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\ProjectWithMSSoftwareInputPanelAsKeyboardLayout.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\MultipleLanguagesWithMSSoftwareInputPanel.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\XamlBevelBitmapEffectSample.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Serialization\Converters\Samples\ScreenWithScreenSecurity.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\ScreenWithUnsetBackground.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\ScreenWithSetBackground.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\ScreenWithUnsetBackgroundGradientBrush.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\ScreenElementsWithWrongConverterKey.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Serialization\Converters\Samples\ProjectWithHardCodedChineseInputPanelAsKeyboardLayout.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\MultipleLanguagesWithHardCodedChineseInputPanelAsKeyboardLayout.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\TrendToTrendViewer\DataLoggerWithValueAsLogItemDataBindingPropertyName.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\TrendToTrendViewer\ProjectWithTrendDataLoggers.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\TrendToTrendViewer\VeryOldProjectWithDataLogger.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\ProjectWithOldDataLoggerForTrendSample.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\DesignerWithOldDataLoggerForTrendSample.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\TrendToTrendViewer\ScreenWithTrendViewerCurvesAndValueBindings.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\TagsWithoutArrayTags.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\TagsWithMultiControllerWithoutArrayTags.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\PrinterDeviceWithAlarmDistributorSettings.xml" />
+    <EmbeddedResource Include="Serialization\Converters\Samples\ProjectWithoutDeviceSection.xml" />
+    <EmbeddedResource Include="Screen\ScreenIDsDummy.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screen\ScreenIDsWithErrosDummy.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Serialization\Converters\Samples\ScreenWithMultiTextLabel.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="BeDataSource2">
+      <Guid>{1D363E47-8466-11D7-BB97-0002A555A627}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Serialization\TestFiles\" />
+    <Folder Include="WebServer\Website\File\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Serialization\Converters\Samples\TrendToTrendViewer\ScreenWithTwoTrendsAndTrendActions.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Serialization\Converters\Samples\TrendToTrendViewer\VeryOldScreenWithTrend.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Serialization\Converters\Samples\RecipeActionsWithNullParametersTestAfter.xml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Serialization\Converters\Samples\RecipeActionsWithNullParametersTestBefore.xml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Serialization\Converters\Samples\ScreenWithOldBackupActions.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\..\ThirdParty\NSubstitute.Analyzers.CSharp.1.0.13\analyzers\dotnet\cs\NSubstitute.Analyzers.CSharp.dll" />
+    <Analyzer Include="..\..\ThirdParty\NSubstitute.Analyzers.CSharp.1.0.13\analyzers\dotnet\cs\NSubstitute.Analyzers.Shared.dll" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\ThirdParty\NUnit.3.13.2\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\ThirdParty\NUnit.3.13.2\build\NUnit.props'))" />
+    <Error Condition="!Exists('..\..\ThirdParty\NUnit3TestAdapter.4.0.0-beta.2\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\ThirdParty\NUnit3TestAdapter.4.0.0-beta.2\build\net35\NUnit3TestAdapter.props'))" />
+  </Target>
+</Project>

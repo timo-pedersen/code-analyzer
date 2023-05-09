@@ -1,0 +1,5 @@
+#define BUILD_NUMBER 65534.1
+#define BUILD_NO_STR "65534.1"
+#define RELEASE 1
+#define VERSION 2,50
+#define VERSION_STRING "2.50"

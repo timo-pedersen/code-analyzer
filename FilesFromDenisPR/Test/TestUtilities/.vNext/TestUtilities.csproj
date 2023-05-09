@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0-windows;net48</TargetFrameworks>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWpf>true</UseWpf>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;VNEXT_TARGET;VNEXT_TARGET_NEEDS_REIMPLEMENTATION;VNEXT_TARGET_INCLUDED;VNEXT_TARGET_STRUCTURE_DIFFERENCE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;VNEXT_TARGET;VNEXT_TARGET_NEEDS_REIMPLEMENTATION;VNEXT_TARGET_INCLUDED;VNEXT_TARGET_STRUCTURE_DIFFERENCE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="obj\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <None Remove="obj\**" />
+
+    <Compile Remove="..\obj\**" />
+    <EmbeddedResource Remove="..\obj\**" />
+    <None Remove="..\obj\**" />
+    
+    <Compile Include="..\Brush\BrushValidator.cs" Link="Brush\BrushValidator.cs" />
+    <Compile Include="..\ControllerHelper.cs" Link="ControllerHelper.cs" />
+    <Compile Include="..\Extensions\System\ComponentModel\NotifyExpectation.cs" Link="Extensions\System\ComponentModel\NotifyExpectation.cs" />
+    <Compile Include="..\Extensions\System\ComponentModel\NotifyPropertyChangedExtensions.cs" Link="Extensions\System\ComponentModel\NotifyPropertyChangedExtensions.cs" />
+    <Compile Include="..\Extensions\System\ObjectExtensions.cs" Link="Extensions\System\ObjectExtensions.cs" />
+    <Compile Include="..\Printer\GdiPrinter\BitmapPrintingHelper.cs" Link="Printer\GdiPrinter\BitmapPrintingHelper.cs" />
+    <Compile Include="..\Printer\GdiPrinter\BitmapWrapperPC.cs" Link="Printer\GdiPrinter\BitmapWrapperPC.cs" />
+    <Compile Include="..\SelectSwedishTestingCulture.cs" />
+    <Compile Include="..\TestAttributes\NeoClearStaticStateActionAttribute.cs" Link="TestAttributes\NeoClearStaticStateActionAttribute.cs" />
+    <Compile Include="..\TestHelper.cs" />
+    <Compile Include="..\TestThreadHelper.cs" />
+    <Compile Include="..\Threading\InvokeDirectActionConsumer.cs" Link="Threading\InvokeDirectActionConsumer.cs" />
+    <Compile Include="..\Utilities\DependencyObjectPropertyBinderTests\MockObjects\DataItemProxyMock.cs" Link="Utilities\DependencyObjectPropertyBinderTests\MockObjects\DataItemProxyMock.cs" />
+    <Compile Include="..\Utilities\DependencyObjectPropertyBinderTests\MockObjects\DataItemProxyProviderMock.cs" Link="Utilities\DependencyObjectPropertyBinderTests\MockObjects\DataItemProxyProviderMock.cs" />
+    <Compile Include="..\Utilities\ElementCanvasHelper.cs" Link="Utilities\ElementCanvasHelper.cs" />
+    <Compile Include="..\Utilities\EventAsserter.cs" Link="Utilities\EventAsserter.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Core.Controls.Api" Version="3.1.0" />
+    <PackageReference Include="Core.TestUtilities" Version="3.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+    <PackageReference Include="NSubstitute" Version="4.2.2" />
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+    <PackageReference Include="coverlet.collector" Version="3.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\CommonCF\.vNext\CommonCF.csproj" />
+    <ProjectReference Include="..\..\..\Common\Common\.vNext\Common.csproj" />
+    <ProjectReference Include="..\..\..\Controls\ControlsCF\.vNext\ControlsCF.csproj" />
+    <ProjectReference Include="..\..\..\Controls\Controls\.vNext\Controls.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DataSourceInterop">
+      <HintPath>..\..\..\Interop\DataSource\BeDataSource2\Interop\DataSourceInterop.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

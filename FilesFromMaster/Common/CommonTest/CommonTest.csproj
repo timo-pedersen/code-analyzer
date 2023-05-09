@@ -1,0 +1,567 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <Import Project="..\..\ThirdParty\NUnit.3.13.2\build\NUnit.props" Condition="Exists('..\..\ThirdParty\NUnit.3.13.2\build\NUnit.props')" />
+  <Import Project="..\..\ThirdParty\NUnit3TestAdapter.4.3.1\build\net35\NUnit3TestAdapter.props" Condition="Exists('..\..\ThirdParty\NUnit3TestAdapter.4.3.1\build\net35\NUnit3TestAdapter.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{879C18EC-BC6F-46F9-8A7C-5C40BAE7DE1A}</ProjectGuid>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Neo.ApplicationFramework.Common</RootNamespace>
+    <AssemblyName>CommonTest</AssemblyName>
+    <!-- Most people will use Publish dialog in Visual Studio to increment this -->
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn />
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn />
+    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\Output\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <NoWarn>
+    </NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>..\..\Output\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ApiChange, Version=1.1.66.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ApiChange.1.1.66\lib\net48\ApiChange.exe</HintPath>
+    </Reference>
+    <Reference Include="ApiChange.Api, Version=1.1.66.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ApiChange.1.1.66\lib\net48\ApiChange.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CodeInSanityTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\CodeInSanityTest.1.0.0\lib\net48\CodeInSanityTest.dll</HintPath>
+    </Reference>
+    <Reference Include="Core.Api, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.3.0.99\lib\net48\Core.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="Core.Controls.Api, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.3.0.99\lib\net48\Core.Controls.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="Core.Controls.Engine, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.3.0.99\lib\net48\Core.Controls.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="Core.TestUtilities, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.TestUtilities.3.0.99\lib\net48\Core.TestUtilities.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreCF.Api, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.3.0.99\lib\net48\CoreCF.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreCF.Component.Api, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.3.0.99\lib\net48\CoreCF.Component.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreCF.Component.Engine, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.3.0.99\lib\net48\CoreCF.Component.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreCF.Controls.Api, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.3.0.99\lib\net48\CoreCF.Controls.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreCF.Engine, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.3.0.99\lib\net48\CoreCF.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreIde.Api, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.3.0.99\lib\net48\CoreIde.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreIde.Component.Api, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.3.0.99\lib\net48\CoreIde.Component.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreIde.Component.Engine, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.3.0.99\lib\net48\CoreIde.Component.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreIde.Controls.Api, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.3.0.99\lib\net48\CoreIde.Controls.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreIde.Controls.Engine, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.3.0.99\lib\net48\CoreIde.Controls.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreIde.Engine, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.ExecutionEngine.3.0.99\lib\net48\CoreIde.Engine.dll</HintPath>
+    </Reference>
+    <Reference Include="DataSourceInterop, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DriversDataSourceInterop.9.0.5\lib\DataSourceInterop.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="DotNetZip, Version=1.13.5.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DotNetZip.1.13.5\lib\net40\DotNetZip.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ApiChange.1.1.66\lib\net48\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ApiChange.1.1.66\lib\net48\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ApiChange.1.1.66\lib\net48\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ApiChange.1.1.66\lib\net48\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="NSubstitute, Version=4.2.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\NSubstitute.4.2.2\lib\net46\NSubstitute.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.13.2.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\NUnit.3.13.2\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Prism, Version=6.3.0.0, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\Prism.Core.6.3.0\lib\net45\Prism.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Prism.Wpf, Version=6.3.0.0, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\Prism.Wpf.6.3.0\lib\net45\Prism.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RibbonControlsLibrary, Version=4.0.0.11019, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\Microsoft Ribbon for WPF\RibbonControlsLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Storage.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\Storage.Api.1.0.0\lib\net35\Storage.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\Expression.Blend.Sdk.1.0.2\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="WPFToolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\WPFToolkit\WPFToolkit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Applications\NeoIDE\NeoIDE\Properties\SolutionInfo.cs">
+      <Link>Properties\SolutionInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Applications\NeoIDE\NeoIDE\Properties\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="Assertion\AssertTest.cs" />
+    <Compile Include="Behaviors\ExecuteCommandOnLostFocusBehaviorTest.cs" />
+    <Compile Include="Behaviors\ExecuteNotifiedCommandBehaviorTest.cs" />
+    <Compile Include="Behaviors\Formatters\NumberValidationBehaviorFormattingTest.cs" />
+    <Compile Include="Behaviors\NumberValidationBehaviorTest.cs" />
+    <Compile Include="Behaviors\SelectTextOnFocusBehaviorTest.cs" />
+    <Compile Include="Behaviors\StyleHandling\StyleBehaviorSetterTest.cs" />
+    <Compile Include="Behaviors\UndoOnEscapeBehaviorTest.cs" />
+    <Compile Include="Behaviors\UpdateBindingOnEnterBehaviorTest.cs" />
+    <Compile Include="Behaviors\UpdateBindingOnLostFocusBehaviorTest.cs" />
+    <Compile Include="Behaviors\WindowCloseBehaviorTest.cs" />
+    <Compile Include="Boundary\ComparerFactoryTest.cs" />
+    <Compile Include="Boundary\DecimalComparerTest.cs" />
+    <Compile Include="Boundary\DoubleComparerTest.cs" />
+    <Compile Include="Boundary\IntComparerTest.cs" />
+    <Compile Include="Configurations\ConfigurationsTest.cs" />
+    <Compile Include="Brand\BrandToolResourceDocumentationTest.cs" />
+    <Compile Include="Collections\ExtendedBindingListTest.cs" />
+    <Compile Include="Collections\FilteredListTests.cs" />
+    <Compile Include="Collections\OwnedListTests.cs" />
+    <Compile Include="Collections\StringComparableListTest.cs" />
+    <Compile Include="Collections\ThreadSafeQueueTests.cs" />
+    <Compile Include="Commands\AutoDelegateCommandTest.cs" />
+    <Compile Include="Commands\DelegateCommandTest.cs" />
+    <Compile Include="Commands\EventToCommandTest.cs" />
+    <Compile Include="Commands\ExecuteNotifiedCommandTest.cs" />
+    <Compile Include="Converters\BooleanAndConverterTests.cs" />
+    <Compile Include="Converters\BooleanToStretchConverterTest.cs" />
+    <Compile Include="Converters\DateTimeToStringWithDateTimePatternConverterTest.cs" />
+    <Compile Include="Converters\EnumDisplayNameConverterTest.cs" />
+    <Compile Include="Converters\InvertedBooleanToVisibilityConverterTest.cs" />
+    <Compile Include="Converters\InvertedNullToVisibilityConverterTest.cs" />
+    <Compile Include="Converters\StringLeftConverterTest.cs" />
+    <Compile Include="Converters\TimeSpanToSecondsStringValueConverterTest.cs" />
+    <Compile Include="Converters\VisibilityToBooleanConverterTest.cs" />
+    <Compile Include="Database\DBNullValidationTest.cs" />
+    <Compile Include="Data\ControlStub.cs" />
+    <Compile Include="Data\NotifyPropertyChangedHelperBaseTest.cs" />
+    <Compile Include="Data\NotifyPropertyChangedHelperTest.cs" />
+    <Compile Include="Data\PropertyConnectionCollectionTest.cs" />
+    <Compile Include="Data\PropertyConnectionTest.cs" />
+    <Compile Include="Data\DataItemProxyTest.cs" />
+    <Compile Include="Data\DynamicControlBindingsCollectionTest.cs" />
+    <Compile Include="Data\ObservableTest.cs" />
+    <Compile Include="Design\NameCreationServiceTest.cs" />
+    <Compile Include="Dynamics\MessageLibraryDynamicsConverterTest.cs" />
+    <Compile Include="EncodingsList\EncodingsListManagerTest.cs" />
+    <Compile Include="EnsureReferences.cs" />
+    <Compile Include="Extensions\System\ActionExtensionsTest.cs" />
+    <Compile Include="Extensions\System\Windows\Media\BrushExtensionsTest.cs" />
+    <Compile Include="Extensions\System\Linq\Expressions\ExpressionExtensionsTest.cs" />
+    <Compile Include="Extensions\System\ICloneableExtensionsTest.cs" />
+    <Compile Include="Extensions\System\Collections\Generic\ICollectionExtensionsTest.cs" />
+    <Compile Include="Extensions\System\Collections\Generic\IEnumerableExtensionsTest.cs" />
+    <Compile Include="Extensions\System\StringExtensionsTest.cs" />
+    <Compile Include="Fakes\BindableDummyObject.cs" />
+    <Compile Include="FileLogic\FilePathLogicCFTest.cs" />
+    <Compile Include="Graphics\AnimatedGifHelperTest.cs" />
+    <Compile Include="HarrisStyleDialog\HarrisDialogViewModelTest.cs" />
+    <Compile Include="Keyboard\KeyboardLayoutInfoTest.cs" />
+    <Compile Include="Keyboard\OnScreenKeyboardSizePropertiesTest.cs" />
+    <Compile Include="Printer\GdiPrinter\ColumnWidthCalculatorTest.cs" />
+    <Compile Include="Printer\GdiPrinter\GdiPrinterCFTest.cs" />
+    <Compile Include="Printer\SerialPrinter\SerialPortRecorder.cs" />
+    <Compile Include="Printer\SerialPrinter\SerialPrinterCFTest.cs" />
+    <Compile Include="RectangleDTest.cs" />
+    <Compile Include="Serialization\ComponentTestObject.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Serialization\ComponentTestObjectConverter.cs" />
+    <Compile Include="Serialization\CSharpEncryptionStrategyTest.cs" />
+    <Compile Include="Serialization\XmlEncryptionStrategyTest.cs" />
+    <Compile Include="ServiceRegistration\InterceptTestHelper.cs" />
+    <Compile Include="ServiceRegistration\InterceptTests.cs" />
+    <Compile Include="TestDispatcherHelper.cs" />
+    <Compile Include="TestHelpers\Fixtures\KeyFixtures.cs" />
+    <Compile Include="TestHelpers\RoutedEventsTestHelper.cs" />
+    <Compile Include="TestHelpers\FrameworkElementEventExtensions.cs" />
+    <Compile Include="Threshold\BoundaryMonitorTest.cs" />
+    <Compile Include="TypeConverters\IntSecondsTimeSpanTypeConverterTest.cs" />
+    <Compile Include="TypeConverters\StringListConverterTest.cs" />
+    <Compile Include="TypeValidation\ComplexDefaultValueTests.cs" />
+    <Compile Include="Utilities\AlphaNumericStringComparerTest.cs" />
+    <Compile Include="Utilities\BEDATATYPENameConverterTest.cs" />
+    <Compile Include="Utilities\BlockRecursionScopeTest.cs" />
+    <Compile Include="Utilities\EventThrottlerTest.cs" />
+    <Compile Include="Utilities\NaturalSortComparerTest.cs" />
+    <Compile Include="Utilities\DirectoryHelperTest.cs" />
+    <None Include="..\..\.nuget\NuGet.Config">
+      <Link>NuGet.Config</Link>
+    </None>
+    <Compile Include="Logic\ArcLogicTest.cs" />
+    <Compile Include="Data\DataItemProxyFactoryTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\DynamicBindingTest.cs">
+    </Compile>
+    <Compile Include="Design\NameCreationServiceCreateProjectItemNameTest.cs" />
+    <Compile Include="Design\NameCreationServiceValidateNameTest.cs" />
+    <Compile Include="Design\NameCreationTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Dynamics\DynamicStringTest.cs" />
+    <Compile Include="Dynamics\LinearConverterTest.cs" />
+    <Compile Include="Fakes\FileHelperStub.cs" />
+    <Compile Include="Graphics\BitmapHelperTest.cs" />
+    <Compile Include="MultiLanguage\MultiTextBindingsAndResourceItemsManagerTest.cs" />
+    <Compile Include="MultiLanguage\StringIntervalsSynchronizerTest.cs" />
+    <Compile Include="NotifyPropertyChangedHelperTest.cs" />
+    <Compile Include="ObjectDumper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RelaxedStreamComparer\RelaxedStreamComparerAllowingOnePercentDifferenceTest.cs" />
+    <Compile Include="RelaxedStreamComparer\RelaxedStreamComparerTest.cs" />
+    <Compile Include="Ribbon\RibbonAttributeContextProviderTest.cs" />
+    <Compile Include="Runtime\GlobalsBaseTest.cs" />
+    <Compile Include="Serialization\ITestInterfaceCollectionItem.cs" />
+    <Compile Include="Serialization\ObjectSerializerTest.cs" />
+    <Compile Include="Serialization\ObjectXmlSerializerTest.cs" />
+    <Compile Include="Serialization\SerializeAssemblyReferenceResolverInfoTest.cs" />
+    <Compile Include="Serialization\SimpleTestObject1.cs" />
+    <Compile Include="Serialization\TestCollection.cs" />
+    <Compile Include="Serialization\TestObjectCollectionItem.cs" />
+    <Compile Include="Serialization\TestObjectWithCollectionProperty.cs" />
+    <Compile Include="Serialization\TestObjectWithDictionary.cs" />
+    <Compile Include="Serialization\TestObjectWithInterfaceCollection.cs" />
+    <Compile Include="SymbolAdditionalFileInfo\SymbolAdditionalFileInfoTest.cs" />
+    <Compile Include="SymbolAdditionalFileInfo\SymbolAdditionalFileInfoWithExistingFileTest.cs" />
+    <Compile Include="TypeConverters\WPFToCFBrushConverterTest.cs" />
+    <Compile Include="Utilities\BEDATATYPEConverterTest.cs" />
+    <Compile Include="Utilities\BrushFactoryTest.cs" />
+    <Compile Include="Utilities\CFFormExtensionMethodsTest.cs" />
+    <Compile Include="Utilities\ComponentPropertyBinderTest.cs" />
+    <Compile Include="Utilities\DependencyObjectPropertyBinderTest.cs" />
+    <Compile Include="Utilities\DependencyObjectPropertyBinderTests\BoolDataSourceTest.cs" />
+    <Compile Include="Utilities\DependencyObjectPropertyBinderTests\DateTimeDataSourceTest.cs" />
+    <Compile Include="Utilities\DependencyObjectPropertyBinderTests\DependencyObjectPropertyBinderTestBase.cs" />
+    <Compile Include="Utilities\DependencyObjectPropertyBinderTests\DoubleDataSourceTest.cs" />
+    <Compile Include="Utilities\DependencyObjectPropertyBinderTests\IntDataSourceTest.cs" />
+    <Compile Include="Utilities\DependencyObjectPropertyBinderTests\ShortDataSourceTest.cs" />
+    <Compile Include="Utilities\DependencyObjectPropertyBinderTests\MockObjects\FrameworkElementMock.cs" />
+    <Compile Include="Utilities\DependencyObjectPropertyBinderTests\SingleDataSourceTest.cs" />
+    <Compile Include="Utilities\DependencyObjectPropertyBinderTests\StringDataSourceTest.cs" />
+    <Compile Include="Utilities\ElementHelperTest.cs" />
+    <Compile Include="Utilities\FileHelperTest.cs" />
+    <Compile Include="Utilities\NeoZipFileFolderTest.cs" />
+    <Compile Include="Utilities\Threading\TaskTest.cs" />
+    <Compile Include="Utilities\Threading\ThreadPoolTaskSchedulerTest.cs" />
+    <Compile Include="Utilities\ThreadPoolHelperCFTest.cs" />
+    <Compile Include="Utilities\TypeHelperTest.cs" />
+    <Compile Include="Utilities\TypeImageExtractorTest.cs" />
+    <Compile Include="VariantValueTest.cs" />
+    <Compile Include="Xaml\Converter\XamlConverterTest.cs" />
+    <Compile Include="Xaml\Serializer\XamlNamespaceManagerTest.cs" />
+    <Compile Include="Xaml\Serializer\DomXamlNamespaceManagerTest.cs" />
+    <Compile Include="Xaml\Serializer\LinqXamlNamespaceManagerTest.cs" />
+    <Compile Include="Xaml\Serializer\XamlSerializerTest.cs" />
+    <Compile Include="Xaml\Serializer\XamlWriterSerializeResourcesTest.cs" />
+    <Compile Include="Xaml\Serializer\XamlWriterTest.cs" />
+    <Compile Include="Xaml\TestUserControlWithResourceFX.xaml.cs">
+      <DependentUpon>TestUserControlWithResourceFX.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\TestUserControlFX.xaml.cs">
+      <DependentUpon>TestUserControlFX.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Fakes\ZipFileStub.cs" />
+    <Compile Include="Fakes\ZipFileFactoryStub.cs" />
+    <Compile Include="Xaml\TestWindowNestedControlInternalResources.xaml.cs">
+      <DependentUpon>TestWindowNestedControlInternalResources.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\TestWindowNestedControlLocalResources.xaml.cs">
+      <DependentUpon>TestWindowNestedControlLocalResources.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ZippedSymbolAdditionalFileInfoTest.cs" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Attributes\AttributesCF\AttributesCF.csproj">
+      <Project>{B5C40A38-F695-4EC8-BA8B-47EACAA97ED0}</Project>
+      <Name>AttributesCF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Controls\ControlsCF\ControlsCF.csproj">
+      <Project>{72912BC1-2E9D-40B4-8173-1C31F4D74A4F}</Project>
+      <Name>ControlsCF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Controls\Controls\Controls.csproj">
+      <Project>{D3337796-50E6-4506-97AE-31EA3185EE4A}</Project>
+      <Name>Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Interfaces\InterfacesCF\InterfacesCF.csproj">
+      <Project>{C0123242-C353-44E2-B2EF-8AC1713E5DC6}</Project>
+      <Name>InterfacesCF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Interfaces\InterfacesIde\InterfacesIde.csproj">
+      <Project>{538A33E0-747A-4CEB-BF4C-435C582C68C5}</Project>
+      <Name>InterfacesIde</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Interfaces\Interfaces\Interfaces.csproj">
+      <Project>{8C0345E1-EEF0-4FFC-81E8-E601D6666BF7}</Project>
+      <Name>Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Resources\ResourcesIde\ResourcesIde.csproj">
+      <Project>{76910A0E-5D47-414D-B9AB-9EDD74D5D4AA}</Project>
+      <Name>ResourcesIde</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SignatureInterfaces\SignatureInterfacesCF\SignatureInterfacesCF.csproj">
+      <Project>{7DC5DB55-A630-4FDB-9D35-6EBA349585B9}</Project>
+      <Name>SignatureInterfacesCF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Test\TestUtilities\TestUtilities.csproj">
+      <Project>{643f4799-56a0-4fed-9d6f-cdcd68a425d1}</Project>
+      <Name>TestUtilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ThirdPartyExtensions\RhinoMocks.Extensions\RhinoMocks.Extensions.csproj">
+      <Project>{31AD6D97-F9E7-4CE8-B9AD-729C4E8D25BE}</Project>
+      <Name>RhinoMocks.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Tools\ToolsCF\ToolsCF.csproj">
+      <Project>{F6CDB96A-8C6A-472D-A603-2DB47529A612}</Project>
+      <Name>ToolsCF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Tools\ToolsIde\ToolsIde.csproj">
+      <Project>{0FCA8999-23A3-419D-952F-720929141D86}</Project>
+      <Name>ToolsIde</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommonCF.Utilities\CommonCF.Utilities.csproj">
+      <Project>{3F23D485-EF00-487F-908F-5452AF393DC0}</Project>
+      <Name>CommonCF.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommonCF\CommonCF.csproj">
+      <Project>{86D35348-3E3B-40E7-8AF2-C0B537BDCAA9}</Project>
+      <Name>CommonCF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommonIde.Utilities\CommonIde.Utilities.csproj">
+      <Project>{C82B6F9F-B1AD-4F60-BF2B-FF7CEEB6769E}</Project>
+      <Name>CommonIde.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommonIde\CommonIde.csproj">
+      <Project>{85F7588F-D7C2-4152-A8F3-3C1961CEB975}</Project>
+      <Name>CommonIde</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{4A3C1C33-9D29-4AB8-BB96-0B81D24453AB}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Xaml\TestUserControlWithResourceFX.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Xaml\TestUserControlFX.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Xaml\TestWindowNestedControlInternalResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Xaml\TestWindowNestedControlLocalResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Graphics\animated dog.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Graphics\animated clock.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Graphics\animated writing process.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Graphics\animated writing process composition.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\..\ThirdParty\NSubstitute.Analyzers.CSharp.1.0.13\analyzers\dotnet\cs\NSubstitute.Analyzers.CSharp.dll" />
+    <Analyzer Include="..\..\ThirdParty\NSubstitute.Analyzers.CSharp.1.0.13\analyzers\dotnet\cs\NSubstitute.Analyzers.Shared.dll" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\ThirdParty\NUnit3TestAdapter.4.3.1\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\ThirdParty\NUnit3TestAdapter.4.3.1\build\net35\NUnit3TestAdapter.props'))" />
+    <Error Condition="!Exists('..\..\ThirdParty\NUnit.3.13.2\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\ThirdParty\NUnit.3.13.2\build\NUnit.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

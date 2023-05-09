@@ -1,0 +1,246 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\ThirdParty\NUnit.3.13.2\build\NUnit.props" Condition="Exists('..\..\ThirdParty\NUnit.3.13.2\build\NUnit.props')" />
+  <Import Project="..\..\ThirdParty\NUnit3TestAdapter.4.3.1\build\net35\NUnit3TestAdapter.props" Condition="Exists('..\..\ThirdParty\NUnit3TestAdapter.4.3.1\build\net35\NUnit3TestAdapter.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{643F4799-56A0-4FED-9D6F-CDCD68A425D1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Neo.ApplicationFramework.TestUtilities</RootNamespace>
+    <AssemblyName>TestUtilities</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ApiChange, Version=1.1.66.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ApiChange.1.1.66\lib\net48\ApiChange.exe</HintPath>
+    </Reference>
+    <Reference Include="ApiChange.Api, Version=1.1.66.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ApiChange.1.1.66\lib\net48\ApiChange.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="CodeInSanityTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\CodeInSanityTest.1.0.0\lib\net48\CodeInSanityTest.dll</HintPath>
+    </Reference>
+    <Reference Include="Core.Api, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.3.0.99\lib\net48\Core.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Core.CodeGenerationUtilities, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.CodeGenerationUtilities.3.0.99\lib\net48\Core.CodeGenerationUtilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Core.Controls.Api, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Controls.3.0.99\lib\net48\Core.Controls.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Core.TestUtilities, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.TestUtilities.3.0.99\lib\net48\Core.TestUtilities.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreCF.Api, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.3.0.99\lib\net48\CoreCF.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CoreCF.Component.Api, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.3.0.99\lib\net48\CoreCF.Component.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CoreCF.Controls.Api, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Controls.3.0.99\lib\net48\CoreCF.Controls.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CoreIde.Api, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.3.0.99\lib\net48\CoreIde.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CoreIde.Component.Api, Version=3.0.99.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ixCore2.x.Ide.3.0.99\lib\net48\CoreIde.Component.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DataSourceInterop, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\DriversDataSourceInterop.9.0.5\lib\DataSourceInterop.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Mono.Cecil, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ApiChange.1.1.66\lib\net48\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ApiChange.1.1.66\lib\net48\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ApiChange.1.1.66\lib\net48\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\ApiChange.1.1.66\lib\net48\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.13.2.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\NUnit.3.13.2\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Storage.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f9bf78ad04ede021, processorArchitecture=MSIL">
+      <HintPath>..\..\ThirdParty\Storage.Api.1.0.0\lib\net35\Storage.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Applications\NeoIDE\NeoIDE\Properties\SolutionInfo.cs">
+      <Link>Properties\SolutionInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Applications\NeoIDE\NeoIDE\Properties\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="Brush\BrushValidator.cs" />
+    <Compile Include="ControllerHelper.cs" />
+    <Compile Include="NeoDesignerHostStub.cs" />
+    <Compile Include="Screen\ScreenEditorTestWindow.xaml.cs">
+      <DependentUpon>ScreenEditorTestWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SelectSwedishTestingCulture.cs" />
+    <Compile Include="TestCodeObject.cs" />
+    <Compile Include="CodeDomTestHelper.cs" />
+    <Compile Include="Extensions\System\ComponentModel\NotifyExpectation.cs" />
+    <Compile Include="Extensions\System\ComponentModel\NotifyPropertyChangedExtensions.cs" />
+    <Compile Include="Extensions\System\ObjectExtensions.cs" />
+    <Compile Include="InvisibleInformationProgressManager.cs" />
+    <Compile Include="ModifierKeysInfoMock.cs" />
+    <Compile Include="MouseInfoMock.cs" />
+    <Compile Include="Namespace\NamespaceValidator.cs" />
+    <Compile Include="Printer\GdiPrinter\BitmapPrintingHelper.cs" />
+    <Compile Include="Printer\GdiPrinter\BitmapWrapperPC.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestActionObject.cs" />
+    <Compile Include="TestAttributes\NeoClearStaticStateActionAttribute.cs" />
+    <Compile Include="TestHelper.cs" />
+    <Compile Include="TestThreadHelper.cs" />
+    <Compile Include="Threading\InvokeDirectActionConsumer.cs" />
+    <Compile Include="Utilities\DependencyObjectPropertyBinderTests\MockObjects\DataItemProxyMock.cs" />
+    <Compile Include="Utilities\DependencyObjectPropertyBinderTests\MockObjects\DataItemProxyProviderMock.cs" />
+    <Compile Include="Utilities\ElementCanvasHelper.cs" />
+    <Compile Include="Utilities\EventAsserter.cs" />
+    <Compile Include="UsedMemoryUnloadDecisionStrategyForTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Attributes\AttributesCF\AttributesCF.csproj">
+      <Project>{b5c40a38-f695-4ec8-ba8b-47eacaa97ed0}</Project>
+      <Name>AttributesCF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\CommonCF.Utilities\CommonCF.Utilities.csproj">
+      <Project>{3F23D485-EF00-487F-908F-5452AF393DC0}</Project>
+      <Name>CommonCF.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\CommonCF\CommonCF.csproj">
+      <Project>{86d35348-3e3b-40e7-8af2-c0b537bdcaa9}</Project>
+      <Name>CommonCF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Common\Common.csproj">
+      <Project>{4a3c1c33-9d29-4ab8-bb96-0b81d24453ab}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Controls\ControlsCF\ControlsCF.csproj">
+      <Project>{72912bc1-2e9d-40b4-8173-1c31f4d74a4f}</Project>
+      <Name>ControlsCF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Controls\ControlsIde\ControlsIde.csproj">
+      <Project>{bb038f4e-8d28-438e-94f2-06687e64de02}</Project>
+      <Name>ControlsIde</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Controls\Controls\Controls.csproj">
+      <Project>{d3337796-50e6-4506-97ae-31ea3185ee4a}</Project>
+      <Name>Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Interfaces\InterfacesCF\InterfacesCF.csproj">
+      <Project>{c0123242-c353-44e2-b2ef-8ac1713e5dc6}</Project>
+      <Name>InterfacesCF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Interfaces\InterfacesIde\InterfacesIde.csproj">
+      <Project>{538a33e0-747a-4ceb-bf4c-435c582c68c5}</Project>
+      <Name>InterfacesIde</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Interfaces\Interfaces\Interfaces.csproj">
+      <Project>{8c0345e1-eef0-4ffc-81e8-e601d6666bf7}</Project>
+      <Name>Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SignatureInterfaces\SignatureInterfacesCF\SignatureInterfacesCF.csproj">
+      <Project>{7dc5db55-a630-4fdb-9d35-6eba349585b9}</Project>
+      <Name>SignatureInterfacesCF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Tools\ToolsIde\ToolsIde.csproj">
+      <Project>{0fca8999-23a3-419d-952f-720929141d86}</Project>
+      <Name>ToolsIde</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\.nuget\NuGet.Config">
+      <Link>NuGet.Config</Link>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Screen\ScreenEditorTestWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\ThirdParty\NUnit3TestAdapter.4.3.1\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\ThirdParty\NUnit3TestAdapter.4.3.1\build\net35\NUnit3TestAdapter.props'))" />
+    <Error Condition="!Exists('..\..\ThirdParty\NUnit.3.13.2\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\ThirdParty\NUnit.3.13.2\build\NUnit.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
