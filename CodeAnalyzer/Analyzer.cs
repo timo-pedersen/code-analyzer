@@ -45,7 +45,7 @@ public static class Analyzer
         }
         
         progressMax.Report(sln.Projects.Count());
-
+        int projectCount = 1;
         foreach (var project in sln.Projects.Where(x => x.FilePath != null && x.FilePath.EndsWith(".csproj") && x.FilePath.Contains("Test")))
         {
             // If needed:
@@ -76,6 +76,8 @@ public static class Analyzer
                     projectData.Documents.Add(documentData);
                 }
             }
+
+            progress.Report(projectCount++);
 
             if (projectData.Documents.Any())
             {
