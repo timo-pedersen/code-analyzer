@@ -22,7 +22,8 @@ internal class MainVM : INotifyPropertyChanged
 {
     public ICommand BrowseFolderCommand { get; }
     public ICommand ScanCommand { get; }
-
+    public ICommand ScanAllCommand { get; }
+    
     public ObservableCollection<CodeAnalyzer.Data.Solution> Solutions { get; } = new ();
     
     #region Observables =========================================================
@@ -71,10 +72,12 @@ internal class MainVM : INotifyPropertyChanged
     }
 
     #endregion ============================================================
+
     public MainVM()
     {
         BrowseFolderCommand = new RelayCommand(BrowseFolder);
         ScanCommand = new RelayCommand(Scan, ScanCanExecute);
+        ScanAllCommand = new RelayCommand(ScanAll, ScanCanExecute);
         ProgressMax1 = 100;
         ProgressValue1 = 0;
         ProgressMax2 = 100;
@@ -101,17 +104,25 @@ internal class MainVM : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private void BrowseFolder(object? o)
+    private async void BrowseFolder(object? o)
     {
         (string path, bool ok) = Dlg.OpenFolderBrowser(FolderPath);
         if(ok) FolderPath = path;
+
+        List<FileInfo> solutionFiles = await GetSolutionFiles(FolderPath);
+        
+        Solutions.Clear();
+        foreach (FileInfo solution in solutionFiles)
+        {
+            Solutions.Add(new CodeAnalyzer.Data.Solution(solution.FullName));
+        }
     }
 
-    private async void Scan(object? o)
+    private async void ScanAll(object? o)
     {
         IProgress<int> progress1 = new Progress<int>(val => { ProgressValue1 = val; });
-        IProgress<int> progress2 = new Progress<int>(_ => { ProgressValue2++; });
-        IProgress<int> progressMax2 = new Progress<int>(val => { ProgressMax2 += val; });
+        IProgress<int> progress2 = new Progress<int>(val => { ProgressValue2 = val; });
+        IProgress<int> progressMax2 = new Progress<int>(val => { ProgressMax2 = val; });
 
         Stopwatch sw = Stopwatch.StartNew();
 
@@ -127,6 +138,7 @@ internal class MainVM : INotifyPropertyChanged
         var tasks = new List<Task>();
 
         var dispatcher = Dispatcher.CurrentDispatcher;
+        Solutions.Clear();
         foreach (FileInfo solution in solutionFiles)
         {
             tasks.Add(Task.Run(() =>
@@ -147,6 +159,12 @@ internal class MainVM : INotifyPropertyChanged
         sw.Stop();
         MessageBox.Show($"Took {sw.ElapsedMilliseconds / 1000} seconds.\r" + collectedMsg);
     }
+
+    private void Scan(object? o)
+    {
+        throw new NotImplementedException();
+    }
+
 
     private async Task<List<FileInfo>> GetSolutionFiles(string path)
     {

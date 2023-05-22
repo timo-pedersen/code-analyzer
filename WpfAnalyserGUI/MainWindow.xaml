@@ -7,7 +7,8 @@
         xmlns:vm="clr-namespace:WpfAnalyzerGUI.VMs"
         xmlns:data="clr-namespace:CodeAnalyzer.Data;assembly=CodeAnalyzer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        FontFamily="Arial" FontSize="14">
   <Window.Resources>
     <vm:MainVM x:Key="vm" />
   </Window.Resources>
@@ -31,7 +32,6 @@
       <Label VerticalContentAlignment="Center">SolutionPath:</Label>
       <TextBox VerticalContentAlignment="Center" MinWidth="200px" Margin="2,2,0,2" Text="{Binding FolderPath}" />
       <Button Padding="5,0,5,0" Margin="0,2,0,2" Command="{Binding BrowseFolderCommand}">…</Button>
-      <Button Padding="5,0,5,0" Margin="10,2,0,2" Command="{Binding ScanCommand}">Scan</Button>
       <StackPanel Orientation="Vertical" Width="200" Margin="5,5,5,5">
         <ProgressBar Foreground="BlueViolet" Margin="0,5,0,1" Value="{Binding ProgressValue1}" Maximum="{Binding ProgressMax1}"/>
         <ProgressBar Foreground="LimeGreen" Margin="0,1,0,5" Value="{Binding ProgressValue2}" Maximum="{Binding ProgressMax2}"/>
@@ -45,35 +45,33 @@
         <ColumnDefinition Width="133*"/>
         <ColumnDefinition Width="267*"/>
       </Grid.ColumnDefinitions>
-      <TreeView Grid.Column="0" ItemsSource="{Binding Solutions}">
-        <TreeView.Resources>
-          <HierarchicalDataTemplate DataType="{x:Type data:Solution}" ItemsSource="{Binding Projects}">
-            <StackPanel Orientation="Horizontal">
-              <Label Foreground="DarkMagenta" IsEnabled="{Binding Loaded}">#</Label>
-              <Label Content="{Binding Name}" />
-            </StackPanel>
-          </HierarchicalDataTemplate>
-          <HierarchicalDataTemplate DataType="{x:Type data:Project}" ItemsSource="{Binding Documents}">
-            <TextBlock Text="{Binding Name}" />
-          </HierarchicalDataTemplate>
-          <DataTemplate DataType="{x:Type data:Document}">
-            <TextBlock Text="{Binding Name}" />
-          </DataTemplate>
-        </TreeView.Resources>
-        <!--
-        <TreeView Grid.Column="0" ItemsSource="{Binding Solutions}">
-          <TreeView.ItemTemplate>
-          <DataTemplate>
-            <TreeViewItem Header="{Binding Name}" IsEnabled="{Binding Loaded}">
-              <TreeViewItem.ItemTemplate>
-                <DataTemplate>
-                  <Label Content="{Binding ProjectCount}" />
-                </DataTemplate>
-              </TreeViewItem.ItemTemplate>
-            </TreeViewItem>
-          </DataTemplate>
-        </TreeView.ItemTemplate>-->
-      </TreeView>
+      <DockPanel>
+        <DockPanel VerticalAlignment="Bottom" HorizontalAlignment="Stretch" DockPanel.Dock="Bottom">
+          <Button DockPanel.Dock="Left" Command="{Binding ScanCommand}" Margin="2" Padding="4,0,4,0">Scan selected</Button>
+          <Button DockPanel.Dock="Right" Command="{Binding ScanAllCommand}" Margin="2" Padding="4,0,4,0">Scan All</Button>
+          <Label></Label>
+        </DockPanel>
+        <TreeView Grid.Column="0" ItemsSource="{Binding Solutions}" >
+          <TreeView.Resources>
+            <HierarchicalDataTemplate DataType="{x:Type data:Solution}" ItemsSource="{Binding Projects}">
+              <StackPanel Orientation="Horizontal">
+                <Ellipse Width="8" Height="8" Fill="DarkMagenta" />
+                <Label Foreground="DarkMagenta" IsEnabled="{Binding Loaded}">#</Label>
+                <Label Content="{Binding Name}" />
+              </StackPanel>
+            </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type data:Project}" ItemsSource="{Binding Documents}">
+              <StackPanel Orientation="Horizontal">
+                <Ellipse Width="8" Height="8" Fill="LimeGreen" />
+                <TextBlock Text="{Binding Name}" />
+              </StackPanel>
+            </HierarchicalDataTemplate>
+            <DataTemplate DataType="{x:Type data:Document}">
+              <TextBlock Text="{Binding Name}" />
+            </DataTemplate>
+          </TreeView.Resources>
+        </TreeView>
+      </DockPanel>
     </Grid>
   </Grid>
 </Window>
