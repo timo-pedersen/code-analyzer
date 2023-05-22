@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace TestProject
 {
     // A class to be mocked
+
     public class Class2 : IClass2
     {
         public string Name1 { get; set; }
