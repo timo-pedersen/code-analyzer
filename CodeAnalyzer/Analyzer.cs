@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
-using CodeAnalyzer.Data;
+﻿using System.Diagnostics;
 using Microsoft.Build.Locator; // Finding MsBuild on system
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp; // Roslyn analysis
@@ -22,7 +20,7 @@ public static class Analyzer
         MSBuildLocator.RegisterDefaults();
     }
 
-    public async static Task<Data.Solution> AnalyzeSolutionAsync(string solutionPath, IProgress<int> progress, IProgress<int> progressMax)
+    public static async Task<Data.Solution> AnalyzeSolutionAsync(string solutionPath, IProgress<int> progress, IProgress<int> progressMax)
     {
         Stopwatch sw = Stopwatch.StartNew();
 
@@ -42,10 +40,10 @@ public static class Analyzer
             return solutionData;
         }
 
-        IEnumerable<Microsoft.CodeAnalysis.Project> projects = sln.Projects;
+        IEnumerable<Project> projects = sln.Projects;
         var projectsToConsider = projects
-            .Where(x => x.FilePath != null && x.FilePath.EndsWith(".csproj"))
-            .Where(y => y.FilePath.Contains("Test"));
+            .Where(x => x.FilePath != null && x.FilePath.EndsWith(".csproj"));
+            //.Where(y => y.FilePath.Contains("Test"));
 
         progressMax.Report(projectsToConsider.Count());
         int projectCount = 1;
@@ -82,10 +80,10 @@ public static class Analyzer
 
             progress.Report(projectCount++);
 
+            solutionData.Projects.Add(projectData);
+            
             if (projectData.Documents.Any())
-            {
-                solutionData.Projects.Add(projectData);
-            }
+                solutionData.Loaded = true;
 
         });
 

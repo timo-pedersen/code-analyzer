@@ -5,6 +5,7 @@ namespace CodeAnalyzer.Data;
 public class Project
 {
     public string Path { get; }
+    public bool Loaded { get; set; }
 
     public string Name
     {
