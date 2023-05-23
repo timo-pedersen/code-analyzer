@@ -96,6 +96,17 @@ internal class MainVM : INotifyPropertyChanged
         }
     }
 
+    private string _selectedSolutionPath = "C:\\git_tpp\\code-analyzer\\CodeAnalyzer.sln";
+    public string SelectedSolutionPath
+    {
+        get => _selectedSolutionPath;
+        set
+        {
+            _selectedSolutionPath = value;
+            OnPropertyChanged();
+        }
+    }
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     [NotifyPropertyChangedInvocator]
@@ -127,9 +138,6 @@ internal class MainVM : INotifyPropertyChanged
         Stopwatch sw = Stopwatch.StartNew();
 
         List<FileInfo> solutionFiles = await GetSolutionFiles(FolderPath);
-        /*------------------------------------*/
-        // NOTE Neo is removed
-        /*------------------------------------*/
 
         string collectedMsg = "";
 
@@ -160,9 +168,24 @@ internal class MainVM : INotifyPropertyChanged
         MessageBox.Show($"Took {sw.ElapsedMilliseconds / 1000} seconds.\r" + collectedMsg);
     }
 
-    private void Scan(object? o)
+    private async void Scan(object? o)
     {
-        throw new NotImplementedException();
+        IProgress<int> progress = new Progress<int>(val => { ProgressValue2 = val; });
+        IProgress<int> progressMax = new Progress<int>(val => { ProgressMax2 = val; });
+
+        Stopwatch sw = Stopwatch.StartNew();
+
+        int p = 1;
+        var tasks = new List<Task>();
+
+        var dispatcher = Dispatcher.CurrentDispatcher;
+        Solutions.Clear();
+
+        CodeAnalyzer.Data.Solution slnData = await Analyzer.AnalyzeSolutionAsync(SelectedSolutionPath, progress, progressMax);
+        dispatcher.Invoke(() => Solutions.Add(slnData));
+
+        sw.Stop();
+        MessageBox.Show($"Took {sw.ElapsedMilliseconds / 1000} seconds.\r" + slnData.Message);
     }
 
 
