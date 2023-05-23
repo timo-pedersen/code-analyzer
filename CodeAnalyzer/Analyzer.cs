@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using CodeAnalyzer.Data;
 using Microsoft.Build.Locator; // Finding MsBuild on system
 using Microsoft.CodeAnalysis;
@@ -19,6 +20,78 @@ public static class Analyzer
     {
         // Needs to be here b/c MEF
         MSBuildLocator.RegisterDefaults();
+    }
+
+    public async static Task<Data.Solution> AnalyzeSolutionAsync(string solutionPath, IProgress<int> progress, IProgress<int> progressMax)
+    {
+        Stopwatch sw = Stopwatch.StartNew();
+
+        var workspace = MSBuildWorkspace.Create();
+        Solution sln;
+
+        Data.Solution solutionData = new(solutionPath);
+
+        try
+        {
+            sln = await workspace.OpenSolutionAsync(solutionPath);
+            solutionData.Loaded = true;
+        }
+        catch (Exception ex)
+        {
+            solutionData.Message = $"Could not open sln: {ex.Message}";
+            return solutionData;
+        }
+
+        IEnumerable<Microsoft.CodeAnalysis.Project> projects = sln.Projects;
+        var projectsToConsider = projects
+            .Where(x => x.FilePath != null && x.FilePath.EndsWith(".csproj"))
+            .Where(y => y.FilePath.Contains("Test"));
+
+        progressMax.Report(projectsToConsider.Count());
+        int projectCount = 1;
+        Parallel.ForEach(projectsToConsider, project =>
+        {
+            // If needed:
+            // var prjCompilation = project.GetCompilationAsync().Result;
+
+            Data.Project projectData = new Data.Project(project.FilePath);
+
+            foreach (Document document in project.Documents)
+            {
+                SyntaxTree? syntaxTree = document.GetSyntaxTreeAsync().Result;
+
+                if (syntaxTree is null)
+                    continue;
+
+                CompilationUnitSyntax root = syntaxTree.GetCompilationUnitRoot();
+
+                var collector = new Walkers.SpecificUsingCollector("Rhino.Mocks");
+                collector.Visit(root);
+
+                if (!collector.Usings.Any())
+                    continue; // Nothing to see here - move on
+
+                if (document.FilePath != null)
+                {
+                    Data.Document documentData = new Data.Document(document.FilePath);
+                    documentData.SyntaxNodes.AddRange(collector.Usings);
+
+                    projectData.Documents.Add(documentData);
+                }
+            }
+
+            progress.Report(projectCount++);
+
+            if (projectData.Documents.Any())
+            {
+                solutionData.Projects.Add(projectData);
+            }
+
+        });
+
+        sw.Stop();
+        solutionData.TimeToLoad = sw.ElapsedMilliseconds / (double)1000;
+        return solutionData;
     }
 
     public static Data.Solution AnalyzeSolution(string solutionPath, IProgress<int> progress, IProgress<int> progressMax)
@@ -43,7 +116,7 @@ public static class Analyzer
             solutionData.Message = $"Could not open sln: {ex.Message}";
             return solutionData;
         }
-        
+
         progressMax.Report(sln.Projects.Count());
         int projectCount = 1;
         foreach (var project in sln.Projects.Where(x => x.FilePath != null && x.FilePath.EndsWith(".csproj") && x.FilePath.Contains("Test")))
@@ -83,7 +156,7 @@ public static class Analyzer
             {
                 solutionData.Projects.Add(projectData);
             }
-            
+
         }
         sw.Stop();
         solutionData.TimeToLoad = sw.ElapsedMilliseconds / (double)1000;
