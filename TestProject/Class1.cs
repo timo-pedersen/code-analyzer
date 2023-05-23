@@ -1,61 +1,62 @@
-﻿using System.Diagnostics.Tracing;
+﻿namespace TestProject;
 
-namespace TestProject
+public class Class1 : IClass1
 {
-    public class Class1 : IClass1
+    public IClass2 TheClass2 { get; }
+
+    public event EventHandler<SomeEvent1Args> SomeEvent;
+
+    public int SomeEventCallCount { get; set; } = 0;
+    public int Class2EventCount { get; set; } = 0;
+
+    public Class1(Class2 class2)
     {
-        public IClass2 TheClass2 { get; }
+        TheClass2 = class2;
 
-        public event EventHandler<SomeEventArgs> SomeEvent;
+        TheClass2.SomeEvent += TheClass2SomeEventHandler;
+    }
 
-        public int SomeEventCallCount { get; set; } = 0;
-        public int Class2EventCount { get; set; } = 0;
+    private void TheClass2SomeEventHandler(object? sender, SomeEvent2Args e)
+    {
+        Class2EventCount++;
+    }
 
-        public Class1(Class2 class2)
-        {
-            TheClass2 = class2;
+    public void OnSomeEvent()
+    {
+        SomeEvent?.Invoke(this, new SomeEvent1Args("Class1: Some event happened"));
+        SomeEventCallCount++;
+    }
 
-            TheClass2.SomeEvent += TheClass2OnSomeEvent;
-        }
+    // Add two numbers and raise event
+    public int AddTwoNumbers(int a, int b)
+    {
+        OnSomeEvent();
+        return a + b;
+    }
 
-        private void TheClass2OnSomeEvent(object? sender, SomeEventArgs e)
-        {
-            Class2EventCount++;
-        }
+    public int LengthOfSomeString(string s)
+    {
+        return s.Length;
+    }
 
-        public void OnSomeEvent()
-        {
-            SomeEvent?.Invoke(this, new SomeEventArgs("Class1: Some event happened"));
-            SomeEventCallCount++;
-        }
+    // Uses class2 -----------------------
+    public void SetFirstName(string name)
+    {
+        TheClass2.Name1 = name;
+    }
 
-        public void OnSomeOtherEvent()
-        {
-            SomeEvent?.Invoke(this, new SomeEventArgs("Class1: Some event happened"));
-            SomeEventCallCount++;
-        }
+    public void SetLastName(string name)
+    {
+        TheClass2.Name2 = name;
+    }
 
-        // Add two numbers and raise evnt on Class 2
-        public int AddTwoNumbers(int a, int b)
-        {
-            TheClass2.OnSomeEvent();
-            return a + b;
-        }
+    public string GetFullName1(string first, string last)
+    {
+        return TheClass2.GetFullName1();
+    }
 
-        public void MethodThatRaisesSomeEvent()
-        {
-            OnSomeEvent();
-        }
-
-        public bool AnotherMethodThatRaisesSomeEvent(bool b)
-        {
-            OnSomeEvent();
-            return b;
-        }
-
-        public int LengthOfSomeString(string s)
-        {
-            return s.Length;
-        }
+    public string GetFullName2(string first, string last)
+    {
+        return TheClass2.GetFullName2();
     }
 }

@@ -1,43 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace TestProject;
 
-namespace TestProject
+ // A class to be mocked
+
+public class Class2 : IClass2
 {
-    // A class to be mocked
+    public string Name1 { get; set; }
+    public string Name2 { get; set; }
+    public int SomeEventCallCount { get; set; } = 0;
 
-    public class Class2 : IClass2
+    public event EventHandler<SomeEvent2Args> SomeEvent;
+
+    public Class2(string name1, string name2)
     {
-        public string Name1 { get; set; }
-        public string Name2 { get; set; }
-        public int SomeEventCallCount { get; set; } = 0;
+        Name1 = name1;
+        Name2 = name2;
+    }
 
-        public event EventHandler<SomeEventArgs> SomeEvent;
-        public void OnSomeEvent()
-        {
-            SomeEvent?.Invoke(this, new SomeEventArgs("Class2: Some event happened"));
-            SomeEventCallCount++;
-        }
+    public void OnSomeEvent()
+    {
+        SomeEvent?.Invoke(this, new SomeEvent2Args("Class2: Some event happened"));
+        SomeEventCallCount++;
+    }
 
+    public string GetFullName1()
+    {
+        OnSomeEvent();
+        return Name1 + " " + Name2;
+    }
 
-
-        public Class2(string name1, string name2)
-        {
-            Name1 = name1;
-            Name2 = name2;
-        }
-
-        public string GetFullName1()
-        {
-            return Name1 + " " + Name2;
-        }
-
-        public string GetFullName2()
-        {
-            return Name2 + ", " + Name1;
-        }
+    public string GetFullName2()
+    {
+        OnSomeEvent();
+        return Name2 + ", " + Name1;
     }
 }
+

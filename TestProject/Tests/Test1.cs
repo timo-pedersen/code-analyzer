@@ -1,30 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace TestProject.Tests
+namespace TestProject.Tests;
+
+[TestFixture]
+public class Test1
 {
-    [TestFixture]
-    public class Test1
+    private IClass1 Sut;
+
+    [SetUp]
+    public void SetUp()
     {
-        private IClass1 Sut;
+        var Class2Mock = MockRepository.GenerateStub<Class2>();
+        Sut = new Class1(Class2Mock);
+    }
 
-        [SetUp]
-        public void SetUp()
-        {
-            var Class2Mock = MockRepository.GenerateStub<Class2>();
-            Sut = new Class1(Class2Mock);
-        }
-
-        [Test]
-        void ThisIsATest()
-        {
-            int a = Sut.AddTwoNumbers(2, 3);
-            Assert.AreEqual(5, a);
-        }
+    [Test]
+    void ThisIsATest()
+    {
+        int a = Sut.AddTwoNumbers(2, 3);
+        Assert.AreEqual(5, a);
     }
 }
+

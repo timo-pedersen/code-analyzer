@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace TestProject
 {
-    public class SomeEventArgs : EventArgs
+    public class SomeEvent2Args : EventArgs
     {
         public string Message { get; }
 
-        public SomeEventArgs(string msg)
+        public SomeEvent2Args(string msg)
         {
             Message = msg;
         }

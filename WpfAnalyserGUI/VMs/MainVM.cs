@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using WpfAnalyserGUI.Annotations;
 using WpfAnalyzerGUI.Commands;
 using Utils;
 using WinFormUtils;
@@ -98,8 +97,7 @@ internal class MainVM : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    [NotifyPropertyChangedInvocator]
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
@@ -187,5 +185,6 @@ internal class MainVM : INotifyPropertyChanged
         return Fs.GetFilesInFolder(FolderPath, true, "*.sln").Any();
     }
 
+ 
 }
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Configuration.Assemblies;
-
-namespace Utils;
+﻿namespace Utils;
 
 public static class Fs
 {

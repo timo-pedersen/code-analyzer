@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-
-namespace WinFormUtils;
+﻿namespace WinFormUtils;
 
 public static class Dlg
 {

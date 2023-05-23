@@ -1,34 +1,29 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 
-namespace CodeAnalyzer.Walkers
+namespace CodeAnalyzer.Walkers;
+
+public class SpecificUsingCollector : CSharpSyntaxWalker
 {
-    public class SpecificUsingCollector : CSharpSyntaxWalker
+    public ICollection<UsingDirectiveSyntax> Usings { get; } = new List<UsingDirectiveSyntax>();
+
+    private string SearchString { get; set; }
+    private bool IgnoreCase { get; set; }
+
+    public SpecificUsingCollector(string searchString, bool ignoreCase = false,
+        SyntaxWalkerDepth depth = SyntaxWalkerDepth.Node) : base(depth)
     {
-        public ICollection<UsingDirectiveSyntax> Usings { get; } = new List<UsingDirectiveSyntax>();
+        SearchString = searchString;
+        IgnoreCase = ignoreCase;
+    }
 
-        private string SearchString { get; set; }
-        private bool IgnoreCase { get; set; }
-
-        public SpecificUsingCollector(string searchString, bool ignoreCase = false, SyntaxWalkerDepth depth = SyntaxWalkerDepth.Node) : base(depth)
+    public override void VisitUsingDirective(UsingDirectiveSyntax node)
+    {
+        if (IgnoreCase && node.Name.ToString().ToLower() == SearchString.ToLower()
+            || !IgnoreCase && node.Name.ToString() == SearchString)
         {
-            SearchString = searchString;
-            IgnoreCase = ignoreCase;
-        }
-
-        public override void VisitUsingDirective(UsingDirectiveSyntax node)
-        {
-            if (IgnoreCase && node.Name.ToString().ToLower() == SearchString.ToLower()
-                || !IgnoreCase && node.Name.ToString() == SearchString)
-            {
-                Usings.Add(node);
-            }
+            Usings.Add(node);
         }
     }
 }
