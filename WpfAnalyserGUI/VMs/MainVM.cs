@@ -14,15 +14,19 @@ using System.Threading.Tasks;
 using System.Windows;
 using CodeAnalyzer;
 using System.Windows.Threading;
+using System.Windows.Controls;
 
 namespace WpfAnalyzerGUI.VMs;
 
 internal class MainVM : INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public ICommand BrowseFolderCommand { get; }
     public ICommand ScanCommand { get; }
     public ICommand ScanAllCommand { get; }
-    
+    public ICommand SelectionChangeCommand { get; }
+
     public ObservableCollection<CodeAnalyzer.Data.Solution> Solutions { get; } = new ();
     
     #region Observables =========================================================
@@ -77,11 +81,13 @@ internal class MainVM : INotifyPropertyChanged
         BrowseFolderCommand = new RelayCommand(BrowseFolder);
         ScanCommand = new RelayCommand(Scan, ScanCanExecute);
         ScanAllCommand = new RelayCommand(ScanAll, ScanCanExecute);
+        SelectionChangeCommand = new RelayCommand(x => SelectedItem = x);
         ProgressMax1 = 100;
         ProgressValue1 = 0;
         ProgressMax2 = 100;
         ProgressValue2 = 0;
     }
+
 
     //private string _folderPath = "d:\\git3\\iXDeveloper\\";
     private string _folderPath = "D:\\git4\\iXDeveloper\\";
@@ -95,18 +101,35 @@ internal class MainVM : INotifyPropertyChanged
         }
     }
 
-    private string _selectedSolutionPath = "C:\\git_tpp\\code-analyzer\\CodeAnalyzer.sln";
+    private string _selectedSolutionPath => SelectedItem is CodeAnalyzer.Data.Solution sln ? sln.Path : String.Empty;
     public string SelectedSolutionPath
     {
         get => _selectedSolutionPath;
+        //set
+        //{
+        //    _selectedSolutionPath = value;
+        //    OnPropertyChanged();
+        //}
+    }
+
+    private object? _selectedItem;
+    public object? SelectedItem
+    {
+        get => _selectedItem;
         set
         {
-            _selectedSolutionPath = value;
-            OnPropertyChanged();
+            if (value is TreeView tv)
+            {
+                _selectedItem = tv.SelectedItem;
+                OnPropertyChanged();
+            }
         }
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public CodeAnalyzer.Data.Solution? SelectedSolution
+    {
+        get => Solutions.FirstOrDefault(x => x.Path == SelectedSolutionPath);
+    }
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
@@ -168,6 +191,9 @@ internal class MainVM : INotifyPropertyChanged
 
     private async void Scan(object? o)
     {
+        if (SelectedSolution == null)
+            return;
+
         IProgress<int> progress = new Progress<int>(val => { ProgressValue2 = val; });
         IProgress<int> progressMax = new Progress<int>(val => { ProgressMax2 = val; });
 
@@ -176,10 +202,16 @@ internal class MainVM : INotifyPropertyChanged
         var tasks = new List<Task>();
 
         var dispatcher = Dispatcher.CurrentDispatcher;
-        Solutions.Clear();
 
         CodeAnalyzer.Data.Solution slnData = await Analyzer.AnalyzeSolutionAsync(SelectedSolutionPath, progress, progressMax);
-        dispatcher.Invoke(() => Solutions.Add(slnData));
+        dispatcher.Invoke(() =>
+        {
+            SelectedSolution.Loaded = true;
+            SelectedSolution.Projects = slnData.Projects;
+            //OnPropertyChanged(nameof(SelectedSolution));
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Solutions)));
+            Solutions.
+        });
 
         sw.Stop();
         MessageBox.Show($"Took {sw.ElapsedMilliseconds / 1000} seconds.\r" + slnData.Message);

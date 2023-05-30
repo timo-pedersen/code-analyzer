@@ -13,7 +13,7 @@ public class Solution
 
     public bool Loaded { get; set; } = false;
     public string Message { get; set; } = string.Empty;
-    public ObservableCollection<Project> Projects { get; } = new();
+    public ObservableCollection<Project> Projects { get; set; } = new();
 
     /// <summary>
     /// Time to load in seconds

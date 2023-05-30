@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfAnalyzerGUI"
         xmlns:vm="clr-namespace:WpfAnalyzerGUI.VMs"
@@ -51,7 +52,17 @@
           <Button DockPanel.Dock="Right" Command="{Binding ScanAllCommand}" Margin="2" Padding="4,0,4,0">Scan All</Button>
           <Label></Label>
         </DockPanel>
-        <TreeView Grid.Column="0" ItemsSource="{Binding Solutions}" >
+        <TreeView x:Name="TheTreeView" ItemsSource="{Binding Solutions}" >
+          <!--<TreeView.ItemContainerStyle>
+            <Style TargetType="{x:Type TreeViewItem}">
+              <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+            </Style>
+          </TreeView.ItemContainerStyle>-->
+          <i:Interaction.Triggers>
+            <i:EventTrigger EventName="SelectedItemChanged">
+              <i:InvokeCommandAction Command="{Binding Mode=OneWay, Path=SelectionChangeCommand}" CommandParameter="{Binding ElementName=TheTreeView}" />
+            </i:EventTrigger>
+          </i:Interaction.Triggers>
           <TreeView.Resources>
             <HierarchicalDataTemplate DataType="{x:Type data:Solution}" ItemsSource="{Binding Projects}">
               <StackPanel Orientation="Horizontal">

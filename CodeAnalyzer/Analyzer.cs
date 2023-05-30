@@ -52,7 +52,7 @@ public static class Analyzer
             // If needed:
             // var prjCompilation = project.GetCompilationAsync().Result;
 
-            Data.Project projectData = new Data.Project(project.FilePath);
+            Data.Project projectData = new Data.Project(project.FilePath ?? "");
 
             foreach (Document document in project.Documents)
             {
@@ -71,7 +71,7 @@ public static class Analyzer
 
                 if (document.FilePath != null)
                 {
-                    Data.Document documentData = new Data.Document(document.FilePath);
+                    Data.Document documentData = new Data.Document(document.FilePath ?? "");
                     documentData.SyntaxNodes.AddRange(collector.Usings);
 
                     projectData.Documents.Add(documentData);
@@ -89,6 +89,7 @@ public static class Analyzer
 
         sw.Stop();
         solutionData.TimeToLoad = sw.ElapsedMilliseconds / (double)1000;
+
         return solutionData;
     }
 
@@ -122,7 +123,7 @@ public static class Analyzer
             // If needed:
             // var prjCompilation = project.GetCompilationAsync().Result;
 
-            Data.Project projectData = new Data.Project(project.FilePath);
+            Data.Project projectData = new Data.Project(project.FilePath ?? "");
 
             foreach (Document document in project.Documents)
             {
@@ -141,7 +142,7 @@ public static class Analyzer
 
                 if (document.FilePath != null)
                 {
-                    Data.Document documentData = new Data.Document(document.FilePath);
+                    Data.Document documentData = new Data.Document(document.FilePath ?? "");
                     documentData.SyntaxNodes.AddRange(collector.Usings);
 
                     projectData.Documents.Add(documentData);
@@ -192,6 +193,8 @@ public static class Analyzer
         foreach (var project in sln.Projects)
         {
             var prjCompilation = project.GetCompilationAsync().Result;
+            if (prjCompilation == null)
+                continue;
 
             string assemblyName = "System";
             var usingsInProject = prjCompilation.SyntaxTrees
@@ -201,11 +204,11 @@ public static class Analyzer
                 .Where(x => x.ToString().Contains(assemblyName))
                 ?.Select(y => y.Name);
 
-            Data.Project projectData = new Data.Project(project.FilePath);
+            Data.Project projectData = new Data.Project(project.FilePath ?? "");
 
             foreach (var document in project.Documents)
             {
-                Data.Document docData = new Data.Document(document.FilePath);
+                Data.Document docData = new Data.Document(document.FilePath ?? "");
 
                 SyntaxTree? tree = document.GetSyntaxTreeAsync().Result;
                 //Microsoft.CodeAnalysis.CSharp.Kind
