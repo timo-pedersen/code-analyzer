@@ -173,7 +173,6 @@ internal class MainVM : INotifyPropertyChanged
 
         Stopwatch sw = Stopwatch.StartNew();
 
-        int p = 1;
         var tasks = new List<Task>();
 
         var dispatcher = Dispatcher.CurrentDispatcher;
