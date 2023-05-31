@@ -4,9 +4,9 @@ using Microsoft.CodeAnalysis;
 
 namespace CodeAnalyzer.Walkers;
 
-public class SpecificUsingCollector : CSharpSyntaxWalker
+public class SpecificUsingCollector : CSharpSyntaxWalker, ISyntaxWalker
 {
-    public ICollection<UsingDirectiveSyntax> Usings { get; } = new List<UsingDirectiveSyntax>();
+    public ICollection<CSharpSyntaxNode> SyntaxNodes { get; } = new List<CSharpSyntaxNode>();
 
     private string SearchString { get; set; }
     private bool IgnoreCase { get; set; }
@@ -23,7 +23,7 @@ public class SpecificUsingCollector : CSharpSyntaxWalker
         if (IgnoreCase && node.Name.ToString().ToLower() == SearchString.ToLower()
             || !IgnoreCase && node.Name.ToString() == SearchString)
         {
-            Usings.Add(node);
+            SyntaxNodes.Add(node);
         }
     }
 }

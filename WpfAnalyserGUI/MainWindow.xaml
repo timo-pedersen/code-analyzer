@@ -67,8 +67,9 @@
             <HierarchicalDataTemplate DataType="{x:Type data:Solution}" ItemsSource="{Binding Projects}">
               <StackPanel Orientation="Horizontal">
                 <Ellipse Width="8" Height="8" Fill="DarkMagenta" />
-                <Label Foreground="DarkMagenta" IsEnabled="{Binding Loaded}">#</Label>
+                <Label Foreground="DarkMagenta" IsEnabled="{Binding Loaded}">###</Label>
                 <Label Content="{Binding Name}" />
+                <Label Foreground="DarkGray" FontStyle="Italic" Content="{Binding Message, Mode=TwoWay}" />
               </StackPanel>
             </HierarchicalDataTemplate>
             <HierarchicalDataTemplate DataType="{x:Type data:Project}" ItemsSource="{Binding Documents}">
@@ -83,6 +84,7 @@
           </TreeView.Resources>
         </TreeView>
       </DockPanel>
+      <TextBlock Grid.Column="1" Text="{Binding Path=DocumentText}"/> 
     </Grid>
   </Grid>
 </Window>

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using CodeAnalyzer.Walkers;
 using Microsoft.Build.Locator; // Finding MsBuild on system
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp; // Roslyn analysis
@@ -32,6 +33,7 @@ public static class Analyzer
         try
         {
             sln = await workspace.OpenSolutionAsync(solutionPath);
+            solutionData.Message = "Loaded.";
             solutionData.Loaded = true;
         }
         catch (Exception ex)
@@ -42,19 +44,23 @@ public static class Analyzer
 
         IEnumerable<Project> projects = sln.Projects;
         var projectsToConsider = projects
-            .Where(x => x.FilePath != null && x.FilePath.EndsWith(".csproj"));
-            //.Where(y => y.FilePath.Contains("Test"));
+            .Where(x => x.FilePath != null && x.FilePath.EndsWith(".csproj"))
+            ;
+
+        if (!projectsToConsider.Any())
+            return solutionData;
 
         progressMax.Report(projectsToConsider.Count());
         int projectCount = 1;
-        Parallel.ForEach(projectsToConsider, project =>
+        //Parallel.ForEach(projectsToConsider, project =>
+        foreach (Project project in projectsToConsider)
         {
             // If needed:
             // var prjCompilation = project.GetCompilationAsync().Result;
 
             Data.Project projectData = new Data.Project(project.FilePath ?? "");
 
-            foreach (Document document in project.Documents)
+            foreach (Document document in project.Documents.Where(x => !string.IsNullOrWhiteSpace(x.FilePath)))
             {
                 SyntaxTree? syntaxTree = document.GetSyntaxTreeAsync().Result;
 
@@ -63,29 +69,34 @@ public static class Analyzer
 
                 CompilationUnitSyntax root = syntaxTree.GetCompilationUnitRoot();
 
-                var collector = new Walkers.SpecificUsingCollector("Rhino.Mocks");
-                collector.Visit(root);
+                List<CSharpSyntaxWalker> collectors = new List<CSharpSyntaxWalker>
+                {
+                    new SpecificUsingCollector("Rhino.Mocks"),
+                    new RhinoGenerateStubCollector(),
+                };
 
-                if (!collector.Usings.Any())
+                collectors.ForEach(x => x.Visit(root));
+
+                if (!collectors.Any(x => ((ISyntaxWalker)x).SyntaxNodes.Any()))
                     continue; // Nothing to see here - move on
 
-                if (document.FilePath != null)
-                {
-                    Data.Document documentData = new Data.Document(document.FilePath ?? "");
-                    documentData.SyntaxNodes.AddRange(collector.Usings);
+                Data.Document documentData = new Data.Document(document.FilePath ?? "");
+                collectors.ForEach(x => documentData.SyntaxNodes.AddRange(((ISyntaxWalker)x).SyntaxNodes));
 
-                    projectData.Documents.Add(documentData);
-                }
+                projectData.Documents.Add(documentData);
             }
 
             progress.Report(projectCount++);
 
-            solutionData.Projects.Add(projectData);
+            if(projectData.Documents.Any())
+                solutionData.Projects.Add(projectData);
             
             if (projectData.Documents.Any())
-                solutionData.Loaded = true;
+                projectData.Loaded = true;
+        }
 
-        });
+        if (solutionData.Projects.Any())
+            solutionData.Loaded = true;
 
         sw.Stop();
         solutionData.TimeToLoad = sw.ElapsedMilliseconds / (double)1000;
@@ -137,13 +148,13 @@ public static class Analyzer
                 var collector = new Walkers.SpecificUsingCollector("Rhino.Mocks");
                 collector.Visit(root);
 
-                if (!collector.Usings.Any())
+                if (!collector.SyntaxNodes.Any())
                     continue; // Nothing to see here - move on
 
                 if (document.FilePath != null)
                 {
                     Data.Document documentData = new Data.Document(document.FilePath ?? "");
-                    documentData.SyntaxNodes.AddRange(collector.Usings);
+                    documentData.SyntaxNodes.AddRange(collector.SyntaxNodes);
 
                     projectData.Documents.Add(documentData);
                 }
@@ -157,6 +168,7 @@ public static class Analyzer
             }
 
         }
+
         sw.Stop();
         solutionData.TimeToLoad = sw.ElapsedMilliseconds / (double)1000;
         return solutionData;

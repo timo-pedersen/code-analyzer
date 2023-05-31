@@ -11,10 +11,12 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
-using System.Windows;
 using CodeAnalyzer;
 using System.Windows.Threading;
-using System.Windows.Controls;
+using System.Windows.Forms;
+using CodeAnalyzer.Data;
+using MessageBox = System.Windows.MessageBox;
+using TreeView = System.Windows.Controls.TreeView;
 
 namespace WpfAnalyzerGUI.VMs;
 
@@ -27,7 +29,7 @@ internal class MainVM : INotifyPropertyChanged
     public ICommand ScanAllCommand { get; }
     public ICommand SelectionChangeCommand { get; }
 
-    public ObservableCollection<CodeAnalyzer.Data.Solution> Solutions { get; } = new ();
+    public ObservableCollection<Solution> Solutions { get; } = new ();
     
     #region Observables =========================================================
     private int _progressMax1;
@@ -74,6 +76,17 @@ internal class MainVM : INotifyPropertyChanged
         }
     }
 
+    private string _documentText = string.Empty;
+    public string DocumentText
+    {
+        get => _documentText;
+        set
+        {
+            _documentText = value;
+            OnPropertyChanged();
+        }
+    }
+
     #endregion ============================================================
 
     public MainVM()
@@ -81,13 +94,23 @@ internal class MainVM : INotifyPropertyChanged
         BrowseFolderCommand = new RelayCommand(BrowseFolder);
         ScanCommand = new RelayCommand(Scan, ScanCanExecute);
         ScanAllCommand = new RelayCommand(ScanAll, ScanCanExecute);
-        SelectionChangeCommand = new RelayCommand(x => SelectedItem = x);
+        SelectionChangeCommand = new RelayCommand(SelectedTreeViewItemChangedHandler);
+
         ProgressMax1 = 100;
         ProgressValue1 = 0;
         ProgressMax2 = 100;
         ProgressValue2 = 0;
     }
 
+    private void SelectedTreeViewItemChangedHandler(object? obj)
+    {
+        SelectedItem = obj;
+
+        if (SelectedItem is Document doc)
+        {
+            DocumentText = File.ReadAllText(doc.Path);
+        }
+    }
 
     //private string _folderPath = "d:\\git3\\iXDeveloper\\";
     private string _folderPath = "D:\\git4\\iXDeveloper\\";
@@ -101,39 +124,63 @@ internal class MainVM : INotifyPropertyChanged
         }
     }
 
-    private string _selectedSolutionPath => SelectedItem is CodeAnalyzer.Data.Solution sln ? sln.Path : String.Empty;
-    public string SelectedSolutionPath
-    {
-        get => _selectedSolutionPath;
-        //set
-        //{
-        //    _selectedSolutionPath = value;
-        //    OnPropertyChanged();
-        //}
-    }
+    private string SelectedSolutionPath => SelectedItem is Solution sln ? sln.Path : string.Empty;
+    private string SelectedProjectPath => SelectedItem is Project prj ? prj.Path : string.Empty;
+    private string SelectedDocumentPath => SelectedItem is Document doc ? doc.Path : string.Empty;
 
     private object? _selectedItem;
-    public object? SelectedItem
+    private object? SelectedItem
     {
         get => _selectedItem;
         set
         {
-            if (value is TreeView tv)
+            if (value is TreeView treeView)
             {
-                _selectedItem = tv.SelectedItem;
+                _selectedItem = treeView.SelectedItem;
                 OnPropertyChanged();
             }
         }
     }
 
-    public CodeAnalyzer.Data.Solution? SelectedSolution
+    private Solution? SelectedSolution => Solutions.FirstOrDefault(x => x.Path == SelectedSolutionPath);
+
+    public Project? SelectedProject
     {
-        get => Solutions.FirstOrDefault(x => x.Path == SelectedSolutionPath);
+        get
+        {
+            if(string.IsNullOrWhiteSpace(SelectedProjectPath))
+                return null;
+
+            foreach (Solution solution in Solutions)
+            {
+                Project? theProject = solution.Projects.FirstOrDefault(x => x.Path == SelectedProjectPath);
+                if(theProject != null)
+                    return theProject;
+            }
+
+            return null;
+        }
     }
 
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    private Document? SelectedDocument
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        get
+        {
+            if(string.IsNullOrWhiteSpace(SelectedDocumentPath))
+                return null;
+
+            foreach (Solution solution in Solutions)
+            {
+                foreach (Project project in solution.Projects)
+                {
+                    Document? theDoc = project.Documents.FirstOrDefault(x => x.Path == SelectedDocumentPath);
+                    if(theDoc != null)
+                        return theDoc;
+                }
+            }
+
+            return null;
+        }
     }
 
     private async void BrowseFolder(object? o)
@@ -144,10 +191,7 @@ internal class MainVM : INotifyPropertyChanged
         List<FileInfo> solutionFiles = await GetSolutionFiles(FolderPath);
         
         Solutions.Clear();
-        foreach (FileInfo solution in solutionFiles)
-        {
-            Solutions.Add(new CodeAnalyzer.Data.Solution(solution.FullName));
-        }
+        solutionFiles.ForEach(x => Solutions.Add(new Solution(x.FullName)));
     }
 
     private async void ScanAll(object? o)
@@ -210,7 +254,6 @@ internal class MainVM : INotifyPropertyChanged
             SelectedSolution.Projects = slnData.Projects;
             //OnPropertyChanged(nameof(SelectedSolution));
             //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Solutions)));
-            Solutions.
         });
 
         sw.Stop();
@@ -239,6 +282,11 @@ internal class MainVM : INotifyPropertyChanged
         return Fs.GetFilesInFolder(FolderPath, true, "*.sln").Any();
     }
 
- 
+
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 }
 
