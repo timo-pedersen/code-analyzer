@@ -7,11 +7,18 @@
         xmlns:local="clr-namespace:WpfAnalyzerGUI"
         xmlns:vm="clr-namespace:WpfAnalyzerGUI.VMs"
         xmlns:data="clr-namespace:CodeAnalyzer.Data;assembly=CodeAnalyzer"
+        xmlns:converters="clr-namespace:Converters"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         FontFamily="Arial" FontSize="14">
   <Window.Resources>
     <vm:MainVM x:Key="vm" />
+    <converters:BoolToVisibilityConverter
+      x:Key="BoolToHiddenConverter"
+      TrueValue="Visible" FalseValue="Hidden" />
+    <converters:BoolToVisibilityConverter
+      x:Key="BoolToHiddenConverterNot"
+      FalseValue="Visible" TrueValue="Hidden" />
   </Window.Resources>
   <Window.DataContext>
     <Binding Source="{StaticResource vm}"/>
@@ -66,8 +73,11 @@
           <TreeView.Resources>
             <HierarchicalDataTemplate DataType="{x:Type data:Solution}" ItemsSource="{Binding Projects}">
               <StackPanel Orientation="Horizontal">
-                <Ellipse Width="8" Height="8" Fill="DarkMagenta" />
-                <Label Foreground="DarkMagenta" IsEnabled="{Binding Loaded}">###</Label>
+                <Ellipse Width="8" Height="8" Fill="DarkMagenta" 
+                         Visibility="{Binding Loaded,  Converter={StaticResource BoolToHiddenConverter}}" />
+                <Ellipse Width="8" Height="8" Fill="Gray" 
+                         Visibility="{Binding Loaded,  Converter={StaticResource BoolToHiddenConverterNot}}" />
+                <!--<Label Foreground="DarkMagenta" IsEnabled="{Binding Loaded}">###</Label>-->
                 <Label Content="{Binding Name}" />
                 <Label Foreground="DarkGray" FontStyle="Italic" Content="{Binding Message, Mode=TwoWay}" />
               </StackPanel>
@@ -84,7 +94,9 @@
           </TreeView.Resources>
         </TreeView>
       </DockPanel>
-      <TextBlock Grid.Column="1" Text="{Binding Path=DocumentText}"/> 
+      <ScrollViewer Grid.Column="1" Padding="2">
+        <TextBlock Text="{Binding Path=DocumentText}"/>
+      </ScrollViewer>
     </Grid>
   </Grid>
 </Window>
