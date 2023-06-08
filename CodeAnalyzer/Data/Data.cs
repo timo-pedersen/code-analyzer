@@ -10,13 +10,11 @@ public class Data : IData, INotifyPropertyChanged
     public string Path { get; }
     public string Name => System.IO.Path.GetFileNameWithoutExtension(Path);
 
-    public Data(string path)
+    protected Data(string path)
     {
         Path = path;
     }
 
-    public void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) => 
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 }

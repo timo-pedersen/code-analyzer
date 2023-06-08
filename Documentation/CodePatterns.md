@@ -15,3 +15,7 @@
 |  |  |  |  |
 |  |  |  |  |
 |  |  |  |  |
+
+## 3. GenerateStub
+
+![](img/GenerateStub.png)

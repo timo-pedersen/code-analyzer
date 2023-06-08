@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfAnalyzerGUI"
         xmlns:vm="clr-namespace:WpfAnalyzerGUI.VMs"
         xmlns:data="clr-namespace:CodeAnalyzer.Data;assembly=CodeAnalyzer"
         xmlns:converters="clr-namespace:Converters"
@@ -12,7 +11,7 @@
         Title="MainWindow" Height="450" Width="800"
         FontFamily="Arial" FontSize="14">
   <Window.Resources>
-    <vm:MainVM x:Key="vm" />
+    <vm:MainVM x:Key="Vm" />
     <converters:BoolToVisibilityConverter
       x:Key="BoolToHiddenConverter"
       TrueValue="Visible" FalseValue="Hidden" />
@@ -21,7 +20,7 @@
       FalseValue="Visible" TrueValue="Hidden" />
   </Window.Resources>
   <Window.DataContext>
-    <Binding Source="{StaticResource vm}"/>
+    <Binding Source="{StaticResource Vm}"/>
   </Window.DataContext>  <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="27"/>

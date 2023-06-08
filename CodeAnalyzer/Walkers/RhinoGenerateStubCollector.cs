@@ -22,12 +22,31 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
     {
         // Search for 8634 - InvocationExpression
 
-        if(!node.Expression.GetText().ToString().Contains(Text1)
-           || !node.Expression.GetText().ToString().Contains(Text2)) 
+        // Quick & dirty guard (does not catch all)
+        if(!(node.Expression.GetText().ToString().Contains(Text1)
+           && node.Expression.GetText().ToString().Contains(Text2))) 
             return;
 
+
+        // Better guard:
+        MemberAccessExpressionSyntax? memberAccessExpressionSyntax = (MemberAccessExpressionSyntax)node
+            .ChildNodesAndTokens()
+            .FirstOrDefault(x => x.RawKind == 8689);
+
+        // Debug
+        Microsoft.CodeAnalysis.ChildSyntaxList xxx = memberAccessExpressionSyntax.ChildNodesAndTokens();
+
+        IdentifierNameSyntax identifierNameSyntax = (IdentifierNameSyntax)memberAccessExpressionSyntax
+            .ChildNodes()
+            .Where(y => y.RawKind == 8616)
+            .First(x => ((IdentifierNameSyntax)x).Identifier.Text == Text1);
+
+
+
+        //var x = node.ChildNodesAndTokens().FirstOrDefault(x => x.RawKind == );
+
         // OK, should have a hit here.
-        
+
         // Get parent and add that
         var parentNode = node.Parent.Parent.Parent as CSharpSyntaxNode;
 
