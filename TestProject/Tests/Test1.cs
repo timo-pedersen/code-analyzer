@@ -11,8 +11,8 @@ public class Test1
     [SetUp]
     public void SetUp()
     {
-        var Class2Mock = MockRepository.GenerateStub<Class2>();
-        Sut = new Class1(Class2Mock);
+        var class2Mock = MockRepository.GenerateStub<Class2>();
+        Sut = new Class1(class2Mock);
     }
 
     [Test]

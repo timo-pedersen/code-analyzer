@@ -15,10 +15,24 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
 {
     public ICollection<CSharpSyntaxNode> SyntaxNodes { get; } = new List<CSharpSyntaxNode>();
 
+    private const string Text1 = "MockRepository";
+    private const string Text2 = "GenerateStub";
+
     public override void VisitInvocationExpression(InvocationExpressionSyntax node)
     {
+        // Search for 8634 - InvocationExpression
 
-        //SyntaxNodes.Add(node);
+        if(!node.Expression.GetText().ToString().Contains(Text1)
+           || !node.Expression.GetText().ToString().Contains(Text2)) 
+            return;
+
+        // OK, should have a hit here.
+        
+        // Get parent and add that
+        var parentNode = node.Parent.Parent.Parent as CSharpSyntaxNode;
+
+        SyntaxNodes.Add(parentNode);
+        MessageBox.Show( parentNode.RawKind + ":"+ parentNode.ToString());
     }
 }
 
