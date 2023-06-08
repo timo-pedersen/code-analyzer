@@ -87,6 +87,34 @@ internal class MainVM : INotifyPropertyChanged
         }
     }
 
+    //private string _folderPath = "d:\\git3\\iXDeveloper\\";
+    private string _folderPath = "D:\\git4\\iXDeveloper\\";
+    public string FolderPath
+    {
+        get => _folderPath;
+        set
+        {
+            _folderPath = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string CurrentPath
+    {
+        get 
+        {
+            string path = string.Empty;
+            if (SelectedItem is Solution solution) { path = solution.Path; }
+            if (SelectedItem is Project project) { path =  project.Path; }
+            if (SelectedItem is Document document) { path = document.Path; }
+
+            if(path.Length > FolderPath.Length) 
+                path = path.Substring(FolderPath.Length);
+
+            return path;
+        }
+    }
+
     #endregion ============================================================
 
     public MainVM()
@@ -112,18 +140,6 @@ internal class MainVM : INotifyPropertyChanged
         }
     }
 
-    //private string _folderPath = "d:\\git3\\iXDeveloper\\";
-    private string _folderPath = "D:\\git4\\iXDeveloper\\";
-    public string FolderPath
-    {
-        get => _folderPath;
-        set
-        {
-            _folderPath = value;
-            OnPropertyChanged();
-        }
-    }
-
     private string SelectedSolutionPath => SelectedItem is Solution sln ? sln.Path : string.Empty;
     private string SelectedProjectPath => SelectedItem is Project prj ? prj.Path : string.Empty;
     private string SelectedDocumentPath => SelectedItem is Document doc ? doc.Path : string.Empty;
@@ -138,6 +154,7 @@ internal class MainVM : INotifyPropertyChanged
             {
                 _selectedItem = treeView.SelectedItem;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(CurrentPath));
             }
         }
     }
@@ -252,8 +269,12 @@ internal class MainVM : INotifyPropertyChanged
         {
             SelectedSolution.Loaded = true;
             SelectedSolution.Projects = slnData.Projects;
+            SelectedSolution.TimeToLoad = slnData.TimeToLoad;
+            SelectedSolution.Message = $"{slnData.Message} ({slnData.TimeToLoad} ms)";
+
             //OnPropertyChanged(nameof(SelectedSolution));
             //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Solutions)));
+
         });
 
         sw.Stop();

@@ -8,7 +8,7 @@
         xmlns:vm="clr-namespace:WpfAnalyzerGUI.VMs"
         xmlns:data="clr-namespace:CodeAnalyzer.Data;assembly=CodeAnalyzer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="450" Width="1200"
         FontFamily="Arial" FontSize="14">
   <Window.Resources>
     <vm:MainVM x:Key="vm" />
@@ -18,6 +18,7 @@
   </Window.DataContext>  <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="27"/>
+      <RowDefinition Height="22"/>
       <RowDefinition/>
     </Grid.RowDefinitions>
 
@@ -40,17 +41,23 @@
       <Label Content="{Binding Solutions.Count}"/>
       <Label Content="solutions scanned"/>
     </StackPanel>
+    <StackPanel Grid.Row="1">
+      <Label Content="{Binding CurrentPath}"></Label>
+    </StackPanel>
     
-    <Grid Grid.Row="1" Margin="0,5,0,0">
+    
+    <Grid Grid.Row="2" Margin="0,5,0,0">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="133*"/>
+        <ColumnDefinition Width="5"/>
+        <ColumnDefinition Width="267*"/>
+        <ColumnDefinition Width="5"/>
         <ColumnDefinition Width="267*"/>
       </Grid.ColumnDefinitions>
       <DockPanel>
         <DockPanel VerticalAlignment="Bottom" HorizontalAlignment="Stretch" DockPanel.Dock="Bottom">
           <Button DockPanel.Dock="Left" Command="{Binding ScanCommand}" Margin="2" Padding="4,0,4,0">Scan selected</Button>
           <Button DockPanel.Dock="Right" Command="{Binding ScanAllCommand}" Margin="2" Padding="4,0,4,0">Scan All</Button>
-          <Label></Label>
         </DockPanel>
         <TreeView x:Name="TheTreeView" ItemsSource="{Binding Solutions}" >
           <!--<TreeView.ItemContainerStyle>
@@ -84,7 +91,19 @@
           </TreeView.Resources>
         </TreeView>
       </DockPanel>
-      <TextBlock Grid.Column="1" Text="{Binding Path=DocumentText}"/> 
+      
+      <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+
+      <ScrollViewer Margin="2" Grid.Column="2">
+        <TextBlock Text="{Binding Path=DocumentText}"/>
+      </ScrollViewer>
+      
+      <GridSplitter Grid.Column="3" Width="5" HorizontalAlignment="Stretch" />
+      
+      <ScrollViewer Margin="2" Grid.Column="4">
+        <TextBlock Text="{Binding Path=DocumentText}"/>
+      </ScrollViewer>
+
     </Grid>
   </Grid>
 </Window>
