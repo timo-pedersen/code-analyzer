@@ -1,8 +1,9 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace CodeAnalyzer.Data;
 
-public class Solution : Data
+public class Solution : Data, INotifyPropertyChanged
 {
     private bool _loaded { get; set; } = false;
     public bool Loaded
@@ -49,5 +50,10 @@ public class Solution : Data
     public override string ToString()
     {
         return $"{Name}, Projects: {Projects.Count}";
+    }
+
+    public void FirePropertyChanged()
+    {
+        OnPropertyChanged(nameof(Solution));
     }
 }
