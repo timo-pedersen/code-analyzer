@@ -10,4 +10,5 @@ namespace CodeAnalyzer.Walkers;
 public interface ISyntaxWalker
 {
     public ICollection<CSharpSyntaxNode> SyntaxNodes { get; }
+    public List<string> Log { get; }
 }

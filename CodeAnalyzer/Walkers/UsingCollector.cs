@@ -7,6 +7,7 @@ namespace CodeAnalyzer.Walkers;
 public class UsingCollector : CSharpSyntaxWalker, ISyntaxWalker
 {
     public ICollection<CSharpSyntaxNode> SyntaxNodes { get; } = new List<CSharpSyntaxNode>();
+    public List<string> Log { get; } = new();
 
     public override void VisitUsingDirective(UsingDirectiveSyntax node)
     {

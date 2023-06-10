@@ -21,6 +21,7 @@
     <ProjectReference Include="..\Constants\Constants.csproj" />
     <ProjectReference Include="..\Utils\Utils.csproj" />
     <ProjectReference Include="..\WinFormsUtils\WinFormsUtils.csproj" />
+    <ProjectReference Include="..\WpfUtils\WpfUtils.csproj" />
   </ItemGroup>
 
 </Project>
