@@ -128,6 +128,12 @@ internal class MainVM : INotifyPropertyChanged
         ProgressValue1 = 0;
         ProgressMax2 = 100;
         ProgressValue2 = 0;
+
+        (bool success, string folderPath) = Fs.ReadFileFromMyDocuments();
+        if (success && Path.Exists(folderPath)) 
+        {
+            FolderPath = folderPath;
+        }
     }
 
     private void SelectedTreeViewItemChangedHandler(object? obj)
@@ -204,6 +210,7 @@ internal class MainVM : INotifyPropertyChanged
     {
         (string path, bool ok) = Dlg.OpenFolderBrowser(FolderPath);
         if(ok) FolderPath = path;
+        Fs.SaveFileToMyDocuments(FolderPath);
 
         List<FileInfo> solutionFiles = await GetSolutionFiles(FolderPath);
         

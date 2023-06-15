@@ -1,11 +1,5 @@
 ﻿using Microsoft.CodeAnalysis.CSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using WpfUtils;
 
 namespace CodeAnalyzer.Walkers;
 
@@ -71,11 +65,6 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
         Log.Add($"Found type param: {typeParamIdentifierNameSyntax.Identifier.Text}");
 
         //var x = node.ChildNodesAndTokens().FirstOrDefault(x => x.RawKind == );
-
-        // OK, should have a hit here.
-
-        // Get parent and add that
-        //var parentNode = node.Parent.Parent.Parent as CSharpSyntaxNode;
 
         //SyntaxNodes.Add(parentNode);
         
