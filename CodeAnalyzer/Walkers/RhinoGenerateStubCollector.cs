@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Utils;
 
 namespace CodeAnalyzer.Walkers;
 
@@ -42,7 +43,7 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
             .Where(y => y.RawKind == 8616)
             ?.First(x => ((IdentifierNameSyntax)x).Identifier.Text == Text1);
 
-        if (identifierNameSyntax is null)
+        if (identifierNameSyntax == null)
             return;
 
         // Get second part + <T>
@@ -52,12 +53,28 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
             .Where(y => y.RawKind == 8618) // GenericName
             ?.First(x => ((GenericNameSyntax)x).Identifier.Text == Text2);
 
-        IdentifierNameSyntax? typeParamIdentifierNameSyntax = (IdentifierNameSyntax?)genericNameSyntax
+
+        // Test that we have GenerateStub
+        Microsoft.CodeAnalysis.SyntaxToken generateStubToken = genericNameSyntax.ChildTokens().First();
+        
+        if (generateStubToken.ValueText != Text2)
+            return;
+
+        // Get TypeArgumentList
+
+        TypeArgumentListSyntax? typeArgumentList =
+            (TypeArgumentListSyntax?)genericNameSyntax
             .ChildNodes()
-            .Where(y => y.RawKind == 8619) // TypeArgumentList
-            ?.FirstOrDefault()
-            ?.ChildNodes()
-            ?.First(x => x is GenericNameSyntax);
+            .Where(y => y.RawKind == (int)SyntaxKind.TypeArgumentList).FirstOrDefault();
+
+        // We expect: '<' + IdentifierName node + '>' contained in  typeArgumentList (only center part is a node)
+        var typeParamIdentifierNameSyntax = (IdentifierNameSyntax?)typeArgumentList.ChildNodes().FirstOrDefault();
+
+        var t = typeParamIdentifierNameSyntax.ToString();
+
+        MessageBox.Show(t);
+
+
 
         if (typeParamIdentifierNameSyntax is null)
             return;
@@ -67,7 +84,7 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
         //var x = node.ChildNodesAndTokens().FirstOrDefault(x => x.RawKind == );
 
         //SyntaxNodes.Add(parentNode);
-        
+
         WpfUtils.MessageBox.ShowList(Log);
     }
 }
