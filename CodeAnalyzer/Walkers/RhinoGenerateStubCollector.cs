@@ -72,18 +72,12 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
 
         var t = typeParamIdentifierNameSyntax.ToString();
 
-        MessageBox.Show(t);
-
-
-
         if (typeParamIdentifierNameSyntax is null)
             return;
 
+        MessageBox.Show(t);
+
         Log.Add($"Found type param: {typeParamIdentifierNameSyntax.Identifier.Text}");
-
-        //var x = node.ChildNodesAndTokens().FirstOrDefault(x => x.RawKind == );
-
-        //SyntaxNodes.Add(parentNode);
 
         WpfUtils.MessageBox.ShowList(Log);
     }

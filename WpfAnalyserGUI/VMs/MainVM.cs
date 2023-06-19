@@ -13,10 +13,12 @@ using System.IO;
 using System.Threading.Tasks;
 using CodeAnalyzer;
 using System.Windows.Threading;
-using System.Windows.Forms;
 using CodeAnalyzer.Data;
 using MessageBox = System.Windows.MessageBox;
 using TreeView = System.Windows.Controls.TreeView;
+using System.Windows.Documents;
+using Microsoft.CodeAnalysis.CSharp;
+using WpfAnalyserGUI.FlowDoc;
 
 namespace WpfAnalyzerGUI.VMs;
 
@@ -30,7 +32,11 @@ internal class MainVM : INotifyPropertyChanged
     public ICommand SelectionChangeCommand { get; }
 
     public ObservableCollection<Solution> Solutions { get; } = new ();
-    
+    private List<CSharpSyntaxNode> SyntaxNodes { get; set;  }
+
+    private System.Windows.Documents.FlowDocument theFlowDoc;
+    public System.Windows.Documents.FlowDocument TheFlowDoc { get => theFlowDoc; set => SetProperty(ref theFlowDoc, value); }
+
     #region Observables =========================================================
     private int _progressMax1;
     public int ProgressMax1
@@ -134,6 +140,9 @@ internal class MainVM : INotifyPropertyChanged
         {
             FolderPath = folderPath;
         }
+
+        TheFlowDoc = new FlowDocument();
+        TheFlowDoc.Blocks.Add(new Paragraph(new Run("...")));
     }
 
     private void SelectedTreeViewItemChangedHandler(object? obj)
@@ -142,7 +151,10 @@ internal class MainVM : INotifyPropertyChanged
 
         if (SelectedItem is Document doc)
         {
-            DocumentText = File.ReadAllText(doc.Path);
+            string text = File.ReadAllText(doc.Path);
+            DocumentText = text;
+
+            TheFlowDoc = CodeFormatter.GenerateFlowDoc(text, SyntaxNodes);
         }
     }
 
@@ -310,11 +322,22 @@ internal class MainVM : INotifyPropertyChanged
         return Fs.GetFilesInFolder(FolderPath, true, "*.sln").Any();
     }
 
-
-
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+
+    protected bool SetProperty<T>(ref T field, T newValue, [CallerMemberName] string propertyName = null)
+    {
+        if (!Equals(field, newValue))
+        {
+            field = newValue;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return true;
+        }
+
+        return false;
+    }
+
 }
 
