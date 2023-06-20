@@ -16,7 +16,7 @@ public class Class2 : IClass2
         Name2 = name2;
     }
 
-    public void OnSomeEvent()
+    public void FireSomeEvent()
     {
         SomeEvent?.Invoke(this, new SomeEvent2Args("Class2: Some event happened"));
         SomeEventCallCount++;
@@ -24,13 +24,13 @@ public class Class2 : IClass2
 
     public string GetFullName1()
     {
-        OnSomeEvent();
+        FireSomeEvent();
         return Name1 + " " + Name2;
     }
 
     public string GetFullName2()
     {
-        OnSomeEvent();
+        FireSomeEvent();
         return Name2 + ", " + Name1;
     }
 }

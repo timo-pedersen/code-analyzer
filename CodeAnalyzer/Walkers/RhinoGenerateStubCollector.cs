@@ -17,15 +17,16 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
 
     public override void VisitInvocationExpression(InvocationExpressionSyntax node)
     {
-        Log.Add ($"Entering {this.GetType().Name} with node: {node}");
+        //Log.Add ($"Entering {this.GetType().Name} with node: {node}");
 
         // Search for 8634 - InvocationExpression
 
         // Quick & dirty guard
         if(!(node.Expression.GetText().ToString().Contains(Text1)
            && node.Expression.GetText().ToString().Contains(Text2))) 
-            return;
+           return;
 
+        Log.Add($"Entering {this.GetType().Name} with node: {node}");
 
         // Get expressions we need: Identifier, GenerateStub<T> and specifically T
         MemberAccessExpressionSyntax? memberAccessExpressionSyntax = (MemberAccessExpressionSyntax?)node
@@ -53,6 +54,7 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
             .Where(y => y.RawKind == 8618) // GenericName
             ?.First(x => ((GenericNameSyntax)x).Identifier.Text == Text2);
 
+        if(genericNameSyntax == null) return;
 
         // Test that we have GenerateStub
         Microsoft.CodeAnalysis.SyntaxToken generateStubToken = genericNameSyntax.ChildTokens().First();
@@ -70,20 +72,12 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
         // We expect: '<' + IdentifierName node + '>' contained in  typeArgumentList (only center part is a node)
         var typeParamIdentifierNameSyntax = (IdentifierNameSyntax?)typeArgumentList.ChildNodes().FirstOrDefault();
 
-        var t = typeParamIdentifierNameSyntax.ToString();
-
-        MessageBox.Show(t);
-
-
-
         if (typeParamIdentifierNameSyntax is null)
             return;
 
         Log.Add($"Found type param: {typeParamIdentifierNameSyntax.Identifier.Text}");
 
-        //var x = node.ChildNodesAndTokens().FirstOrDefault(x => x.RawKind == );
-
-        //SyntaxNodes.Add(parentNode);
+        SyntaxNodes.Add(node);
 
         WpfUtils.MessageBox.ShowList(Log);
     }
