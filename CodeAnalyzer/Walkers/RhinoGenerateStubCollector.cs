@@ -72,8 +72,11 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
         // We expect: '<' + IdentifierName node + '>' contained in  typeArgumentList (only center part is a node)
         var typeParamIdentifierNameSyntax = (IdentifierNameSyntax?)typeArgumentList.ChildNodes().FirstOrDefault();
 
+
         if (typeParamIdentifierNameSyntax is null)
             return;
+
+        MessageBox.Show(t);
 
         Log.Add($"Found type param: {typeParamIdentifierNameSyntax.Identifier.Text}");
 

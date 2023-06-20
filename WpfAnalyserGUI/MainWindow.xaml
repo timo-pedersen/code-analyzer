@@ -21,7 +21,8 @@
   </Window.Resources>
   <Window.DataContext>
     <Binding Source="{StaticResource Vm}"/>
-  </Window.DataContext>  <Grid>
+  </Window.DataContext>
+  <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="27"/>
       <RowDefinition Height="22"/>
@@ -50,8 +51,8 @@
     <StackPanel Grid.Row="1">
       <Label Content="{Binding CurrentPath}"></Label>
     </StackPanel>
-    
-    
+
+
     <Grid Grid.Row="2" Margin="0,5,0,0">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="133*"/>
@@ -100,18 +101,21 @@
           </TreeView.Resources>
         </TreeView>
       </DockPanel>
-      
+
       <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
 
       <ScrollViewer Margin="2" Grid.Column="2">
         <TextBlock Text="{Binding Path=DocumentText}"/>
       </ScrollViewer>
-      
+
       <GridSplitter Grid.Column="3" Width="5" HorizontalAlignment="Stretch" />
-      
-      <ScrollViewer Margin="2" Grid.Column="4">
+
+      <!--<ScrollViewer Margin="2" Grid.Column="4">
         <TextBlock Text="{Binding Path=DocumentText}"/>
-      </ScrollViewer>
+      </ScrollViewer>-->
+      <FlowDocumentScrollViewer Margin="2" Grid.Column="4" FontFamily="Consolas" Document="{Binding Path=TheFlowDoc}" />
+
+
 
     </Grid>
   </Grid>
