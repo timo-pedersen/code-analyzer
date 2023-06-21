@@ -31,13 +31,10 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
         // Get expressions we need: Identifier, GenerateStub<T> and specifically T
         MemberAccessExpressionSyntax? memberAccessExpressionSyntax = (MemberAccessExpressionSyntax?)node
             .ChildNodesAndTokens()
-            .FirstOrDefault(x => x.RawKind == 8689);
+            .FirstOrDefault(x => x.RawKind == (int)SyntaxKind.SimpleMemberAccessExpression);
 
         if (memberAccessExpressionSyntax is null)
             return;
-
-        // Debug
-        Microsoft.CodeAnalysis.ChildSyntaxList xxx = memberAccessExpressionSyntax.ChildNodesAndTokens();
 
         IdentifierNameSyntax? identifierNameSyntax = (IdentifierNameSyntax?)memberAccessExpressionSyntax
             .ChildNodes()
@@ -51,7 +48,7 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
 
         GenericNameSyntax? genericNameSyntax = (GenericNameSyntax?)memberAccessExpressionSyntax
             .ChildNodes()
-            .Where(y => y.RawKind == 8618) // GenericName
+            .Where(y => y.RawKind == (int)SyntaxKind.GenericName)
             ?.First(x => ((GenericNameSyntax)x).Identifier.Text == Text2);
 
         if(genericNameSyntax == null) return;
@@ -70,13 +67,15 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
             .Where(y => y.RawKind == (int)SyntaxKind.TypeArgumentList).FirstOrDefault();
 
         // We expect: '<' + IdentifierName node + '>' contained in  typeArgumentList (only center part is a node)
-        var typeParamIdentifierNameSyntax = (IdentifierNameSyntax?)typeArgumentList.ChildNodes().FirstOrDefault();
-
+        // ToDo: Can be GenericNameSyntax, please note and handle
+        // Both Identifiername and GeneriName nodes inherit from SimpleNameSyntax
+        var typeParamIdentifierNameSyntax = (SimpleNameSyntax?)typeArgumentList?.ChildNodes().FirstOrDefault();
 
         if (typeParamIdentifierNameSyntax is null)
+        {
+            Log.Add($"ERROR: Type param was null, exiting.");
             return;
-
-        MessageBox.Show(t);
+        }
 
         Log.Add($"Found type param: {typeParamIdentifierNameSyntax.Identifier.Text}");
 

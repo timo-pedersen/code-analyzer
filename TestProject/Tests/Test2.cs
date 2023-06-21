@@ -4,7 +4,7 @@ using Rhino.Mocks;
 namespace TestProject.Tests;
 
 [TestFixture]
-public class Test1
+public class Test2
 {
     private IClass1? Sut;
 

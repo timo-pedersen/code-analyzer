@@ -32,10 +32,10 @@ internal class MainVM : INotifyPropertyChanged
     public ICommand SelectionChangeCommand { get; }
 
     public ObservableCollection<Solution> Solutions { get; } = new ();
-    private List<CSharpSyntaxNode> SyntaxNodes { get; set;  }
+    private List<CSharpSyntaxNode> SyntaxNodes { get; set; } = new ();
 
-    private System.Windows.Documents.FlowDocument theFlowDoc;
-    public System.Windows.Documents.FlowDocument TheFlowDoc { get => theFlowDoc; set => SetProperty(ref theFlowDoc, value); }
+    private System.Windows.Documents.FlowDocument? theFlowDoc;
+    public System.Windows.Documents.FlowDocument? TheFlowDoc { get => theFlowDoc; set => SetProperty(ref theFlowDoc, value); }
 
     #region Observables =========================================================
     private int _progressMax1;
@@ -143,6 +143,13 @@ internal class MainVM : INotifyPropertyChanged
 
         TheFlowDoc = new FlowDocument();
         TheFlowDoc.Blocks.Add(new Paragraph(new Run("...")));
+
+        // Preload if possible
+        if (Directory.Exists(FolderPath))
+        {
+            List<FileInfo> solutionFiles = GetSolutionFiles(FolderPath);
+            solutionFiles.ForEach(x => Solutions.Add(new Solution(x.FullName)));
+        }
     }
 
     private void SelectedTreeViewItemChangedHandler(object? obj)
@@ -154,7 +161,7 @@ internal class MainVM : INotifyPropertyChanged
             string text = File.ReadAllText(doc.Path);
             DocumentText = text;
 
-            TheFlowDoc = CodeFormatter.GenerateFlowDoc(text, SyntaxNodes);
+            TheFlowDoc = CodeFormatter.GenerateFlowDoc(text, doc.SyntaxNodes);
         }
     }
 
@@ -224,7 +231,7 @@ internal class MainVM : INotifyPropertyChanged
         if(ok) FolderPath = path;
         Fs.SaveFileToMyDocuments(FolderPath);
 
-        List<FileInfo> solutionFiles = await GetSolutionFiles(FolderPath);
+        List<FileInfo> solutionFiles = await GetSolutionFilesAsync(FolderPath);
         
         Solutions.Clear();
         solutionFiles.ForEach(x => Solutions.Add(new Solution(x.FullName)));
@@ -238,7 +245,7 @@ internal class MainVM : INotifyPropertyChanged
 
         Stopwatch sw = Stopwatch.StartNew();
 
-        List<FileInfo> solutionFiles = await GetSolutionFiles(FolderPath);
+        List<FileInfo> solutionFiles = await GetSolutionFilesAsync(FolderPath);
 
         string collectedMsg = "";
 
@@ -301,9 +308,9 @@ internal class MainVM : INotifyPropertyChanged
     }
 
 
-    private async Task<List<FileInfo>> GetSolutionFiles(string path)
+    private async Task<List<FileInfo>> GetSolutionFilesAsync(string path)
     {
-        Task <List<FileInfo>> t =  Task.Run(() =>
+        Task<List<FileInfo>> t = Task.Run(() =>
         {
             List<FileInfo> solutionFiles = Fs.GetFilesInFolder(path, true, "*.sln")
                 //.Where(x => x.Name.Contains("Neo.sln"))
@@ -317,6 +324,15 @@ internal class MainVM : INotifyPropertyChanged
         return t.Result;
     }
 
+    private List<FileInfo> GetSolutionFiles(string path)
+    {
+        List<FileInfo> solutionFiles = Fs.GetFilesInFolder(path, true, "*.sln")
+            //.Where(x => x.Name.Contains("Neo.sln"))
+            .ToList();
+
+        return solutionFiles;
+    }
+
     private bool ScanCanExecute(object? o)
     {
         return Fs.GetFilesInFolder(FolderPath, true, "*.sln").Any();
@@ -327,7 +343,7 @@ internal class MainVM : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    protected bool SetProperty<T>(ref T field, T newValue, [CallerMemberName] string propertyName = null)
+    protected bool SetProperty<T>(ref T field, T newValue, [CallerMemberName] string? propertyName = null)
     {
         if (!Equals(field, newValue))
         {
