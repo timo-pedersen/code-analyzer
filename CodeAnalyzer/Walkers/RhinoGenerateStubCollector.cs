@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Utils;
 using Const = Constants.Const;
@@ -11,6 +12,7 @@ namespace CodeAnalyzer.Walkers;
 public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
 {
     public ICollection<CSharpSyntaxNode> SyntaxNodes { get; } = new List<CSharpSyntaxNode>();
+    public ICollection<CSharpSyntaxNode> ParameterNodes { get; } = new List<CSharpSyntaxNode>();// This is where we store the T in GenerateStub<T>.
     public List<string> Log { get; } = new ();
 
     private const string Text1 = "MockRepository";
@@ -20,13 +22,11 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
     {
         try
         {
-            //Log.Add ($"Entering {this.GetType().Name} with node: {node}");
-
             // Search for 8634 - InvocationExpression
 
             // Quick & dirty guard
-            if (!(node.Expression.GetText().ToString().Contains(Text1)
-               && node.Expression.GetText().ToString().Contains(Text2)))
+            string text = node.Expression.GetText().ToString();
+            if (!(text.Contains(Text1) && text.Contains(Text2)))
                 return;
 
             Log.Add($"Entering {this.GetType().Name} with node: {node}");
@@ -37,19 +37,36 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
                 .FirstOrDefault(x => x.RawKind == (int)SyntaxKind.SimpleMemberAccessExpression);
 
             if (memberAccessExpressionSyntax is null)
+            {
+                Log.Add("Unknow expression");
                 return;
+            }
 
-            IdentifierNameSyntax? identifierNameSyntax = (IdentifierNameSyntax?)memberAccessExpressionSyntax
+            // Here we are expecting either a Identifier node or an invocationExpression.
+            // In case of invocationExpression, just go down the tree until we find an identifierExpression
+            CSharpSyntaxNode? tmpNode = memberAccessExpressionSyntax;
+            while (tmpNode?.ChildNodes()?.FirstOrDefault()?.RawKind != (int)SyntaxKind.IdentifierName)
+                tmpNode = (CSharpSyntaxNode?)tmpNode?.ChildNodes().FirstOrDefault();
+
+            if(tmpNode is null)
+            {
+                Log.Add($"Something went wrong - tmpNode is null. Parent expression is '{memberAccessExpressionSyntax}'.");
+                return;
+            }
+
+            IdentifierNameSyntax? identifierNameSyntax = (IdentifierNameSyntax?)tmpNode
                 .ChildNodes()
                 ?.Where(y => y.RawKind == (int)SyntaxKind.IdentifierName)
                 ?.FirstOrDefault(x => ((IdentifierNameSyntax)x).Identifier.Text == Text1);
 
             if (identifierNameSyntax == null)
+            {
+                Log.Add($"Found expressionNode, but no matching Identifier for {Text1}");
                 return;
+            }
 
             // Get second part + <T>
-
-            GenericNameSyntax? genericNameSyntax = (GenericNameSyntax?)memberAccessExpressionSyntax
+            GenericNameSyntax? genericNameSyntax = (GenericNameSyntax?)tmpNode
                 .ChildNodes()
                 .Where(y => y.RawKind == (int)SyntaxKind.GenericName)
                 ?.First(x => ((GenericNameSyntax)x).Identifier.Text == Text2);
@@ -72,21 +89,27 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
             // We expect: '<' + IdentifierName node + '>' contained in  typeArgumentList (only center part is a node)
             // ToDo: Can be GenericNameSyntax, please note and handle
             // Both Identifiername and GeneriName nodes inherit from SimpleNameSyntax
-            var typeParamIdentifierNameSyntax = (NameSyntax?)typeArgumentList?.ChildNodes().FirstOrDefault();
+            var typeParamSyntax = typeArgumentList?.ChildNodes().FirstOrDefault();
 
-            if (typeParamIdentifierNameSyntax is null)
+
+            if (typeParamSyntax is null)
             {
                 Log.Add($"ERROR: Type param was null, exiting.");
                 return;
             }
 
-            Log.Add($"Found type param: {typeParamIdentifierNameSyntax}");
+            Log.Add($"Found type param: {typeParamSyntax}");
 
-            SyntaxNodes.Add(node);
+            // Parent of tmpNode can not be null here
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8604 // Possible null reference argument.
+            SyntaxNodes.Add((CSharpSyntaxNode)tmpNode.Parent); // Node including the '()'
+#pragma warning restore CS8604
+#pragma warning restore CS8600
 
-            //WpfUtils.MessageBox.ShowList(Log);
+            ParameterNodes.Add((CSharpSyntaxNode)typeParamSyntax); // T in <T>
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             MessageBox.Show($"Exception thrown when entering {node} in parent {node.Parent}{Const.NL}{Const.NL}Ex: {ex.Message}{Const.NL}StackTrace{Const.NL}{ex.StackTrace}", "ERROR");
         }

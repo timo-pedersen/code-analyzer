@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace CodeAnalyzer.Walkers;
 public interface ISyntaxWalker
 {
     public ICollection<CSharpSyntaxNode> SyntaxNodes { get; }
+    public ICollection<CSharpSyntaxNode> ParameterNodes { get; }
     public List<string> Log { get; }
 }

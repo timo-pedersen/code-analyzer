@@ -7,6 +7,7 @@ namespace CodeAnalyzer.Walkers;
 public class SpecificUsingCollector : CSharpSyntaxWalker, ISyntaxWalker
 {
     public ICollection<CSharpSyntaxNode> SyntaxNodes { get; } = new List<CSharpSyntaxNode>();
+    public ICollection<CSharpSyntaxNode> ParameterNodes { get; } = new List<CSharpSyntaxNode>();
     public List<string> Log { get; } = new();
 
     private string SearchString { get; set; }

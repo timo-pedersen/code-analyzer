@@ -7,6 +7,7 @@ public class Document : Data
     public int Matches { get; set; }
 
     public List<CSharpSyntaxNode> SyntaxNodes { get; } = new();
+    public List<CSharpSyntaxNode> ParameterNodes { get; } = new();
 
     public Document(string path) : base(path) { }
 }
