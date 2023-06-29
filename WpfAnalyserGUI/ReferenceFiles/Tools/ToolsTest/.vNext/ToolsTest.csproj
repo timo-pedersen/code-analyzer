@@ -1,0 +1,165 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0-windows;net48</TargetFrameworks>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <IsPackable>false</IsPackable>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <RootNamespace>Neo.ApplicationFramework.Tools</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;VNEXT_TARGET;VNEXT_TARGET_NEEDS_REIMPLEMENTATION;VNEXT_TARGET_INCLUDED;VNEXT_TARGET_STRUCTURE_DIFFERENCE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;VNEXT_TARGET;VNEXT_TARGET_NEEDS_REIMPLEMENTATION;VNEXT_TARGET_INCLUDED;VNEXT_TARGET_STRUCTURE_DIFFERENCE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\**\*.cs" />
+    <Compile Remove="*.cs" />
+
+    <Compile Remove="obj\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <None Remove="obj\**" />
+
+    <Compile Remove="..\obj\**" />
+    <EmbeddedResource Remove="..\obj\**" />
+    <None Remove="..\obj\**" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="..\About\FeatureConfigurationFacadeTest.cs" />
+    <Compile Remove="..\About\FeatureConfigurationViewModelTest.cs" />
+    <Compile Remove="..\Action\ActionEditors\ViewModels\*.cs" />
+    <Compile Remove="..\Action\ActionPropPageProviderTest.cs" />
+    <Compile Remove="..\Action\Validation\InvalidActionValidatorTest.cs" />
+    <Compile Remove="..\Build\**\*.cs" />
+    <Compile Remove="..\CommonPropertyPages\ServerPropertyPageTest.cs" />
+    <Compile Remove="..\Configurations\*.cs" />
+    <Compile Remove="..\ControllerManager\**\*.cs" />
+    <Compile Remove="..\CreateSeries\CreateSeriesTest.cs" />
+    <Compile Remove="..\CrossReference\**\*.cs" />
+    <Compile Remove="..\Database\*.cs" />
+    <Compile Remove="..\Design\**\*.cs" />
+    <Compile Remove="..\EventMapper\EventMapperServiceTest.cs" />
+    <Compile Remove="..\Event\DeadSubscriptionsRemoverTest.cs" />
+    <Compile Remove="..\FileUtilities\FileSettingsToolTest.cs" />
+    <Compile Remove="..\FontUsageManager\FontServiceTest.cs" />
+    <Compile Remove="..\Help\*.cs" />
+    <Compile Remove="..\ImportExport\*.cs" />
+    <Compile Remove="..\InformationDesignerImport\**\*.cs" />
+    <Compile Remove="..\Localization\*.cs" />
+    <Compile Remove="..\MessageLibrary\MessageImportExportTest.cs" />
+    <Compile Remove="..\MessageRecorder\*.cs" />
+    <Compile Remove="..\MiniToolbar\MiniToolbarLogicTest.cs" />
+    <Compile Remove="..\NavigationManager\NavigationModelTest.cs" />
+    <Compile Remove="..\ObjectBrowser\*.cs" />
+    <Compile Remove="..\OptionsManager\*.cs" />
+    <Compile Remove="..\ProjectManager\**\*.cs" />
+    <Compile Remove="..\PropertyGrid\ObjectPropertyServiceTest.cs" />
+    <Compile Remove="..\Registration\KeyValidatorTest.cs" />
+    <Compile Remove="..\RegistryAccess\MRUListTest.cs" />
+    <Compile Remove="..\RibbonManager\**\*.cs" />
+    <Compile Remove="..\Rules\InternalReferenceTest.cs" />
+    <Compile Remove="..\Scheduler\SchedulerPdaTest\**\*.cs" />
+    <Compile Remove="..\ScreenObjectDecorator\ScreenObjectDecoratorServiceTest.cs" />
+    <Compile Remove="..\Screen\ScreenEditor\**\*.cs" />
+    <Compile Remove="..\ScriptEditor\**\*.cs" />
+    <Compile Remove="..\Screen\ScreenIDServiceTest.cs" />
+    <Compile Remove="..\Security\FeatureSecurityServiceIdeTest.cs" />
+    <Compile Remove="..\Security\FeatureSecurityToolXmlWriterTest.cs" />
+    <Compile Remove="..\Security\SecuredFeatureBaseTest.cs" />
+    <Compile Remove="..\Selection\SelectionServicesTest.cs" />
+    <Compile Remove="..\Serialization\**\*.cs" />
+    <Compile Remove="..\StructuredTags\**\*.cs" />
+    <Compile Remove="..\Tag\TagUsageValidatorTest.cs" />
+    <Compile Remove="..\ToolManager\ToolViewSiteTest.cs" />
+    <Compile Remove="..\Transfer\*.cs" />
+    <Compile Remove="..\TypeList\TypeListServiceTest.cs" />
+    <Compile Remove="..\TypeNames\TestClassAvailablity.cs" />
+    <Compile Remove="..\TypeReference\TypeReferenceManagerTest.cs" />
+    <Compile Remove="..\UndoManager\*.cs" />
+    <Compile Remove="..\UpdateManager\*.cs" />
+    <Compile Remove="..\WebServer\**\*.cs" />
+    <Compile Remove="..\Wizards\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\Screen\ScreenIDsDummy.xml" Link="Screen\ScreenIDsDummy.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Screen\ScreenIDsWithErrosDummy.xml" Link="Screen\ScreenIDsWithErrosDummy.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\TrendViewer\TestFiles\TrendDataConfigTest.xml" Link="TrendViewer\TestFiles\TrendDataConfigTest.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+    <PackageReference Include="NSubstitute" Version="4.2.2" />
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+    <PackageReference Include="coverlet.collector" Version="1.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Storage\Providers\SQLiteDatabase\SQLiteDatabaseCF\.vNext\SQLiteDatabaseCF.csproj" />
+    <ProjectReference Include="..\..\..\Interfaces\Interfaces\.vNext\Interfaces.csproj" />
+    <ProjectReference Include="..\..\..\Test\TestUtilities\.vNext\TestUtilities.csproj" />
+    <ProjectReference Include="..\..\ToolsCF\.vNext\ToolsCF.csproj" />
+    <ProjectReference Include="..\..\Tools\.vNext\Tools.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="CommunicationServerProtocols">
+      <HintPath>..\..\..\Install\Shared\Dependencies\CommunicationServerProtocols.dll</HintPath>
+    </Reference>
+    <Reference Include="DataSourceInterop">
+      <HintPath>..\..\..\Interop\DataSource\BeDataSource2\Interop\DataSourceInterop.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\Reporting\Generating\ExampleReports\2sheet5x5.xls" Link="Reporting\Generating\ExampleReports\2sheet5x5.xls">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Reporting\Generating\ExampleReports\ColumnWidth.xls" Link="Reporting\Generating\ExampleReports\ColumnWidth.xls">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Reporting\Generating\ExampleReports\landscapeSheetWithHPageBreak.xls" Link="Reporting\Generating\ExampleReports\landscapeSheetWithHPageBreak.xls">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Reporting\Generating\ExampleReports\ReportExample1.xls" Link="Reporting\Generating\ExampleReports\ReportExample1.xls">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Reporting\Generating\ExampleReports\ReportExample2.xls" Link="Reporting\Generating\ExampleReports\ReportExample2.xls">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Reporting\Generating\ExampleReports\ReportExample3.xls" Link="Reporting\Generating\ExampleReports\ReportExample3.xls">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Reporting\Generating\ExampleReports\ReportExample4.xls" Link="Reporting\Generating\ExampleReports\ReportExample4.xls">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Reporting\Generating\ExampleReports\ReportExample5.xls" Link="Reporting\Generating\ExampleReports\ReportExample5.xls">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Reporting\Generating\ExampleReports\ReportExample6.xls" Link="Reporting\Generating\ExampleReports\ReportExample6.xls">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Reporting\Generating\ExampleReports\ReportForSerialDevice.xls" Link="Reporting\Generating\ExampleReports\ReportForSerialDevice.xls">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Reporting\Generating\ExampleReports\UnicodeExample.xls" Link="Reporting\Generating\ExampleReports\UnicodeExample.xls">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

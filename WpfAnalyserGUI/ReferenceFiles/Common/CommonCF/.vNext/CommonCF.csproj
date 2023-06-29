@@ -1,0 +1,96 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0-windows;net48</TargetFrameworks>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>false</UseWPF> <!--Since the port is all about Winforms now, exclude WPF-->
+    <!--System.Resources.Extensions + GenerateResourceUsePreserializedResources true fixes resource issue -->
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+    <Configurations>Debug;Release</Configurations>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>Neo.ApplicationFramework.Common</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;VNEXT_TARGET;VNEXT_TARGET_NEEDS_REIMPLEMENTATION;VNEXT_TARGET_INCLUDED;VNEXT_TARGET_STRUCTURE_DIFFERENCE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;VNEXT_TARGET;VNEXT_TARGET_NEEDS_REIMPLEMENTATION;VNEXT_TARGET_INCLUDED;VNEXT_TARGET_STRUCTURE_DIFFERENCE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+		<Compile Include="..\**\*.cs" />
+		<EmbeddedResource Include="..\**\*.resx" />
+
+		<Compile Remove="obj\**" />
+		<EmbeddedResource Remove="obj\**" />
+		<None Remove="obj\**" />
+
+		<Compile Remove="..\obj\**" />
+		<EmbeddedResource Remove="..\obj\**" />
+		<None Remove="..\obj\**" />
+
+
+		<Compile Include="..\..\..\Applications\NeoIDE\NeoIDE\Properties\VersionInfo.cs" Link="Properties\VersionInfo.cs" />
+		<Compile Include="..\..\..\Applications\NeoIDE\NeoIDE\Properties\SolutionInfo.cs" Link="Properties\SolutionInfo.cs" />
+	</ItemGroup>
+
+  
+	
+  <ItemGroup>
+    <Reference Include="BeHwApiProvider">
+      <HintPath>..\..\..\Install\Shared\Dependencies\BeHwApiProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="DataSourceInterop">
+      <HintPath>..\..\..\Interop\DataSource\BeDataSource2\Interop\DataSourceInterop.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="CoreCF.Component.Engine" Version="3.0.31" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0-preview.4.21179.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\.vNext\Stubs\vNextStubs.csproj" />
+    <ProjectReference Include="..\..\..\Attributes\AttributesCF\.vNext\AttributesCF.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\ApplicationFramework\ApplicationFrameworkCF\.vNext\ApplicationFrameworkCF.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\SignatureInterfaces\SignatureInterfacesCF\.vNext\SignatureInterfacesCF.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Storage\StorageCF\.vNext\StorageCF.csproj" />
+    <ProjectReference Include="..\..\..\Interfaces\InterfacesCF\.vNext\InterfacesCF.csproj" />
+    <ProjectReference Include="..\..\..\Resources\ResourcesCF\.vNext\ResourcesCF.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="..\Brand\BrandToolResource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BrandToolResource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="..\Brand\BrandToolResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>BrandToolResource.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Neo.ApplicationFramework.Common.Brand</CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup Condition="$(BrandName)!=''">
+    <Compile Remove="..\Brand\BrandConstants.cs" />
+    <Compile Include="..\..\..\Brands\$(BrandName)\Resources\BrandConstants.cs" />
+  </ItemGroup>
+ 
+</Project>

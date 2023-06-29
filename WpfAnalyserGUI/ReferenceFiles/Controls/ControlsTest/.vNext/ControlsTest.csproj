@@ -1,0 +1,90 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0-windows;net48</TargetFrameworks>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <IsPackable>false</IsPackable>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <RootNamespace>Neo.ApplicationFramework.Controls</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;VNEXT_TARGET;VNEXT_TARGET_NEEDS_REIMPLEMENTATION;VNEXT_TARGET_INCLUDED;VNEXT_TARGET_STRUCTURE_DIFFERENCE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;VNEXT_TARGET;VNEXT_TARGET_NEEDS_REIMPLEMENTATION;VNEXT_TARGET_INCLUDED;VNEXT_TARGET_STRUCTURE_DIFFERENCE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\**\*.cs" />
+    <Compile Remove="..\ControlsIde\**\*.cs" />
+
+    <Compile Remove="obj\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <None Remove="obj\**" />
+
+    <Compile Remove="..\obj\**" />
+    <EmbeddedResource Remove="..\obj\**" />
+    <None Remove="..\obj\**" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+    <PackageReference Include="coverlet.collector" Version="1.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(DefineConstants.Contains('NOTRELEASABLE'))">
+    <PackageReference Include="Resco-Reverse-DO-NOT-RELEASE-TO-CUSTOMER" Version="1.0.1" />
+  </ItemGroup>
+  <ItemGroup Condition="!$(DefineConstants.Contains('NOTRELEASABLE'))">
+    <Reference Include="Resco.AdvancedComboBox">
+      <HintPath>..\..\..\ThirdParty\MobileFormsToolkit\Desktop\Resco.AdvancedComboBox.dll</HintPath>
+    </Reference>
+    <Reference Include="Resco.AdvancedList">
+      <HintPath>..\..\..\ThirdParty\MobileFormsToolkit\Desktop\Resco.AdvancedList.dll</HintPath>
+    </Reference>
+    <Reference Include="Resco.CommonControls">
+      <HintPath>..\..\..\ThirdParty\MobileFormsToolkit\Desktop\Resco.CommonControls.dll</HintPath>
+    </Reference>
+    <Reference Include="Resco.Core">
+      <HintPath>..\..\..\ThirdParty\MobileFormsToolkit\Desktop\Resco.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Resco.OutlookControls">
+      <HintPath>..\..\..\ThirdParty\MobileFormsToolkit\Desktop\Resco.OutlookControls.dll</HintPath>
+    </Reference>
+    <Reference Include="Resco.ScrollBar">
+      <HintPath>..\..\..\ThirdParty\MobileFormsToolkit\Desktop\Resco.ScrollBar.dll</HintPath>
+    </Reference>
+    <Reference Include="Resco.SmartGrid">
+      <HintPath>..\..\..\ThirdParty\MobileFormsToolkit\Desktop\Resco.SmartGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Resco.UIElements">
+      <HintPath>..\..\..\ThirdParty\MobileFormsToolkit\Desktop\Resco.UIElements.dll</HintPath>
+    </Reference>
+    <Reference Include="Resco.UIElements.Controls">
+      <HintPath>..\..\..\ThirdParty\MobileFormsToolkit\Desktop\Resco.UIElements.Controls.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Common\.vNext\Common.csproj" />
+    <ProjectReference Include="..\..\..\Controls\ControlsCF\.vNext\ControlsCF.csproj" />
+    <ProjectReference Include="..\..\..\Test\TestUtilities\.vNext\TestUtilities.csproj" />
+    <ProjectReference Include="..\..\Controls\.vNext\Controls.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="NeoNativeSignature">
+      <HintPath>..\..\..\OutputNeoNative\Release\NeoNativeSignature.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

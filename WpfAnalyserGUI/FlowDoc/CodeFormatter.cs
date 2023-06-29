@@ -66,6 +66,22 @@ public static class CodeFormatter
         return res;
     }
 
+    public static FlowDocument GeneratePlainFlowDoc(string src)
+    {
+        FlowDocument flowDoc = new FlowDocument();
+
+        Paragraph paragraph = new Paragraph();
+        paragraph.FontFamily = new FontFamily("Courier New");
+
+        Run run = new Run(src);
+
+        paragraph.Inlines.Add(run);
+
+        flowDoc.Blocks.Add(paragraph);
+
+        return flowDoc;
+    }
+
     public enum TextType
     {
         Normal = 0,

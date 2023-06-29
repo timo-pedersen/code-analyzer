@@ -18,6 +18,9 @@
     <converters:BoolToVisibilityConverter
       x:Key="BoolToHiddenConverterNot"
       FalseValue="Visible" TrueValue="Hidden" />
+    <Style TargetType="{x:Type FlowDocumentScrollViewer}" x:Key="baseStyle">
+      <Setter Property="FontSize" Value="9" />
+    </Style>
   </Window.Resources>
   <Window.DataContext>
     <Binding Source="{StaticResource Vm}"/>
@@ -104,9 +107,10 @@
 
       <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
 
-      <ScrollViewer Margin="2" Grid.Column="2">
-        <TextBlock Text="{Binding Path=DocumentText}"/>
-      </ScrollViewer>
+      <!--<ScrollViewer Margin="2" Grid.Column="2">
+        <TextBlock FontFamily="Consolas" Text="{Binding Path=ReferenceDocumentText}"/>
+      </ScrollViewer>-->
+      <FlowDocumentScrollViewer Margin="2" Grid.Column="2" FontFamily="Consolas" Document="{Binding Path=TheReferenceFlowDoc}" />
 
       <GridSplitter Grid.Column="3" Width="5" HorizontalAlignment="Stretch" />
 

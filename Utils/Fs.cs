@@ -4,6 +4,8 @@ namespace Utils;
 
 public static class Fs
 {
+    public static string ApplicationPath => AppContext.BaseDirectory;
+
     public static IEnumerable<FileInfo> GetFilesInFolder(string folder, bool recurse = false, string filter = "*.*")
     {
         DirectoryInfo currentDir = new DirectoryInfo(folder.Trim());

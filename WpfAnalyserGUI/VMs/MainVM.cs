@@ -37,6 +37,9 @@ internal class MainVM : INotifyPropertyChanged
     private System.Windows.Documents.FlowDocument? theFlowDoc;
     public System.Windows.Documents.FlowDocument? TheFlowDoc { get => theFlowDoc; set => SetProperty(ref theFlowDoc, value); }
 
+    private System.Windows.Documents.FlowDocument? theReferenceFlowDoc;
+    public System.Windows.Documents.FlowDocument? TheReferenceFlowDoc { get => theReferenceFlowDoc; set => SetProperty(ref theReferenceFlowDoc, value); }
+
     #region Observables =========================================================
     private int _progressMax1;
     public int ProgressMax1
@@ -89,6 +92,17 @@ internal class MainVM : INotifyPropertyChanged
         set
         {
             _documentText = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private string _referenceDocumentText = string.Empty;
+    public string ReferenceDocumentText
+    {
+        get => _referenceDocumentText;
+        set
+        {
+            _referenceDocumentText = value;
             OnPropertyChanged();
         }
     }
@@ -160,6 +174,18 @@ internal class MainVM : INotifyPropertyChanged
         {
             string text = File.ReadAllText(doc.Path);
             DocumentText = text;
+
+            string refPath = WpfAnalyserGUI.Tools.Files.FindCorrespondingReferenceDocument(doc.Path, FolderPath);
+            if (string.IsNullOrWhiteSpace(refPath) || !File.Exists(refPath))
+            {
+                ReferenceDocumentText = "<Reference File Not Found>";
+            }
+            else
+            {
+                ReferenceDocumentText = File.ReadAllText(refPath);
+            }
+
+            TheReferenceFlowDoc = CodeFormatter.GeneratePlainFlowDoc(ReferenceDocumentText);
 
             TheFlowDoc = CodeFormatter.GenerateFlowDoc(text, doc.SyntaxNodes);
         }

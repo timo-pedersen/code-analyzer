@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ReferenceFiles\**" />
+    <EmbeddedResource Remove="ReferenceFiles\**" />
+    <None Remove="ReferenceFiles\**" />
+    <Page Remove="ReferenceFiles\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Annotations.cs" />
   </ItemGroup>
 
@@ -24,4 +31,10 @@
     <ProjectReference Include="..\WpfUtils\WpfUtils.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="ReferenceFiles\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  
 </Project>
