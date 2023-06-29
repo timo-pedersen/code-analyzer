@@ -19,6 +19,7 @@ using TreeView = System.Windows.Controls.TreeView;
 using System.Windows.Documents;
 using Microsoft.CodeAnalysis.CSharp;
 using WpfAnalyserGUI.FlowDoc;
+using System.Windows.Controls;
 
 namespace WpfAnalyzerGUI.VMs;
 
@@ -30,6 +31,7 @@ internal class MainVM : INotifyPropertyChanged
     public ICommand ScanCommand { get; }
     public ICommand ScanAllCommand { get; }
     public ICommand SelectionChangeCommand { get; }
+    public ICommand MouseWheelCommand { get; }
 
     public ObservableCollection<Solution> Solutions { get; } = new ();
     private List<CSharpSyntaxNode> SyntaxNodes { get; set; } = new ();
@@ -51,6 +53,8 @@ internal class MainVM : INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
+
+    private int _fontSize = 9;
 
     private int _progressValue1;
     public int ProgressValue1
@@ -143,6 +147,7 @@ internal class MainVM : INotifyPropertyChanged
         ScanCommand = new RelayCommand(Scan, ScanCanExecute);
         ScanAllCommand = new RelayCommand(ScanAll, ScanCanExecute);
         SelectionChangeCommand = new RelayCommand(SelectedTreeViewItemChangedHandler);
+        MouseWheelCommand = new RelayCommand(MouseWheelHandler);
 
         ProgressMax1 = 100;
         ProgressValue1 = 0;
@@ -156,7 +161,7 @@ internal class MainVM : INotifyPropertyChanged
         }
 
         TheFlowDoc = new FlowDocument();
-        TheFlowDoc.Blocks.Add(new Paragraph(new Run("...")));
+        TheFlowDoc.Blocks.Add(new Paragraph(new Run(Constants.Const.Ellipsis)));
 
         // Preload if possible
         if (Directory.Exists(FolderPath))
@@ -186,9 +191,28 @@ internal class MainVM : INotifyPropertyChanged
             }
 
             TheReferenceFlowDoc = CodeFormatter.GeneratePlainFlowDoc(ReferenceDocumentText);
+            TheReferenceFlowDoc.FontSize = _fontSize;
 
             TheFlowDoc = CodeFormatter.GenerateFlowDoc(text, doc.SyntaxNodes);
+            TheFlowDoc.FontSize = _fontSize;
         }
+    }
+
+    // Handles mouse wheel for the flow docs
+    private void MouseWheelHandler(object? obj)
+    {
+        if (!(obj is FlowDocumentScrollViewer flowDocument))
+            return;
+
+        if (Keyboard.Modifiers != ModifierKeys.Control)
+            return;
+
+        if (flowDocument.Name == "FlowDoc")
+            TheReferenceFlowDoc.FontSize = flowDocument.FontSize;
+        else
+            TheFlowDoc.FontSize = flowDocument.FontSize;
+
+
     }
 
     private string SelectedSolutionPath => SelectedItem is Solution sln ? sln.Path : string.Empty;
@@ -299,7 +323,7 @@ internal class MainVM : INotifyPropertyChanged
         await Task.WhenAll(tasks);
 
         sw.Stop();
-        MessageBox.Show($"Took {sw.ElapsedMilliseconds / 1000} seconds.\r" + collectedMsg);
+        //MessageBox.Show($"Took {sw.ElapsedMilliseconds / 1000} seconds.\r" + collectedMsg);
     }
 
     private async void Scan(object? o)

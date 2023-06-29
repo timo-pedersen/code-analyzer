@@ -18,9 +18,9 @@
     <converters:BoolToVisibilityConverter
       x:Key="BoolToHiddenConverterNot"
       FalseValue="Visible" TrueValue="Hidden" />
-    <Style TargetType="{x:Type FlowDocumentScrollViewer}" x:Key="baseStyle">
-      <Setter Property="FontSize" Value="9" />
-    </Style>
+    <!--<Style TargetType="{x:Type FlowDocument}" x:Key="FontSizeStyle">
+      <Setter Property="FontSize" Value="4" />
+    </Style>-->
   </Window.Resources>
   <Window.DataContext>
     <Binding Source="{StaticResource Vm}"/>
@@ -75,6 +75,16 @@
               <Setter Property="IsSelected" Value="{Binding IsSelected}" />
             </Style>
           </TreeView.ItemContainerStyle>-->
+          
+          <!--
+          <DataGrid>
+            <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseDoubleClick">
+              <i:InvokeCommandAction Command="{Binding Mode=OneWay, Path=OpenClientCommand}" CommandParameter="{Binding ElementName=searchResults, Path=SelectedItems}" />
+            </i:EventTrigger>
+            </i:Interaction.Triggers>
+          </DataGrid>
+          -->
           <i:Interaction.Triggers>
             <i:EventTrigger EventName="SelectedItemChanged">
               <i:InvokeCommandAction Command="{Binding Mode=OneWay, Path=SelectionChangeCommand}" CommandParameter="{Binding ElementName=TheTreeView}" />
@@ -110,16 +120,23 @@
       <!--<ScrollViewer Margin="2" Grid.Column="2">
         <TextBlock FontFamily="Consolas" Text="{Binding Path=ReferenceDocumentText}"/>
       </ScrollViewer>-->
-      <FlowDocumentScrollViewer Margin="2" Grid.Column="2" FontFamily="Consolas" Document="{Binding Path=TheReferenceFlowDoc}" />
+      <FlowDocumentScrollViewer x:Name="RefDoc" Margin="2" Grid.Column="2" FontFamily="Consolas" Document="{Binding Path=TheReferenceFlowDoc}" >
+        <i:Interaction.Triggers>
+          <i:EventTrigger EventName="PreviewMouseWheel">
+            <i:InvokeCommandAction Command="{Binding Mode=OneWay, Path=MouseWheelCommand}" CommandParameter="{Binding ElementName=RefDoc}"/>
+          </i:EventTrigger>
+        </i:Interaction.Triggers>
+      </FlowDocumentScrollViewer>
 
       <GridSplitter Grid.Column="3" Width="5" HorizontalAlignment="Stretch" />
 
-      <!--<ScrollViewer Margin="2" Grid.Column="4">
-        <TextBlock Text="{Binding Path=DocumentText}"/>
-      </ScrollViewer>-->
-      <FlowDocumentScrollViewer Margin="2" Grid.Column="4" FontFamily="Consolas" Document="{Binding Path=TheFlowDoc}" />
-
-
+      <FlowDocumentScrollViewer x:Name="FlowDoc" Margin="2" Grid.Column="4" FontFamily="Consolas" Document="{Binding Path=TheFlowDoc}" >
+        <i:Interaction.Triggers>
+          <i:EventTrigger EventName="PreviewMouseWheel">
+            <i:InvokeCommandAction Command="{Binding Mode=OneWay, Path=MouseWheelCommand}"  CommandParameter="{Binding ElementName=FlowDoc}"/>
+          </i:EventTrigger>
+        </i:Interaction.Triggers>
+      </FlowDocumentScrollViewer>
 
     </Grid>
   </Grid>
