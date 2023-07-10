@@ -8,8 +8,8 @@ namespace CodeAnalyzer.Walkers;
 // Gets all that are not under ns "System"
 public class UsingCollector : CSharpSyntaxWalker, ISyntaxWalker
 {
-    public ICollection<CSharpSyntaxNode> SyntaxNodes { get; } = new List<CSharpSyntaxNode>();
-    public ICollection<CSharpSyntaxNode> ParameterNodes { get; } = new List<CSharpSyntaxNode>();
+    public ICollection<SyntaxNodeContainer> SyntaxNodes { get; } = new List<SyntaxNodeContainer>();
+
     public List<string> Log { get; } = new();
 
     public override void VisitUsingDirective(UsingDirectiveSyntax node)
@@ -17,7 +17,7 @@ public class UsingCollector : CSharpSyntaxWalker, ISyntaxWalker
         if (node.Name.ToString() != "System" &&
             !node.Name.ToString().StartsWith("System."))
         {
-            SyntaxNodes.Add(node);
+            SyntaxNodes.Add(new SyntaxNodeContainer(node));
         }
     }
 }

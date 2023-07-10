@@ -6,8 +6,7 @@ namespace CodeAnalyzer.Walkers;
 
 public class SpecificUsingCollector : CSharpSyntaxWalker, ISyntaxWalker
 {
-    public ICollection<CSharpSyntaxNode> SyntaxNodes { get; } = new List<CSharpSyntaxNode>();
-    public ICollection<CSharpSyntaxNode> ParameterNodes { get; } = new List<CSharpSyntaxNode>();
+    public ICollection<SyntaxNodeContainer> SyntaxNodes { get; } = new List<SyntaxNodeContainer>();
     public List<string> Log { get; } = new();
 
     private string SearchString { get; set; }
@@ -25,7 +24,7 @@ public class SpecificUsingCollector : CSharpSyntaxWalker, ISyntaxWalker
         if (IgnoreCase && node.Name.ToString().ToLower() == SearchString.ToLower()
             || !IgnoreCase && node.Name.ToString() == SearchString)
         {
-            SyntaxNodes.Add(node);
+            SyntaxNodes.Add(new SyntaxNodeContainer(node));
         }
     }
 }
