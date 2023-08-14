@@ -24,4 +24,8 @@
     <ProjectReference Include="..\WpfUtils\WpfUtils.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SolutionComparer\" />
+  </ItemGroup>
+
 </Project>

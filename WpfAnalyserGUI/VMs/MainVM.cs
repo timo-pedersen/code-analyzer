@@ -193,7 +193,7 @@ internal class MainVM : INotifyPropertyChanged
             TheReferenceFlowDoc = CodeFormatter.GeneratePlainFlowDoc(ReferenceDocumentText);
             TheReferenceFlowDoc.FontSize = _fontSize;
 
-            TheFlowDoc = CodeFormatter.GenerateFlowDoc(text, doc.SyntaxNodes);
+            TheFlowDoc = CodeFormatter.GenerateFlowDoc(text, doc.SyntaxNodes.Select(x => x.SyntaxNode));
             TheFlowDoc.FontSize = _fontSize;
         }
     }
@@ -277,7 +277,7 @@ internal class MainVM : INotifyPropertyChanged
 
     private async void BrowseFolder(object? o)
     {
-        (string path, bool ok) = Dlg.OpenFolderBrowser(FolderPath);
+        (string path, bool ok) = Dlg.OpenFolderBrowser(FolderPath, "Select solution folder");
         if(ok) FolderPath = path;
         Fs.SaveFileToMyDocuments(FolderPath);
 
@@ -387,13 +387,15 @@ internal class MainVM : INotifyPropertyChanged
     {
         return Fs.GetFilesInFolder(FolderPath, true, "*.sln").Any();
     }
+    
+    #region INotifyPropertyChanged etc --------------------------
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    protected bool SetProperty<T>(ref T field, T newValue, [CallerMemberName] string? propertyName = null)
+    private bool SetProperty<T>(ref T field, T newValue, [CallerMemberName] string? propertyName = null)
     {
         if (!Equals(field, newValue))
         {
@@ -404,6 +406,8 @@ internal class MainVM : INotifyPropertyChanged
 
         return false;
     }
+
+    #endregion INotifyPropertyChanged -----------------------
 
 }
 

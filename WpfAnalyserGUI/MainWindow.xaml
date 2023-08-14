@@ -11,6 +11,10 @@
         Title="MainWindow" Height="450" Width="1200"
         FontFamily="Arial" FontSize="14">
   <Window.Resources>
+    <Style TargetType="Paragraph">
+      <!-- 20.0 is default. It's pixels not characters though -->
+      <Setter Property="TextIndent" Value="30" /> 
+    </Style>
     <vm:MainVM x:Key="Vm" />
     <converters:BoolToVisibilityConverter
       x:Key="BoolToHiddenConverter"

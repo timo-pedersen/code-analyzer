@@ -61,16 +61,17 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
                 {
                 case "With":
                 {
-                    MockRepository.GenerateStub<T>().ToILazy().ToBuzy();
-
-                    HandleWithTrail();
-                    return;
+                    //MockRepository.GenerateStub<T>().ToILazy().ToBuzy();
+                    //HandleWithTrail();
+                    //return;
+                    break;
                 }
                 case "ToLazy":
                 default:
                 {
-                    HandleGenericTrail();
-                    return;
+                    //HandleGenericTrail();
+                    //return;
+                    break;
                 }
                 }
             }
@@ -115,10 +116,8 @@ public class RhinoGenerateStubCollector : CSharpSyntaxWalker, ISyntaxWalker
                 .Where(y => y.RawKind == (int)SyntaxKind.TypeArgumentList).FirstOrDefault();
 
             // We expect: '<' + IdentifierName node + '>' contained in  typeArgumentList (only center part is a node)
-            // ToDo: Can be GenericNameSyntax, please note and handle
             // Both Identifiername and GenericName nodes inherit from SimpleNameSyntax
             var typeParamSyntax = typeArgumentList?.ChildNodes().FirstOrDefault();
-
 
             if (typeParamSyntax is null)
             {

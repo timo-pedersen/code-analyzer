@@ -81,8 +81,8 @@ public static class Analyzer
                     continue; // Nothing to see here - move on
 
                 Data.Document documentData = new Data.Document(document.FilePath ?? "");
-                collectors.ForEach(x => documentData.SyntaxNodes.AddRange(((ISyntaxWalker)x).SyntaxNodes));
-                collectors.ForEach(x => documentData.ParameterNodes.AddRange(((ISyntaxWalker)x).ParameterNodes));
+                //collectors.ForEach(x => documentData.SyntaxNodes.AddRange(((ISyntaxWalker)x).SyntaxNodes));
+                //collectors.ForEach(x => documentData.ParameterNodes.AddRange(((ISyntaxWalker)x).ParameterNodes));
 
                 projectData.Documents.Add(documentData);
             }

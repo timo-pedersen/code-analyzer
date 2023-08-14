@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Animation;
@@ -28,18 +29,24 @@ namespace WpfAnalyserGUI.Tools
             {
                 string basePath = docRelativePath.Split(Path.DirectorySeparatorChar)?[0] ?? "";
 
-                List<string> files = new DirectoryInfo(Path.Combine(referencePath, basePath))
-                    .EnumerateFiles(Path.GetFileName(documentPath), SearchOption.AllDirectories)
-                    .Select(f => f.FullName)
-                    .ToList();
+                var files = new List<string>();
 
-                if (files.Any())
-                    return files[0];
-                else
+                // Old ref repo may not have files
+                try
+                {
+                    files = new DirectoryInfo(Path.Combine(referencePath, basePath))
+                        .EnumerateFiles(Path.GetFileName(documentPath), SearchOption.AllDirectories)
+                        .Select(f => f.FullName)
+                        .ToList();
+                }
+                catch { /* ignored */ }
+
+                if (!files.Any())
                     return "";
+
+                ret = files[0];
             }
 
-            //new DirectoryInfo(Path.Combine(referencePath, "Tools")).EnumerateFiles("SystemGenerationServiceTest.cs", SearchOption.AllDirectories).ToList();
             return ret;
         }
     }

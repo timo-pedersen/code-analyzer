@@ -2,12 +2,11 @@
 
 public static class Dlg
 {
-    public static (string, bool) OpenFolderBrowser(string startPath)
+    public static (string, bool) OpenFolderBrowser(string startPath, string description = "Select folder")
     {
-
         using var dialog = new FolderBrowserDialog
         {
-            Description = "Select solution folder...",
+            Description = description,
             UseDescriptionForTitle = true,
             SelectedPath = startPath,
             InitialDirectory = startPath,
@@ -21,4 +20,21 @@ public static class Dlg
 
         return (startPath, false);
     }
+
+    public static (string, bool) OpenSelectFileBrowser(string startPath, string description = "Select file")
+    {
+        using var dialog = new OpenFileDialog
+        {
+            Title = description,
+            InitialDirectory = startPath,
+        };
+
+        if (dialog.ShowDialog() == DialogResult.OK)
+        {
+            return (dialog.FileName, true);
+        }
+
+        return ("", false);
+    }
+
 }
