@@ -24,35 +24,91 @@ namespace WpfAnalyserGUI.VMs
 {
     internal class SolutionComparer  : INotifyPropertyChanged
     {
-        private string _solutionPath1;
-        private string _solutionPath2;
+        private string m_SolutionPath1 = "";
+        private string m_SolutionPath2 = "";
+        private string m_SolutionText1 = "";
+        private string m_SolutionText2 = "";
+
+        #region RelayCommands ------------------------------
+        public ICommand BrowseSolutionCommand { get; }
+        #endregion Commands
 
         #region Observables ---------------------------------
 
         public string SolutionPath1
         {
-            get => _solutionPath1;
+            get => m_SolutionPath1;
             set
             {
-                _solutionPath2 = value;
+                m_SolutionPath1 = value;
                 OnPropertyChanged();
             }
         }
 
         public string SolutionPath2
         {
-            get => _solutionPath2;
+            get => m_SolutionPath2;
             set
             {
-                _solutionPath2 = value;
+                m_SolutionPath2 = value;
                 OnPropertyChanged();
             }
         }
 
+        public string SolutionText1
+        {
+            get => m_SolutionText1;
+            set
+            {
+                m_SolutionText1 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string SolutionText2
+        {
+            get => m_SolutionText2;
+            set
+            {
+                m_SolutionText2 = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+
         #endregion ------------------------------------------
 
-        
+        public SolutionComparer()
+        {
+            BrowseSolutionCommand = new RelayCommand(BrowseSolution);
+        }
 
+        private void BrowseSolution(object? obj)
+        {
+            int solutionNo = Convert.ToInt32(obj);
+
+            if (solutionNo < 1 || solutionNo > 2)
+                return;
+
+            // ReSharper disable ConvertToLocalFunction
+            Func<int, string> getPath = i => i == 1 ? SolutionPath1 : SolutionPath2;
+            Action<int, string> setPath = (i, s) =>
+            {
+                if (i == 1)
+                    SolutionPath1 = s;
+                else
+                    SolutionPath2 = s;
+            };
+            // ReSharper restore ConvertToLocalFunction
+
+            (string path, bool ok) = Dlg.OpenSelectFileBrowser(getPath(solutionNo), "Select solution");
+
+            if (!ok)
+                return;
+
+            setPath(solutionNo,  path);
+        }
 
 
         #region INotifyPropertyChanged ------------------

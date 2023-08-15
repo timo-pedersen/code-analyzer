@@ -37,4 +37,20 @@ public static class Dlg
         return ("", false);
     }
 
+    public static (string, bool) OpenSaveFileBrowser(string startPath, string description = "Select file")
+    {
+        using var dialog = new SaveFileDialog
+        {
+            Title = description,
+            InitialDirectory = startPath,
+        };
+
+        if (dialog.ShowDialog() == DialogResult.OK)
+        {
+            return (dialog.FileName, true);
+        }
+
+        return ("", false);
+    }
+
 }

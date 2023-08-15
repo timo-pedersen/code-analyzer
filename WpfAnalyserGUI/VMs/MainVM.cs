@@ -20,18 +20,18 @@ using System.Windows.Documents;
 using Microsoft.CodeAnalysis.CSharp;
 using WpfAnalyserGUI.FlowDoc;
 using System.Windows.Controls;
+using WpfAnalyserGUI;
 
 namespace WpfAnalyzerGUI.VMs;
 
 internal class MainVM : INotifyPropertyChanged
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     public ICommand BrowseFolderCommand { get; }
     public ICommand ScanCommand { get; }
     public ICommand ScanAllCommand { get; }
     public ICommand SelectionChangeCommand { get; }
     public ICommand MouseWheelCommand { get; }
+    public ICommand OpenSolutionComparerCommand { get; }
 
     public ObservableCollection<Solution> Solutions { get; } = new ();
     private List<CSharpSyntaxNode> SyntaxNodes { get; set; } = new ();
@@ -148,6 +148,7 @@ internal class MainVM : INotifyPropertyChanged
         ScanAllCommand = new RelayCommand(ScanAll, ScanCanExecute);
         SelectionChangeCommand = new RelayCommand(SelectedTreeViewItemChangedHandler);
         MouseWheelCommand = new RelayCommand(MouseWheelHandler);
+        OpenSolutionComparerCommand = new RelayCommand(OpenSolutionComparer);
 
         ProgressMax1 = 100;
         ProgressValue1 = 0;
@@ -169,6 +170,12 @@ internal class MainVM : INotifyPropertyChanged
             List<FileInfo> solutionFiles = GetSolutionFiles(FolderPath);
             solutionFiles.ForEach(x => Solutions.Add(new Solution(x.FullName)));
         }
+    }
+
+    private void OpenSolutionComparer(object? obj)
+    {
+        var comparerWindow = new SolutionComparerGui();
+        comparerWindow.Show();
     }
 
     private void SelectedTreeViewItemChangedHandler(object? obj)
@@ -390,6 +397,8 @@ internal class MainVM : INotifyPropertyChanged
     
     #region INotifyPropertyChanged etc --------------------------
 
+    public event PropertyChangedEventHandler? PropertyChanged;
+    
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

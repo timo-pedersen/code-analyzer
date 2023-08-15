@@ -14,16 +14,17 @@ public static class Fs
         {
             files = currentDir.EnumerateFiles(filter, recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
         }
-        catch { } // return empty if error, like if path not found
+        catch { /*return empty if error, like if path not found*/ } 
         
         return files;
     }
 
     /// <summary>
     /// Saves a string to MyDocuments/dirName/fileName. Easy way to save app data as text.
-    /// N.B: Overwites file
+    /// N.B: Overwrites file
     /// </summary>
-    /// <param name="textfile">Defaults to application name</param>
+    /// <param name="text">Defaults to application name</param>
+    /// <param name="fileName">Name of file</param>
     /// <param name="dirName">Defaults to "data.bin"</param>
     public static bool SaveFileToMyDocuments(string text, string fileName = "", string dirName = "")
     {
@@ -56,7 +57,7 @@ public static class Fs
     /// <summary>
     /// Reads text from MyDocuments/dirName/fileName. Easy way to load app data as text.
     /// </summary>
-    /// <param name="textfile">Defaults to application name</param>
+    /// <param name="fileName">Defaults to application name</param>
     /// <param name="dirName">Defaults to "data.bin"</param>
     public static (bool success, string data) ReadFileFromMyDocuments(string fileName = "", string dirName = "")
     {

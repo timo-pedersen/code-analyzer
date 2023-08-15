@@ -8,12 +8,16 @@
         xmlns:data="clr-namespace:CodeAnalyzer.Data;assembly=CodeAnalyzer"
         xmlns:converters="clr-namespace:Converters"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="1200"
+        Title="Code Analyzer" Height="450" Width="1600"
         FontFamily="Arial" FontSize="14">
   <Window.Resources>
     <Style TargetType="Paragraph">
       <!-- 20.0 is default. It's pixels not characters though -->
-      <Setter Property="TextIndent" Value="30" /> 
+      <Setter Property="TextIndent" Value="30" />
+    </Style>
+    <Style TargetType="Button">
+      <Setter Property="Margin" Value="1"/>
+      <Setter Property="Padding" Value="10,0,10,0"/>
     </Style>
     <vm:MainVM x:Key="Vm" />
     <converters:BoolToVisibilityConverter
@@ -44,7 +48,7 @@
       </LinearGradientBrush>
     </Grid.Background>
 
-    <StackPanel Orientation="Horizontal">
+    <DockPanel >
       <Label VerticalContentAlignment="Center">SolutionPath:</Label>
       <TextBox VerticalContentAlignment="Center" MinWidth="200px" Margin="2,2,0,2" Text="{Binding FolderPath}" />
       <Button Padding="5,0,5,0" Margin="0,2,0,2" Command="{Binding BrowseFolderCommand}">…</Button>
@@ -54,7 +58,9 @@
       </StackPanel>
       <Label Content="{Binding Solutions.Count}"/>
       <Label Content="solutions scanned"/>
-    </StackPanel>
+      <Button DockPanel.Dock="Right" Command="{Binding OpenSolutionComparerCommand}">saldkj</Button>
+      <Rectangle/>
+    </DockPanel>
     <StackPanel Grid.Row="1">
       <Label Content="{Binding CurrentPath}"></Label>
     </StackPanel>
@@ -62,24 +68,25 @@
 
     <Grid Grid.Row="2" Margin="0,5,0,0">
       <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="133*"/>
+        <ColumnDefinition Width="317*"/>
         <ColumnDefinition Width="5"/>
-        <ColumnDefinition Width="267*"/>
+        <ColumnDefinition Width="636.477"/>
         <ColumnDefinition Width="5"/>
-        <ColumnDefinition Width="267*"/>
+        <ColumnDefinition Width="636*"/>
       </Grid.ColumnDefinitions>
       <DockPanel>
         <DockPanel VerticalAlignment="Bottom" HorizontalAlignment="Stretch" DockPanel.Dock="Bottom">
-          <Button DockPanel.Dock="Left" Command="{Binding ScanCommand}" Margin="2" Padding="4,0,4,0">Scan selected</Button>
-          <Button DockPanel.Dock="Right" Command="{Binding ScanAllCommand}" Margin="2" Padding="4,0,4,0">Scan All</Button>
-        </DockPanel>
+          <Button DockPanel.Dock="Left" Command="{Binding ScanCommand}">Scan selected</Button>
+          <Button DockPanel.Dock="Right" Command="{Binding ScanAllCommand}">Scan All</Button>
+          <Rectangle/>
+       </DockPanel>
         <TreeView x:Name="TheTreeView" ItemsSource="{Binding Solutions}" >
           <!--<TreeView.ItemContainerStyle>
             <Style TargetType="{x:Type TreeViewItem}">
               <Setter Property="IsSelected" Value="{Binding IsSelected}" />
             </Style>
           </TreeView.ItemContainerStyle>-->
-          
+
           <!--
           <DataGrid>
             <i:Interaction.Triggers>

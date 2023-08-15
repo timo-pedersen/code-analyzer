@@ -3,10 +3,128 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfAnalyserGUI"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:data="clr-namespace:CodeAnalyzer.Data;assembly=CodeAnalyzer"
+        xmlns:converters="clr-namespace:Converters"
+        xmlns:vm="clr-namespace:WpfAnalyserGUI.VMs"
         mc:Ignorable="d"
-        Title="SolutionComparerGui" Height="450" Width="800">
-    <Grid>
-        
+        Title="Solution Comparer" Height="450" Width="800"
+        FontFamily="Arial" FontSize="14">
+  <Window.Resources>
+    <vm:SolutionComparer x:Key="Vm" />
+    <converters:BoolToVisibilityConverter
+      x:Key="BoolToHiddenConverter"
+      TrueValue="Visible" FalseValue="Hidden" />
+    <converters:BoolToVisibilityConverter
+      x:Key="BoolToHiddenConverterNot"
+      FalseValue="Visible" TrueValue="Hidden" />
+    <Style TargetType="Button">
+      <Setter Property="Margin" Value="1"/>
+      <Setter Property="Padding" Value="5,0,5,0"/>
+      <Setter Property="Background" Value="White"/>
+    </Style>
+  </Window.Resources>
+  <Window.DataContext>
+    <Binding Source="{StaticResource Vm}"/>
+  </Window.DataContext>
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="25"/>
+      <RowDefinition Height="25"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="5"/>
+      <ColumnDefinition/>
+    </Grid.ColumnDefinitions>
+    <Grid.Background>
+      <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FFCECECE"/>
+        <GradientStop Color="White" Offset="1"/>
+        <GradientStop Color="#FFEAEAEA" Offset="0.414"/>
+      </LinearGradientBrush>
+    </Grid.Background>
+
+    
+    <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />    
+
+    
+    <Grid Grid.Column="0" VerticalAlignment="Stretch">
+      <DockPanel>
+        <DockPanel DockPanel.Dock="Top">
+          <Label DockPanel.Dock="Left">Solution 1</Label>
+          <Button DockPanel.Dock="Right" Command="{Binding BrowseSolutionCommand}"
+                  CommandParameter="1">Browse...</Button>
+          <Rectangle/>
+        </DockPanel>
+        <DockPanel>
+          <DockPanel Height="25" DockPanel.Dock="Top">
+            <TextBox Text="{Binding SolutionPath1}"/>
+          </DockPanel>
+          <ScrollViewer VerticalAlignment="Stretch">
+            <TextBlock TextWrapping="Wrap" />
+          </ScrollViewer>
+        </DockPanel>
+      </DockPanel>
     </Grid>
+    
+    
+    <Grid Grid.Column="2" VerticalAlignment="Stretch">
+      <DockPanel>
+        <DockPanel DockPanel.Dock="Top">
+          <Label DockPanel.Dock="Left">Solution 2</Label>
+          <Button DockPanel.Dock="Right" Command="{Binding BrowseSolutionCommand}"
+                  CommandParameter="2">Browse...</Button>
+          <Rectangle/>
+        </DockPanel>
+        <DockPanel>
+          <DockPanel Height="25" DockPanel.Dock="Top">
+            <TextBox Text="{Binding SolutionPath2}"/>
+          </DockPanel>
+          <ScrollViewer VerticalAlignment="Stretch">
+            <TextBlock TextWrapping="Wrap" />
+          </ScrollViewer>
+        </DockPanel>
+      </DockPanel>
+      
+    </Grid>
+    
+    
+    <Grid Grid.Row="1" Grid.ColumnSpan="3">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition/>
+        <ColumnDefinition Width="5"/>
+        <ColumnDefinition/>
+      </Grid.ColumnDefinitions>
+      
+      <DockPanel Grid.Column="0">
+        <Button DockPanel.Dock="Left" ToolTip="Export CVS for solution 1">Export CVS</Button>
+      </DockPanel>
+      <DockPanel Grid.Column="2">
+        <Button DockPanel.Dock="Left" ToolTip="Export CVS for solution 2">Export CVS</Button>
+      </DockPanel>
+    </Grid>
+    
+    
+    <Grid Grid.Row="2" Grid.ColumnSpan="3">
+      <DockPanel>
+        <Button DockPanel.Dock="Right" Content="Close">
+          <i:Interaction.Triggers>
+            <i:EventTrigger EventName="Click">
+              <i:CallMethodAction MethodName="Close"
+                                   TargetObject="{Binding RelativeSource={RelativeSource
+                                                          Mode=FindAncestor,
+                                                          AncestorType=Window}}" />
+            </i:EventTrigger>
+          </i:Interaction.Triggers>
+        </Button>
+        <Rectangle DockPanel.Dock="Right" Width="5"/>
+        <Button DockPanel.Dock="Right">Export combined CVS</Button>
+        <Rectangle/>
+      </DockPanel>
+    </Grid>
+    
+  </Grid>
 </Window>
