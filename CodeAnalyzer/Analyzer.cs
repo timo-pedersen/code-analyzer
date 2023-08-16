@@ -12,8 +12,8 @@ namespace CodeAnalyzer;
 
 public static class Analyzer
 {
-    public static List<string> MatchedDocuments { get; } = new();
-    private static object locker = new();
+    //public static List<string> MatchedDocuments { get; } = new();
+    private static readonly object Locker = new();
 
     static Analyzer()
     {
@@ -21,7 +21,7 @@ public static class Analyzer
         MSBuildLocator.RegisterDefaults();
     }
 
-    public static async Task<Data.Solution> AnalyzeSolutionAsync(string solutionPath, IProgress<int> progress, IProgress<int> progressMax)
+    public static async Task<Data.Solution> AnalyzeSolutionAsync(string solutionPath/*, IProgress<int> progress, IProgress<int> progressMax*/)
     {
         Stopwatch sw = Stopwatch.StartNew();
 
@@ -50,7 +50,7 @@ public static class Analyzer
         if (!projectsToConsider.Any())
             return solutionData;
 
-        progressMax.Report(projectsToConsider.Count());
+        //progressMax.Report(projectsToConsider.Count());
         int projectCount = 1;
         //Parallel.ForEach(projectsToConsider, project =>
         foreach (Project project in projectsToConsider)
@@ -71,7 +71,7 @@ public static class Analyzer
 
                 List<CSharpSyntaxWalker> collectors = new List<CSharpSyntaxWalker>
                 {
-                    new SpecificUsingCollector("Rhino.Mocks"),
+                    new SpecificUsingCollector(new []{"Rhino.Mocks"}),
                     new RhinoGenerateStubCollector(),
                 };
 
@@ -87,7 +87,7 @@ public static class Analyzer
                 projectData.Documents.Add(documentData);
             }
 
-            progress.Report(projectCount++);
+            //progress.Report(projectCount++);
 
             if(projectData.Documents.Any())
                 solutionData.Projects.Add(projectData);
@@ -105,6 +105,167 @@ public static class Analyzer
         return solutionData;
     }
 
+    // Gets all projects that have tests, with docs. All sorted alphabetically.
+    // Docs with Rhino docs gets a mark
+    public static async Task<Data.Solution> GetAllTestInSolutionAsync(string solutionPath/*, IProgress<int> progress, IProgress<int> progressMax*/)
+    {
+        Stopwatch sw = Stopwatch.StartNew();
+
+        var workspace = MSBuildWorkspace.Create();
+        Solution sln;
+
+        Data.Solution solutionData = new(solutionPath);
+
+        try
+        {
+            sln = await workspace.OpenSolutionAsync(solutionPath);
+            solutionData.Message = "Loaded.";
+            solutionData.Loaded = true;
+        }
+        catch (Exception ex)
+        {
+            solutionData.Message = $"Could not open sln: {ex.Message}";
+            return solutionData;
+        }
+
+        IEnumerable<Project> projects = sln.Projects;
+        var projectsToConsider = projects
+            .Where(x => x.FilePath != null && x.FilePath.EndsWith(".csproj"))
+            ;
+
+        if (!projectsToConsider.Any())
+            return solutionData;
+
+        foreach (Project project in projectsToConsider.OrderBy(x => x.Name))
+        {
+            // If needed:
+            // var prjCompilation = project.GetCompilationAsync().Result;
+
+            Data.Project projectData = new Data.Project(project.FilePath ?? "");
+
+            foreach (Document document in project.Documents.Where(x => !string.IsNullOrWhiteSpace(x.FilePath)).OrderBy(x => x.Name))
+            {
+                SyntaxTree? syntaxTree = document.GetSyntaxTreeAsync().Result;
+
+                if (syntaxTree is null)
+                    continue;
+
+                CompilationUnitSyntax root = syntaxTree.GetCompilationUnitRoot();
+
+                List<CSharpSyntaxWalker> collectors = new List<CSharpSyntaxWalker>
+                {
+                    new SpecificUsingCollector(new []{"NUnit.Framework"}),
+                    //new SpecificUsingCollector(new []{"NSubstitute", "NUnit.Framework"}),
+                    //new SpecificUsingCollector(new []{"Rhino.Mocks"}),
+                };
+
+                collectors.ForEach(x => x.Visit(root));
+
+                if (!collectors.Any(x => ((ISyntaxWalker)x).SyntaxNodes.Any()))
+                    continue; // Nothing to see here - move on
+
+                List<CSharpSyntaxWalker> rhinoCollectors = new List<CSharpSyntaxWalker>
+                {
+                    new SpecificUsingCollector(new []{"Rhino.Mocks"}),
+                };
+
+                Data.Document documentData = new Data.Document(document.FilePath ?? "");
+
+                // Mark Rhino flag
+
+                rhinoCollectors.ForEach(x => x.Visit(root));
+
+                if (rhinoCollectors.Any(x => ((ISyntaxWalker)x).SyntaxNodes.Any()))
+                    documentData.IsRhino = true;
+
+                projectData.Documents.Add(documentData);
+            }
+
+            if(projectData.Documents.Any())
+            {
+                projectData.Loaded = true;
+                solutionData.Projects.Add(projectData);
+            }
+        }
+
+        if (solutionData.Projects.Any())
+            solutionData.Loaded = true;
+
+        sw.Stop();
+        solutionData.TimeToLoad = sw.ElapsedMilliseconds / (double)1000;
+
+        return solutionData;
+    }
+
+
+    // Return a full set of all projects and documents
+    public static async Task<Data.Solution> GetFullSolutionAsync(string solutionPath/*, IProgress<int> progress, IProgress<int> progressMax*/)
+    {
+        Stopwatch sw = Stopwatch.StartNew();
+
+        var workspace = MSBuildWorkspace.Create();
+        Solution sln;
+
+        Data.Solution solutionData = new(solutionPath);
+
+        try
+        {
+            sln = await workspace.OpenSolutionAsync(solutionPath);
+            solutionData.Message = "Loaded.";
+            solutionData.Loaded = true;
+        }
+        catch (Exception ex)
+        {
+            solutionData.Message = $"Could not open sln: {ex.Message}";
+            return solutionData;
+        }
+
+        IEnumerable<Project> projects = sln.Projects;
+        var projectsToConsider = projects
+            .Where(x => x.FilePath != null && x.FilePath.EndsWith(".csproj"))
+            ;
+
+        if (!projectsToConsider.Any())
+            return solutionData;
+
+        //progressMax.Report(projectsToConsider.Count());
+        int projectCount = 1;
+        //Parallel.ForEach(projectsToConsider, project =>
+        foreach (Project project in projectsToConsider.OrderBy(x => x.Name))
+        {
+            // If needed:
+            // var prjCompilation = project.GetCompilationAsync().Result;
+
+            Data.Project projectData = new Data.Project(project.FilePath ?? "");
+
+            foreach (Document document in project.Documents.Where(x => !string.IsNullOrWhiteSpace(x.FilePath)).OrderBy(x => x.Name))
+            {
+                Data.Document documentData = new Data.Document(document.FilePath ?? "");
+
+                projectData.Documents.Add(documentData);
+            }
+
+            if(projectData.Documents.Any())
+            {
+                projectData.Loaded = true;
+                solutionData.Projects.Add(projectData);
+            }
+        }
+
+        if (solutionData.Projects.Any())
+            solutionData.Loaded = true;
+
+        sw.Stop();
+        solutionData.TimeToLoad = sw.ElapsedMilliseconds / (double)1000;
+
+        return solutionData;
+    }
+
+
+
+
+
+    // OLD needs update
     public static Data.Solution AnalyzeSolution(string solutionPath, IProgress<int> progress, IProgress<int> progressMax)
     {
         Stopwatch sw = Stopwatch.StartNew();
@@ -116,7 +277,7 @@ public static class Analyzer
 
         try
         {
-            lock (locker)
+            lock (Locker)
             {
                 sln = workspace.OpenSolutionAsync(solutionPath).Result;
                 solutionData.Loaded = true;
@@ -146,7 +307,7 @@ public static class Analyzer
 
                 CompilationUnitSyntax root = syntaxTree.GetCompilationUnitRoot();
 
-                var collector = new Walkers.SpecificUsingCollector("Rhino.Mocks");
+                var collector = new Walkers.SpecificUsingCollector(new []{"Rhino.Mocks"});
                 collector.Visit(root);
 
                 if (!collector.SyntaxNodes.Any())

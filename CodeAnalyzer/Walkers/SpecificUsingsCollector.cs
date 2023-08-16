@@ -9,22 +9,25 @@ public class SpecificUsingCollector : CSharpSyntaxWalker, ISyntaxWalker
     public ICollection<SyntaxNodeContainer> SyntaxNodes { get; } = new List<SyntaxNodeContainer>();
     public List<string> Log { get; } = new();
 
-    private string SearchString { get; set; }
+    private string[] SearchString { get; set; }
     private bool IgnoreCase { get; set; }
 
-    public SpecificUsingCollector(string searchString, bool ignoreCase = false,
+    public SpecificUsingCollector(string[] searchStrings, bool ignoreCase = false,
         SyntaxWalkerDepth depth = SyntaxWalkerDepth.Node) : base(depth)
     {
-        SearchString = searchString;
+        SearchString = searchStrings;
         IgnoreCase = ignoreCase;
     }
 
     public override void VisitUsingDirective(UsingDirectiveSyntax node)
     {
-        if (IgnoreCase && node.Name.ToString().ToLower() == SearchString.ToLower()
-            || !IgnoreCase && node.Name.ToString() == SearchString)
+        foreach (string searchString in SearchString)
         {
-            SyntaxNodes.Add(new SyntaxNodeContainer(node));
+            if (IgnoreCase && node.Name.ToString().ToLower() == searchString.ToLower()
+                || !IgnoreCase && node.Name.ToString() == searchString)
+            {
+                SyntaxNodes.Add(new SyntaxNodeContainer(node));
+            }
         }
     }
 }

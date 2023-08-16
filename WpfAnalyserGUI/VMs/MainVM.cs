@@ -347,7 +347,7 @@ internal class MainVM : INotifyPropertyChanged
 
         var dispatcher = Dispatcher.CurrentDispatcher;
 
-        CodeAnalyzer.Data.Solution slnData = await Analyzer.AnalyzeSolutionAsync(SelectedSolutionPath, progress, progressMax);
+        CodeAnalyzer.Data.Solution slnData = await Analyzer.AnalyzeSolutionAsync(SelectedSolutionPath/*, progress, progressMax*/);
         dispatcher.Invoke(() =>
         {
             SelectedSolution.Loaded = true;

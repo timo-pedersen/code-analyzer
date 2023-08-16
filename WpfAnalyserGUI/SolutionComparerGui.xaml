@@ -54,7 +54,7 @@
     <Grid Grid.Column="0" VerticalAlignment="Stretch">
       <DockPanel>
         <DockPanel DockPanel.Dock="Top">
-          <Label DockPanel.Dock="Left">Solution 1</Label>
+          <Label DockPanel.Dock="Left">Solution 1 tests</Label>
           <Button DockPanel.Dock="Right" Command="{Binding BrowseSolutionCommand}"
                   CommandParameter="1">Browse...</Button>
           <Rectangle/>
@@ -63,8 +63,16 @@
           <DockPanel Height="25" DockPanel.Dock="Top">
             <TextBox Text="{Binding SolutionPath1}"/>
           </DockPanel>
-          <ScrollViewer VerticalAlignment="Stretch">
-            <TextBlock TextWrapping="Wrap" />
+          <DockPanel DockPanel.Dock="Bottom">
+            <Label>Projs:</Label>
+            <Label Content="{Binding ProjectCount1}"/>
+            <Label>Rhinos:</Label>
+            <Label Content="{Binding RhinoDocsCount1}"/>
+            <Label>Total docs:</Label>
+            <Label Content="{Binding TotalDocsCount1}"/>
+          </DockPanel>
+          <ScrollViewer>
+            <TextBlock TextWrapping="Wrap" Text="{Binding SolutionText1}"/>
           </ScrollViewer>
         </DockPanel>
       </DockPanel>
@@ -74,7 +82,7 @@
     <Grid Grid.Column="2" VerticalAlignment="Stretch">
       <DockPanel>
         <DockPanel DockPanel.Dock="Top">
-          <Label DockPanel.Dock="Left">Solution 2</Label>
+          <Label DockPanel.Dock="Left">Solution 2 tests</Label>
           <Button DockPanel.Dock="Right" Command="{Binding BrowseSolutionCommand}"
                   CommandParameter="2">Browse...</Button>
           <Rectangle/>
@@ -83,8 +91,17 @@
           <DockPanel Height="25" DockPanel.Dock="Top">
             <TextBox Text="{Binding SolutionPath2}"/>
           </DockPanel>
+          <DockPanel DockPanel.Dock="Bottom">
+            <Label>Projs:</Label>
+            <Label Content="{Binding ProjectCount2}"/>
+            <Label>Rhinos:</Label>
+            <Label Content="{Binding RhinoDocsCount2}"/>
+            <Label>Total docs:</Label>
+            <Label Content="{Binding TotalDocsCount2}"/>
+          </DockPanel>
+
           <ScrollViewer VerticalAlignment="Stretch">
-            <TextBlock TextWrapping="Wrap" />
+            <TextBlock TextWrapping="Wrap"  Text="{Binding SolutionText2}"/>
           </ScrollViewer>
         </DockPanel>
       </DockPanel>
