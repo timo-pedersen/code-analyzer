@@ -30,8 +30,8 @@ namespace WpfAnalyserGUI.VMs
     internal class SolutionComparer  : INotifyPropertyChanged
     {
         #region Backing vars ----------------------------
-        private string m_SolutionPath1 = "";
-        private string m_SolutionPath2 = "";
+        private string m_SolutionPath1 = "d:\\git4\\vNextRef";
+        private string m_SolutionPath2 = "d:\\git4\\vNext";
         private string m_SolutionText1 = "";
         private string m_SolutionText2 = "";
         private int m_ProjectCount1;
@@ -44,6 +44,8 @@ namespace WpfAnalyserGUI.VMs
 
         #region RelayCommands ------------------------------
         public ICommand BrowseSolutionCommand { get; }
+        public ICommand ScanSolutionCommand { get; }
+        public ICommand GenerateFullCvsCommand { get; } 
         #endregion Commands --------------------------------
 
         #region Observables ---------------------------------
@@ -158,7 +160,10 @@ namespace WpfAnalyserGUI.VMs
         public SolutionComparer()
         {
             BrowseSolutionCommand = new RelayCommand(BrowseSolution);
+            ScanSolutionCommand = new RelayCommand(ScanSolution);
+            GenerateFullCvsCommand = new RelayCommand(GenerateFullCvs);
         }
+
 
         #region Command Implementations -------------------------
 
@@ -179,6 +184,26 @@ namespace WpfAnalyserGUI.VMs
                 else
                     SolutionPath2 = s;
             };
+            // ReSharper restore ConvertToLocalFunction
+
+            (string path, bool ok) = Dlg.OpenSelectFileBrowser(getPath(solutionNo), "Select solution");
+
+            if (!ok)
+                return;
+
+            setPath(solutionNo,  path);
+        }
+
+        // obj = 1 or 2, referring to solution number
+        private async void ScanSolution(object? obj)
+        {
+            int solutionNo = Convert.ToInt32(obj);
+
+            if (solutionNo < 1 || solutionNo > 2)
+                return;
+
+            // ReSharper disable ConvertToLocalFunction
+            Func<int, string> getPath = i => i == 1 ? SolutionPath1 : SolutionPath2;
             Action<int, string> setText = (i, s) =>
             {
                 if (i == 1)
@@ -188,16 +213,20 @@ namespace WpfAnalyserGUI.VMs
             };
             // ReSharper restore ConvertToLocalFunction
 
-            (string path, bool ok) = Dlg.OpenSelectFileBrowser(getPath(solutionNo), "Select solution");
-
-            if (!ok)
-                return;
-
-            setPath(solutionNo,  path);
-
-            List<string> solutionResult = await ScanSolution(getPath(solutionNo), solutionNo);
+            List<string> solutionResult = await DoScanSolution(getPath(solutionNo), solutionNo);
             setText(solutionNo, string.Join(Constants.Const.NL, solutionResult));
         }
+
+        private async void GenerateFullCvs(object? obj)
+        {
+            (string savePath, bool ok) = Dlg.OpenSaveFileBrowser(Fs.MyDocumentsDir, "Save CVS report");
+            if (!ok) return;
+
+            string cvs = await GenerateFileReport(SolutionPath1, SolutionPath2);
+
+            await File.WriteAllTextAsync(savePath, cvs);
+        }
+
 
         #endregion Command Implementations ----------------------
 
@@ -211,9 +240,10 @@ namespace WpfAnalyserGUI.VMs
         ///     MyProject2.csproj
         ///     MyDocument1.cs
         /// </summary>
-        /// <param name="solutionData"></param>
+        /// <param name="solutionPath">Path to solution</param>
+        /// <param name="solutionNo">Scan solution 1 or 2</param>
         /// <returns></returns>
-        public async Task<List<string>> ScanSolution(string solutionPath, int solutionNo)
+        public async Task<List<string>> DoScanSolution(string solutionPath, int solutionNo)
         {
             List<string> result = new List<string>();
 
@@ -277,23 +307,28 @@ namespace WpfAnalyserGUI.VMs
         ///     ExistsInFileIsRhino2
         /// </summary>
         /// <returns></returns>
-        public string GenerateFileReport(string folder1, string folder2)
+        public async Task<string> GenerateFileReport(string folder1, string folder2)
         {
-            const string Neo = "Neo.sln";
+            if (folder1.EndsWith(".sln"))
+                folder1 = Path.GetDirectoryName(folder1);
+            if (folder2.EndsWith(".sln"))
+                folder2 = Path.GetDirectoryName(folder2);
+
+            const string neo = "Neo.sln";
             const string vNextTargets = "vNextTargets.sln";
 
-            string NeoPath1 = Path.Combine(folder1, Neo);
-            string NeoPath2 = Path.Combine(folder2, Neo);
+            string neoPath1 = Path.Combine(folder1, neo);
+            string neoPath2 = Path.Combine(folder2, neo);
             string vNextTargetsPath1 = Path.Combine(folder1, vNextTargets);
             string vNextTargetsPath2 = Path.Combine(folder2, vNextTargets);
 
             // Load solutions. This will take a while. 2-3 minutes.
             // Would be nice to run this in parallel, but that gives spurious conflicts.
             var sw = Stopwatch.StartNew();
-            Solution neoSln1 = Analyzer.GetAllTestInSolutionAsync(NeoPath1).Result;
-            Solution neoSln2 = Analyzer.GetAllTestInSolutionAsync(NeoPath2).Result;
-            Solution vNextTargetsSln1 = Analyzer.GetAllTestInSolutionAsync(vNextTargetsPath1).Result;
-            Solution vNextTargetsSln2 = Analyzer.GetAllTestInSolutionAsync(vNextTargetsPath2).Result;
+            Solution neoSln1 = await Analyzer.GetAllTestInSolutionAsync(neoPath1);
+            Solution neoSln2 = await Analyzer.GetAllTestInSolutionAsync(neoPath2);
+            Solution vNextTargetsSln1 = await Analyzer.GetAllTestInSolutionAsync(vNextTargetsPath1);
+            Solution vNextTargetsSln2 = await Analyzer.GetAllTestInSolutionAsync(vNextTargetsPath2);
             sw.Stop();
 
             // Now we have all projects and documents alphabetically sorted
@@ -301,7 +336,7 @@ namespace WpfAnalyserGUI.VMs
             // The report we will return
             var report = new List<FileReport>();
 
-            // vNextTargets 1 (assumed to be reference solution)
+            // SCAN vNextTargets 1 (assumed to be reference solution)
             foreach (var proj in vNextTargetsSln1.Projects)
             {
                 foreach (Document document in proj.Documents)
@@ -322,13 +357,13 @@ namespace WpfAnalyserGUI.VMs
                     {
                         foreach (var fr in found)
                         {
-                            fr.Error += "Duplicate vNextTargets1. ";
+                            fr.Error += $"Duplicate vNextTargets1 {document.Path}";
                         }
                     }
                 }
             }
 
-            // Neo 1
+            // SCAN Neo 1
             foreach (var proj in neoSln1.Projects)
             {
                 foreach (Document document in proj.Documents)
@@ -359,7 +394,7 @@ namespace WpfAnalyserGUI.VMs
                 }
             }
 
-            // vNextTargets 2
+            // SCAN vNextTargets 2
             foreach (var proj in vNextTargetsSln2.Projects)
             {
                 foreach (Document document in proj.Documents)
@@ -392,7 +427,7 @@ namespace WpfAnalyserGUI.VMs
             }
 
 
-            // Neo 2
+            // SCAN Neo 2
             foreach (var proj in neoSln2.Projects)
             {
                 foreach (Document document in proj.Documents)

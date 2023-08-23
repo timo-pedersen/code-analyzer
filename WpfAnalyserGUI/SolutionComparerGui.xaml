@@ -55,6 +55,8 @@
       <DockPanel>
         <DockPanel DockPanel.Dock="Top">
           <Label DockPanel.Dock="Left">Solution 1 tests (reference)</Label>
+          <Button DockPanel.Dock="Right" Command="{Binding ScanSolutionCommand}"
+                  CommandParameter="1">Scan...</Button>
           <Button DockPanel.Dock="Right" Command="{Binding BrowseSolutionCommand}"
                   CommandParameter="1">Browse...</Button>
           <Rectangle/>
@@ -83,6 +85,8 @@
       <DockPanel>
         <DockPanel DockPanel.Dock="Top">
           <Label DockPanel.Dock="Left">Solution 2 tests</Label>
+          <Button DockPanel.Dock="Right" Command="{Binding ScanSolutionCommand}"
+                  CommandParameter="2">Scan...</Button>
           <Button DockPanel.Dock="Right" Command="{Binding BrowseSolutionCommand}"
                   CommandParameter="2">Browse...</Button>
           <Rectangle/>
@@ -138,7 +142,7 @@
           </i:Interaction.Triggers>
         </Button>
         <Rectangle DockPanel.Dock="Right" Width="5"/>
-        <Button DockPanel.Dock="Right">Export combined CVS</Button>
+        <Button DockPanel.Dock="Right" Command="{Binding GenerateFullCvsCommand}">Export combined CVS</Button>
         <Rectangle/>
       </DockPanel>
     </Grid>
