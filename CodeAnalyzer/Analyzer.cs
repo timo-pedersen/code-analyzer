@@ -143,7 +143,9 @@ public static class Analyzer
 
             Data.Project projectData = new Data.Project(project.FilePath ?? "");
 
-            foreach (Document document in project.Documents.Where(x => !string.IsNullOrWhiteSpace(x.FilePath)).OrderBy(x => x.Name))
+            foreach (Document document in project.Documents
+                         .Where(x => !string.IsNullOrWhiteSpace(x.FilePath))
+                         .OrderBy(x => x.Name))
             {
                 SyntaxTree? syntaxTree = document.GetSyntaxTreeAsync().Result;
 
@@ -164,12 +166,13 @@ public static class Analyzer
                 if (!collectors.Any(x => ((ISyntaxWalker)x).SyntaxNodes.Any()))
                     continue; // Nothing to see here - move on
 
+                Data.Document documentData = new Data.Document(document.FilePath ?? "");
+
                 List<CSharpSyntaxWalker> rhinoCollectors = new List<CSharpSyntaxWalker>
                 {
                     new SpecificUsingCollector(new []{"Rhino.Mocks"}),
                 };
 
-                Data.Document documentData = new Data.Document(document.FilePath ?? "");
 
                 // Mark Rhino flag
 

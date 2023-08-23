@@ -54,7 +54,7 @@
     <Grid Grid.Column="0" VerticalAlignment="Stretch">
       <DockPanel>
         <DockPanel DockPanel.Dock="Top">
-          <Label DockPanel.Dock="Left">Solution 1 tests</Label>
+          <Label DockPanel.Dock="Left">Solution 1 tests (reference)</Label>
           <Button DockPanel.Dock="Right" Command="{Binding BrowseSolutionCommand}"
                   CommandParameter="1">Browse...</Button>
           <Rectangle/>

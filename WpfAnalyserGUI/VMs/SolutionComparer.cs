@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.IO.Enumeration;
 using System.Threading.Tasks;
 using CodeAnalyzer;
 using System.Windows.Threading;
@@ -22,7 +23,7 @@ using System.Windows.Controls;
 using CodeAnalyzer.Data;
 using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis.MSBuild;
-using Solution = Microsoft.CodeAnalysis.Solution;
+using WpfAnalyserGUI.Reports;
 
 namespace WpfAnalyserGUI.VMs
 {
@@ -151,6 +152,9 @@ namespace WpfAnalyserGUI.VMs
 
         #endregion ------------------------------------------
 
+        private Solution? _solution1;
+        private Solution? _solution2;
+
         public SolutionComparer()
         {
             BrowseSolutionCommand = new RelayCommand(BrowseSolution);
@@ -251,7 +255,179 @@ namespace WpfAnalyserGUI.VMs
 
             return result;
         }
-            
+
+
+        /// <summary>
+        /// Generate a cvs doc based on the two solutions
+        /// Will automatically fetch Neo and vNext solutions from corresponding folders
+        ///
+        /// Fields
+        ///     FileName
+        ///     Path1
+        ///     Path2
+        ///     FileMoved (y/blank)
+        ///     Size1
+        ///     Size2
+        ///     SizeDiff (Size2-Size1)
+        ///     ExistsInNeo1
+        ///     ExistsInvNextTargets1
+        ///     FileIsRhino1
+        ///     Neo2
+        ///     ExistsInvNextTargets2
+        ///     ExistsInFileIsRhino2
+        /// </summary>
+        /// <returns></returns>
+        public string GenerateFileReport(string folder1, string folder2)
+        {
+            const string Neo = "Neo.sln";
+            const string vNextTargets = "vNextTargets.sln";
+
+            string NeoPath1 = Path.Combine(folder1, Neo);
+            string NeoPath2 = Path.Combine(folder2, Neo);
+            string vNextTargetsPath1 = Path.Combine(folder1, vNextTargets);
+            string vNextTargetsPath2 = Path.Combine(folder2, vNextTargets);
+
+            // Load solutions. This will take a while. 2-3 minutes.
+            // Would be nice to run this in parallel, but that gives spurious conflicts.
+            var sw = Stopwatch.StartNew();
+            Solution neoSln1 = Analyzer.GetAllTestInSolutionAsync(NeoPath1).Result;
+            Solution neoSln2 = Analyzer.GetAllTestInSolutionAsync(NeoPath2).Result;
+            Solution vNextTargetsSln1 = Analyzer.GetAllTestInSolutionAsync(vNextTargetsPath1).Result;
+            Solution vNextTargetsSln2 = Analyzer.GetAllTestInSolutionAsync(vNextTargetsPath2).Result;
+            sw.Stop();
+
+            // Now we have all projects and documents alphabetically sorted
+
+            // The report we will return
+            var report = new List<FileReport>();
+
+            // vNextTargets 1 (assumed to be reference solution)
+            foreach (var proj in vNextTargetsSln1.Projects)
+            {
+                foreach (Document document in proj.Documents)
+                {
+                    List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
+                    
+                    if (!found.Any())
+                    {
+                        FileReport fr = new()
+                        {
+                            FileName = document.Name,
+                            Path1 = document.Path,
+                        };
+
+                        report.Add(fr);
+                    }
+                    else
+                    {
+                        foreach (var fr in found)
+                        {
+                            fr.Error += "Duplicate vNextTargets1. ";
+                        }
+                    }
+                }
+            }
+
+            // Neo 1
+            foreach (var proj in neoSln1.Projects)
+            {
+                foreach (Document document in proj.Documents)
+                {
+                    List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
+                    
+                    if (!found.Any())
+                    {
+                        FileReport fr = new()
+                        {
+                            FileName = document.Name,
+                            Path1 = document.Path,
+                        };
+
+                        report.Add(fr);
+                    }
+                    else if (found.Count == 1)
+                    {
+                        FileReport fr = found[0];
+                    }
+                    else // found more than one - surely an error
+                    {
+                        foreach (var fr in found)
+                        {
+                            fr.Error += "Found more than one when scanning Neo1. ";
+                        }
+                    }
+                }
+            }
+
+            // vNextTargets 2
+            foreach (var proj in vNextTargetsSln2.Projects)
+            {
+                foreach (Document document in proj.Documents)
+                {
+                    List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
+                    
+                    if (!found.Any())
+                    {
+                        FileReport fr = new()
+                        {
+                            FileName = document.Name,
+                            Path2 = document.Path,
+                        };
+
+                        report.Add(fr);
+                    }
+                    else if (found.Count == 1)
+                    {
+                        FileReport fr = found[0];
+                        fr.Path2 = document.Path;
+                    }
+                    else // found more than one - surely an error
+                    {
+                        foreach (var fr in found)
+                        {
+                            fr.Error += "Found more than one when scanning vNextTargets2. ";
+                        }
+                    }
+                }
+            }
+
+
+            // Neo 2
+            foreach (var proj in neoSln2.Projects)
+            {
+                foreach (Document document in proj.Documents)
+                {
+                    List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
+                    
+                    if (!found.Any())
+                    {
+                        FileReport fr = new()
+                        {
+                            FileName = document.Name,
+                            Path2 = document.Path,
+                        };
+
+                        report.Add(fr);
+                    }
+                    else if (found.Count == 1)
+                    {
+                        FileReport fr = found[0];
+                        fr.Path2 = document.Path;
+                    }
+                    else // found more than one - surely an error
+                    {
+                        foreach (var fr in found)
+                        {
+                            fr.Error += "Found more than one when scanning Neo2. ";
+                        }
+                    }
+                }
+            }
+
+
+            return report.ToCvs();
+        }
+
         #region INotifyPropertyChanged ------------------
 
         public event PropertyChangedEventHandler? PropertyChanged;
