@@ -348,7 +348,8 @@ namespace WpfAnalyserGUI.VMs
                         FileReport fr = new()
                         {
                             FileName = document.Name,
-                            Path1 = document.Path,
+                            Path1 = document.Path.Substring(folder1.Length),
+                            ExistsInvNextTargets1 = true,
                         };
 
                         report.Add(fr);
@@ -375,7 +376,8 @@ namespace WpfAnalyserGUI.VMs
                         FileReport fr = new()
                         {
                             FileName = document.Name,
-                            Path1 = document.Path,
+                            Path1 = document.Path.Substring(folder1.Length),
+                            ExistsInNeo1 = true,
                         };
 
                         report.Add(fr);
@@ -383,6 +385,7 @@ namespace WpfAnalyserGUI.VMs
                     else if (found.Count == 1)
                     {
                         FileReport fr = found[0];
+                        fr.ExistsInNeo1 = true;
                     }
                     else // found more than one - surely an error
                     {
@@ -406,7 +409,8 @@ namespace WpfAnalyserGUI.VMs
                         FileReport fr = new()
                         {
                             FileName = document.Name,
-                            Path2 = document.Path,
+                            Path2 = document.Path.Substring(folder2.Length),
+                            ExistsInvNextTargets2 = true,
                         };
 
                         report.Add(fr);
@@ -414,7 +418,8 @@ namespace WpfAnalyserGUI.VMs
                     else if (found.Count == 1)
                     {
                         FileReport fr = found[0];
-                        fr.Path2 = document.Path;
+                        fr.Path2 = document.Path.Substring(folder2.Length);
+                        fr.ExistsInvNextTargets2 = true;
                     }
                     else // found more than one - surely an error
                     {
@@ -439,7 +444,8 @@ namespace WpfAnalyserGUI.VMs
                         FileReport fr = new()
                         {
                             FileName = document.Name,
-                            Path2 = document.Path,
+                            Path2 = document.Path.Substring(folder2.Length),
+                            ExistsInNeo2 = true,
                         };
 
                         report.Add(fr);
@@ -447,7 +453,8 @@ namespace WpfAnalyserGUI.VMs
                     else if (found.Count == 1)
                     {
                         FileReport fr = found[0];
-                        fr.Path2 = document.Path;
+                        fr.Path2 = document.Path.Substring(folder2.Length);
+                        fr.ExistsInNeo2 = true;
                     }
                     else // found more than one - surely an error
                     {

@@ -12,10 +12,10 @@ public static class ListExtensions
         foreach (PropertyInfo property in properties)
         {
             string name = property.Name;
-            header += $"{(ret.Length > 0 ? separator : "")}{name}";
+            header += $"{(header.Length > 0 ? separator : "")}{name}";
         }
 
-        ret =  header + Environment.NewLine;
+        ret =  header;
 
         foreach (T rec in me)
         {
