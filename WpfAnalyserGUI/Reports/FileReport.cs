@@ -9,9 +9,11 @@ namespace WpfAnalyserGUI.Reports;
 public class FileReport
 {
     public string FileName { get; set; }
-    public string Path1 { get; set; }
-    public string Path2 { get; set; }
-    public string FileMoved { get; set; }
+    public string vNextTargetsPath1 { get; set; }
+    public string vNextTargetsPath2 { get; set; }
+    public string NeoPath1 { get; set; }
+    public string NeoPath2 { get; set; }
+    public bool FileMoved { get; set; }
     public int Size1 { get; set; }
     public int Size2 { get; set; }
     public int SizeDiff { get; set; }
@@ -21,5 +23,5 @@ public class FileReport
     public bool ExistsInNeo2 { get; set; }
     public bool ExistsInvNextTargets2 { get; set; }
     public bool FileIsRhino2 { get; set; }
-    public string Error { get; set; }
+    public string Comment { get; set; }
 }

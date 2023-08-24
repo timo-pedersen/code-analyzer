@@ -11,7 +11,8 @@ namespace Utils
             foreach (PropertyInfo property in properties)
             {
                 string? val = property.GetValue(me)?.ToString();
-                ret += $"{(ret.Length > 0 ? separator : "")}{val}";
+                //ret += $"{(ret.Length > 0 ? separator : "")}{val}";
+                ret += $"{val}{separator}";
             }
 
             return ret;
@@ -24,7 +25,8 @@ namespace Utils
             foreach (PropertyInfo property in properties)
             {
                 string name = property.Name;
-                ret += $"{(ret.Length > 0 ? separator : "")}{name}";
+                //ret += $"{(ret.Length > 0 ? separator : "")}{name}";
+                ret += $"{name}{separator}";
             }
 
             return ret;

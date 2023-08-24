@@ -307,12 +307,15 @@ namespace WpfAnalyserGUI.VMs
         ///     ExistsInFileIsRhino2
         /// </summary>
         /// <returns></returns>
-        public async Task<string> GenerateFileReport(string folder1, string folder2)
+        private async Task<string> GenerateFileReport(string folder1, string folder2)
         {
             if (folder1.EndsWith(".sln"))
-                folder1 = Path.GetDirectoryName(folder1);
+                folder1 = Path.GetDirectoryName(folder1) ?? "";
             if (folder2.EndsWith(".sln"))
-                folder2 = Path.GetDirectoryName(folder2);
+                folder2 = Path.GetDirectoryName(folder2) ?? "";
+
+            if ((folder1 + folder1).IsNullOrWhiteSpace())
+                return "ERROR: Invalid folders";
 
             const string neo = "Neo.sln";
             const string vNextTargets = "vNextTargets.sln";
@@ -336,6 +339,13 @@ namespace WpfAnalyserGUI.VMs
             // The report we will return
             var report = new List<FileReport>();
 
+            // Scanning the four solutions, starting with vNextTargets 1 (the reference),
+            // in order to build up the report.
+            // Beware - ugly code below.
+
+            int folderLength1 = folder1.Length + 1;
+            int folderLength2 = folder2.Length + 1;
+
             // SCAN vNextTargets 1 (assumed to be reference solution)
             foreach (var proj in vNextTargetsSln1.Projects)
             {
@@ -348,8 +358,9 @@ namespace WpfAnalyserGUI.VMs
                         FileReport fr = new()
                         {
                             FileName = document.Name,
-                            Path1 = document.Path.Substring(folder1.Length),
+                            vNextTargetsPath1 = document.Path[folderLength1..],
                             ExistsInvNextTargets1 = true,
+                            FileIsRhino1 = document.IsRhino,
                         };
 
                         report.Add(fr);
@@ -358,7 +369,7 @@ namespace WpfAnalyserGUI.VMs
                     {
                         foreach (var fr in found)
                         {
-                            fr.Error += $"Duplicate vNextTargets1 {document.Path}";
+                            fr.Comment += $"### ERROR: vNextTargets1 - {found.Count} duplicates of {document.Path[folderLength1..]}. ";
                         }
                     }
                 }
@@ -376,8 +387,9 @@ namespace WpfAnalyserGUI.VMs
                         FileReport fr = new()
                         {
                             FileName = document.Name,
-                            Path1 = document.Path.Substring(folder1.Length),
+                            NeoPath1 = document.Path[folderLength1..],
                             ExistsInNeo1 = true,
+                            FileIsRhino1 = document.IsRhino,
                         };
 
                         report.Add(fr);
@@ -386,12 +398,16 @@ namespace WpfAnalyserGUI.VMs
                     {
                         FileReport fr = found[0];
                         fr.ExistsInNeo1 = true;
+                        fr.NeoPath1 = document.Path[folderLength1..];
+                        fr.Comment += $"# Neo1 - File is in both vNextTargets and Neo. ";
+                        if(fr.FileIsRhino1 != document.IsRhino)
+                            fr.Comment += $"# Neo1 - Rhino status differs. Neo1 doc isRhino: {document.IsRhino}. ";
                     }
                     else // found more than one - surely an error
                     {
                         foreach (var fr in found)
                         {
-                            fr.Error += "Found more than one when scanning Neo1. ";
+                            fr.Comment += $"### ERROR: Neo1 - {found.Count} duplicates of {document.Name}. ";
                         }
                     }
                 }
@@ -409,8 +425,9 @@ namespace WpfAnalyserGUI.VMs
                         FileReport fr = new()
                         {
                             FileName = document.Name,
-                            Path2 = document.Path.Substring(folder2.Length),
+                            vNextTargetsPath2 = document.Path[folderLength2..],
                             ExistsInvNextTargets2 = true,
+                            FileIsRhino2 = document.IsRhino,
                         };
 
                         report.Add(fr);
@@ -418,14 +435,15 @@ namespace WpfAnalyserGUI.VMs
                     else if (found.Count == 1)
                     {
                         FileReport fr = found[0];
-                        fr.Path2 = document.Path.Substring(folder2.Length);
+                        fr.vNextTargetsPath2 = document.Path[folderLength2..];
                         fr.ExistsInvNextTargets2 = true;
+                        fr.FileIsRhino2 = document.IsRhino;
                     }
                     else // found more than one - surely an error
                     {
                         foreach (var fr in found)
                         {
-                            fr.Error += "Found more than one when scanning vNextTargets2. ";
+                            fr.Comment += $"### ERROR: vNextTargets2 - {found.Count} duplicate of {document.Path.Substring(folderLength2)}. ";
                         }
                     }
                 }
@@ -444,8 +462,9 @@ namespace WpfAnalyserGUI.VMs
                         FileReport fr = new()
                         {
                             FileName = document.Name,
-                            Path2 = document.Path.Substring(folder2.Length),
+                            NeoPath2 = document.Path[folderLength2..],
                             ExistsInNeo2 = true,
+                            FileIsRhino2 = document.IsRhino,
                         };
 
                         report.Add(fr);
@@ -453,21 +472,59 @@ namespace WpfAnalyserGUI.VMs
                     else if (found.Count == 1)
                     {
                         FileReport fr = found[0];
-                        fr.Path2 = document.Path.Substring(folder2.Length);
+                        fr.NeoPath2 = document.Path[folderLength2..];
                         fr.ExistsInNeo2 = true;
+                        if(fr.FileIsRhino2 != document.IsRhino)
+                            fr.Comment += $"# Neo2 - Rhino status differs. Neo2 doc isRhino: {document.IsRhino}. ";
                     }
                     else // found more than one - surely an error
                     {
                         foreach (var fr in found)
                         {
-                            fr.Error += "Found more than one when scanning Neo2. ";
+                            fr.Comment += $"### ERROR: Neo2 - {found.Count} duplicate of {document.Path.Substring(folderLength2)}. ";
                         }
                     }
                 }
             }
 
+            foreach (var line in report)
+            {
 
-            return report.ToCvs();
+                // Compare all found paths if not empty
+                List<string> p = new List<string>();
+                if(!line.NeoPath1.IsNullOrWhiteSpace())
+                    p.Add(line.NeoPath1);
+
+                if(!line.NeoPath2.IsNullOrWhiteSpace())
+                    p.Add(line.NeoPath2);
+
+                if(!line.vNextTargetsPath1.IsNullOrWhiteSpace())
+                    p.Add(line.vNextTargetsPath1);
+
+                if(!line.vNextTargetsPath2.IsNullOrWhiteSpace())
+                    p.Add(line.vNextTargetsPath2);
+
+                bool equal = true;
+                for (int i = 0; i < p.Count; i++)
+                {
+                    for (int j = i + 1; j < p.Count; j++)
+                    {
+                        if(p[i] != p[j])
+                        {
+                            equal = false;
+                            break;
+                        }
+                    }
+
+                    if (!equal) break;
+                }
+
+                line.FileMoved = equal;
+            }
+
+            string cvs = "SEP=;" + Environment.NewLine + report.ToCvs("; ");
+
+            return cvs;
         }
 
         #region INotifyPropertyChanged ------------------
