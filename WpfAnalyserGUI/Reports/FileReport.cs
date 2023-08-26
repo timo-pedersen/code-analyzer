@@ -9,6 +9,7 @@ namespace WpfAnalyserGUI.Reports;
 public class FileReport
 {
     public string FileName { get; set; }
+    public string Project { get; set; }
     public string vNextTargetsPath1 { get; set; }
     public string vNextTargetsPath2 { get; set; }
     public string NeoPath1 { get; set; }

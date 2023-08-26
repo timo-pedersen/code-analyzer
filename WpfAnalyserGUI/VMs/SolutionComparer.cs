@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.IO.Enumeration;
 using System.Threading.Tasks;
+using System.Windows.Automation;
 using CodeAnalyzer;
 using System.Windows.Threading;
 //using CodeAnalyzer.Data;
@@ -345,12 +346,13 @@ namespace WpfAnalyserGUI.VMs
 
             int folderLength1 = folder1.Length + 1;
             int folderLength2 = folder2.Length + 1;
-
+            string documentPath = "";
             // SCAN vNextTargets 1 (assumed to be reference solution)
             foreach (var proj in vNextTargetsSln1.Projects)
             {
                 foreach (Document document in proj.Documents)
                 {
+                    documentPath = document.Path[folderLength1..];
                     List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
                     
                     if (!found.Any())
@@ -358,7 +360,8 @@ namespace WpfAnalyserGUI.VMs
                         FileReport fr = new()
                         {
                             FileName = document.Name,
-                            vNextTargetsPath1 = document.Path[folderLength1..],
+                            Project = proj.Name,
+                            vNextTargetsPath1 = documentPath,
                             ExistsInvNextTargets1 = true,
                             FileIsRhino1 = document.IsRhino,
                         };
@@ -369,7 +372,7 @@ namespace WpfAnalyserGUI.VMs
                     {
                         foreach (var fr in found)
                         {
-                            fr.Comment += $"### ERROR: vNextTargets1 - {found.Count} duplicates of {document.Path[folderLength1..]}. ";
+                            fr.Comment += $"### ERROR: vNextTargets1 - {found.Count} duplicates of {documentPath}. Project: {proj.Name}. ";
                         }
                     }
                 }
@@ -380,6 +383,7 @@ namespace WpfAnalyserGUI.VMs
             {
                 foreach (Document document in proj.Documents)
                 {
+                    documentPath = document.Path[folderLength1..];
                     List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
                     
                     if (!found.Any())
@@ -387,7 +391,8 @@ namespace WpfAnalyserGUI.VMs
                         FileReport fr = new()
                         {
                             FileName = document.Name,
-                            NeoPath1 = document.Path[folderLength1..],
+                            Project = proj.Name,
+                            NeoPath1 = documentPath,
                             ExistsInNeo1 = true,
                             FileIsRhino1 = document.IsRhino,
                         };
@@ -398,7 +403,8 @@ namespace WpfAnalyserGUI.VMs
                     {
                         FileReport fr = found[0];
                         fr.ExistsInNeo1 = true;
-                        fr.NeoPath1 = document.Path[folderLength1..];
+                        fr.Project += $", {proj.Name}";
+                        fr.NeoPath1 = documentPath;
                         fr.Comment += $"# Neo1 - File is in both vNextTargets and Neo. ";
                         if(fr.FileIsRhino1 != document.IsRhino)
                             fr.Comment += $"# Neo1 - Rhino status differs. Neo1 doc isRhino: {document.IsRhino}. ";
@@ -407,7 +413,7 @@ namespace WpfAnalyserGUI.VMs
                     {
                         foreach (var fr in found)
                         {
-                            fr.Comment += $"### ERROR: Neo1 - {found.Count} duplicates of {document.Name}. ";
+                            fr.Comment += $"### ERROR: Neo1 - {found.Count} duplicates of {documentPath}. Project: {proj.Name} ";
                         }
                     }
                 }
@@ -418,6 +424,7 @@ namespace WpfAnalyserGUI.VMs
             {
                 foreach (Document document in proj.Documents)
                 {
+                    documentPath = document.Path[folderLength2..];
                     List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
                     
                     if (!found.Any())
@@ -425,7 +432,8 @@ namespace WpfAnalyserGUI.VMs
                         FileReport fr = new()
                         {
                             FileName = document.Name,
-                            vNextTargetsPath2 = document.Path[folderLength2..],
+                            Project = proj.Name,
+                            vNextTargetsPath2 = documentPath,
                             ExistsInvNextTargets2 = true,
                             FileIsRhino2 = document.IsRhino,
                         };
@@ -435,7 +443,8 @@ namespace WpfAnalyserGUI.VMs
                     else if (found.Count == 1)
                     {
                         FileReport fr = found[0];
-                        fr.vNextTargetsPath2 = document.Path[folderLength2..];
+                        fr.Project += $", {proj.Name}";
+                        fr.vNextTargetsPath2 = documentPath;
                         fr.ExistsInvNextTargets2 = true;
                         fr.FileIsRhino2 = document.IsRhino;
                     }
@@ -443,7 +452,7 @@ namespace WpfAnalyserGUI.VMs
                     {
                         foreach (var fr in found)
                         {
-                            fr.Comment += $"### ERROR: vNextTargets2 - {found.Count} duplicate of {document.Path.Substring(folderLength2)}. ";
+                            fr.Comment += $"### ERROR: vNextTargets2 - {found.Count} duplicates of {documentPath}. Project: {proj.Name}. ";
                         }
                     }
                 }
@@ -455,6 +464,7 @@ namespace WpfAnalyserGUI.VMs
             {
                 foreach (Document document in proj.Documents)
                 {
+                    documentPath = document.Path[folderLength1..];
                     List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
                     
                     if (!found.Any())
@@ -462,7 +472,8 @@ namespace WpfAnalyserGUI.VMs
                         FileReport fr = new()
                         {
                             FileName = document.Name,
-                            NeoPath2 = document.Path[folderLength2..],
+                            Project = proj.Name,
+                            NeoPath2 = documentPath,
                             ExistsInNeo2 = true,
                             FileIsRhino2 = document.IsRhino,
                         };
@@ -472,7 +483,8 @@ namespace WpfAnalyserGUI.VMs
                     else if (found.Count == 1)
                     {
                         FileReport fr = found[0];
-                        fr.NeoPath2 = document.Path[folderLength2..];
+                        fr.Project += $", {proj.Name}";
+                        fr.NeoPath2 = documentPath;
                         fr.ExistsInNeo2 = true;
                         if(fr.FileIsRhino2 != document.IsRhino)
                             fr.Comment += $"# Neo2 - Rhino status differs. Neo2 doc isRhino: {document.IsRhino}. ";
@@ -481,7 +493,7 @@ namespace WpfAnalyserGUI.VMs
                     {
                         foreach (var fr in found)
                         {
-                            fr.Comment += $"### ERROR: Neo2 - {found.Count} duplicate of {document.Path.Substring(folderLength2)}. ";
+                            fr.Comment += $"### ERROR: Neo2 - {found.Count} duplicate of {documentPath}. Project: {proj.Name}. ";
                         }
                     }
                 }

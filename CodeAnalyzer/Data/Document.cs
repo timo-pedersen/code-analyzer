@@ -13,4 +13,6 @@ public class Document : Data
     //public List<CSharpSyntaxNode> ParameterNodes { get; } = new();
 
     public Document(string path) : base(path) { }
+
+    public override string ToString() => Name;
 }
