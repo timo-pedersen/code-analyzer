@@ -131,6 +131,7 @@ public static class Analyzer
         IEnumerable<Project> projects = sln.Projects;
         var projectsToConsider = projects
             .Where(x => x.FilePath != null && x.FilePath.EndsWith(".csproj"))
+            .DistinctBy(x => x.FilePath)
             ;
 
         if (!projectsToConsider.Any())

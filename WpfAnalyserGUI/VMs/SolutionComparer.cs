@@ -220,12 +220,18 @@ namespace WpfAnalyserGUI.VMs
 
         private async void GenerateFullCvs(object? obj)
         {
-            (string savePath, bool ok) = Dlg.OpenSaveFileBrowser(Fs.MyDocumentsDir, "Save CVS report");
-            if (!ok) return;
+            //(string savePath, bool ok) = Dlg.OpenSaveFileBrowser(Fs.MyDocumentsDir, "Save CVS report");
+            //if (!ok) return;
 
-            string cvs = await GenerateFileReport(SolutionPath1, SolutionPath2);
+            string savePath = @"C:\Users\TIMPE\Documents\aa.xls";
+
+            string cvs = await GenerateCvsFileReport(SolutionPath1, SolutionPath2);
+
+            if(File.Exists(savePath))
+                File.Delete(savePath);
 
             await File.WriteAllTextAsync(savePath, cvs);
+            MessageBox.Show("Done");
         }
 
 
@@ -292,32 +298,23 @@ namespace WpfAnalyserGUI.VMs
         /// Generate a cvs doc based on the two solutions
         /// Will automatically fetch Neo and vNext solutions from corresponding folders
         ///
-        /// Fields
-        ///     FileName
-        ///     Path1
-        ///     Path2
-        ///     FileMoved (y/blank)
-        ///     Size1
-        ///     Size2
-        ///     SizeDiff (Size2-Size1)
-        ///     ExistsInNeo1
-        ///     ExistsInvNextTargets1
-        ///     FileIsRhino1
-        ///     Neo2
-        ///     ExistsInvNextTargets2
-        ///     ExistsInFileIsRhino2
+        /// Fields: <see cref="FileReport"/>
         /// </summary>
         /// <returns></returns>
-        private async Task<string> GenerateFileReport(string folder1, string folder2)
+        private async Task<string> GenerateCvsFileReport(string folder1, string folder2)
         {
             if (folder1.EndsWith(".sln"))
                 folder1 = Path.GetDirectoryName(folder1) ?? "";
             if (folder2.EndsWith(".sln"))
                 folder2 = Path.GetDirectoryName(folder2) ?? "";
 
-            if ((folder1 + folder1).IsNullOrWhiteSpace())
+            if (folder1.IsNullOrWhiteSpace() || folder2.IsNullOrWhiteSpace())
                 return "ERROR: Invalid folders";
 
+            const string neoShortName1 = "N1";
+            const string neoShortName2 = "N2";
+            const string vnextTargetsShortName1 = "V1";
+            const string vnextTargetsShortName2 = "V2";
             const string neo = "Neo.sln";
             const string vNextTargets = "vNextTargets.sln";
 
@@ -329,10 +326,10 @@ namespace WpfAnalyserGUI.VMs
             // Load solutions. This will take a while. 2-3 minutes.
             // Would be nice to run this in parallel, but that gives spurious conflicts.
             var sw = Stopwatch.StartNew();
-            Solution neoSln1 = await Analyzer.GetAllTestInSolutionAsync(neoPath1);
-            Solution neoSln2 = await Analyzer.GetAllTestInSolutionAsync(neoPath2);
             Solution vNextTargetsSln1 = await Analyzer.GetAllTestInSolutionAsync(vNextTargetsPath1);
+            Solution neoSln1 = await Analyzer.GetAllTestInSolutionAsync(neoPath1);
             Solution vNextTargetsSln2 = await Analyzer.GetAllTestInSolutionAsync(vNextTargetsPath2);
+            Solution neoSln2 = await Analyzer.GetAllTestInSolutionAsync(neoPath2);
             sw.Stop();
 
             // Now we have all projects and documents alphabetically sorted
@@ -347,23 +344,25 @@ namespace WpfAnalyserGUI.VMs
             int folderLength1 = folder1.Length + 1;
             int folderLength2 = folder2.Length + 1;
             string documentPath = "";
+
             // SCAN vNextTargets 1 (assumed to be reference solution)
             foreach (var proj in vNextTargetsSln1.Projects)
             {
                 foreach (Document document in proj.Documents)
                 {
                     documentPath = document.Path[folderLength1..];
-                    List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
+                    //List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
+                    List<FileReport> found = report.Where(x => x.vNextTargetsPath1 == documentPath).ToList();
                     
                     if (!found.Any())
                     {
                         FileReport fr = new()
                         {
                             FileName = document.Name,
-                            Project = proj.Name,
+                            Project = $"{vnextTargetsShortName1}/{proj.Name}",
                             vNextTargetsPath1 = documentPath,
                             ExistsInvNextTargets1 = true,
-                            FileIsRhino1 = document.IsRhino,
+                            IsRhino1 = document.IsRhino,
                         };
 
                         report.Add(fr);
@@ -384,17 +383,18 @@ namespace WpfAnalyserGUI.VMs
                 foreach (Document document in proj.Documents)
                 {
                     documentPath = document.Path[folderLength1..];
-                    List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
-                    
+                    //List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
+                    List<FileReport> found = report.Where(x => x.vNextTargetsPath1 == documentPath).ToList();
+
                     if (!found.Any())
                     {
                         FileReport fr = new()
                         {
                             FileName = document.Name,
-                            Project = proj.Name,
+                            Project = $"{neoShortName1}/{proj.Name}",
                             NeoPath1 = documentPath,
                             ExistsInNeo1 = true,
-                            FileIsRhino1 = document.IsRhino,
+                            IsRhino1 = document.IsRhino,
                         };
 
                         report.Add(fr);
@@ -403,10 +403,9 @@ namespace WpfAnalyserGUI.VMs
                     {
                         FileReport fr = found[0];
                         fr.ExistsInNeo1 = true;
-                        fr.Project += $", {proj.Name}";
+                        fr.Project += $", {neoShortName1}/{proj.Name}";
                         fr.NeoPath1 = documentPath;
-                        fr.Comment += $"# Neo1 - File is in both vNextTargets and Neo. ";
-                        if(fr.FileIsRhino1 != document.IsRhino)
+                        if(!fr.ExistsInvNextTargets1 && fr.IsRhino1 != document.IsRhino)
                             fr.Comment += $"# Neo1 - Rhino status differs. Neo1 doc isRhino: {document.IsRhino}. ";
                     }
                     else // found more than one - surely an error
@@ -425,17 +424,21 @@ namespace WpfAnalyserGUI.VMs
                 foreach (Document document in proj.Documents)
                 {
                     documentPath = document.Path[folderLength2..];
-                    List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
-                    
+                    //List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
+                    List<FileReport> found = report.Where(
+                        x => x.vNextTargetsPath1 == documentPath
+                             || x.NeoPath1 == documentPath
+                    ).ToList();
+
                     if (!found.Any())
                     {
                         FileReport fr = new()
                         {
                             FileName = document.Name,
-                            Project = proj.Name,
+                            Project = $"{vnextTargetsShortName2}/{proj.Name}",
                             vNextTargetsPath2 = documentPath,
                             ExistsInvNextTargets2 = true,
-                            FileIsRhino2 = document.IsRhino,
+                            IsRhino2 = document.IsRhino,
                         };
 
                         report.Add(fr);
@@ -443,10 +446,10 @@ namespace WpfAnalyserGUI.VMs
                     else if (found.Count == 1)
                     {
                         FileReport fr = found[0];
-                        fr.Project += $", {proj.Name}";
+                        fr.Project += $", {vnextTargetsShortName2}/{proj.Name}";
                         fr.vNextTargetsPath2 = documentPath;
                         fr.ExistsInvNextTargets2 = true;
-                        fr.FileIsRhino2 = document.IsRhino;
+                        fr.IsRhino2 = document.IsRhino;
                     }
                     else // found more than one - surely an error
                     {
@@ -462,20 +465,25 @@ namespace WpfAnalyserGUI.VMs
             // SCAN Neo 2
             foreach (var proj in neoSln2.Projects)
             {
-                foreach (Document document in proj.Documents)
+                foreach (Document document in proj.Documents.OrderBy(x => x.Name))
                 {
-                    documentPath = document.Path[folderLength1..];
-                    List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
+                    documentPath = document.Path[folderLength2..];
+                    //List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
+                    List<FileReport> found = report.Where(
+                        x => x.vNextTargetsPath1 == documentPath
+                        || x.NeoPath1 == documentPath
+                        || x.vNextTargetsPath2 == documentPath
+                        ).ToList();
                     
                     if (!found.Any())
                     {
                         FileReport fr = new()
                         {
                             FileName = document.Name,
-                            Project = proj.Name,
+                            Project = $"{neoShortName2}/{proj.Name}",
                             NeoPath2 = documentPath,
                             ExistsInNeo2 = true,
-                            FileIsRhino2 = document.IsRhino,
+                            IsRhino2 = document.IsRhino,
                         };
 
                         report.Add(fr);
@@ -483,11 +491,14 @@ namespace WpfAnalyserGUI.VMs
                     else if (found.Count == 1)
                     {
                         FileReport fr = found[0];
-                        fr.Project += $", {proj.Name}";
+                        fr.Project += $", {neoShortName2}/{proj.Name}";
                         fr.NeoPath2 = documentPath;
                         fr.ExistsInNeo2 = true;
-                        if(fr.FileIsRhino2 != document.IsRhino)
-                            fr.Comment += $"# Neo2 - Rhino status differs. Neo2 doc isRhino: {document.IsRhino}. ";
+                        if (!fr.ExistsInvNextTargets2)
+                            fr.IsRhino2 = document.IsRhino;
+                        else
+                            if(fr.IsRhino2 != document.IsRhino)
+                                fr.Comment += $"# Neo2 - Rhino status differs. Neo2 IsRhino: {document.IsRhino}. ";
                     }
                     else // found more than one - surely an error
                     {
@@ -499,42 +510,56 @@ namespace WpfAnalyserGUI.VMs
                 }
             }
 
+            // Processing results
             foreach (var line in report)
             {
+                List<FileReport> found = report.Where(x => x.FileName == line.FileName && !x.HasDuplicate).ToList();
+                if(found.Count > 1)
+                    foreach (var foundLine in found)
+                        foundLine.HasDuplicate = true;
 
                 // Compare all found paths if not empty
-                List<string> p = new List<string>();
-                if(!line.NeoPath1.IsNullOrWhiteSpace())
-                    p.Add(line.NeoPath1);
+                //List<string> p = new List<string>();
+                //if(!line.NeoPath1.IsNullOrWhiteSpace())
+                //    p.Add(line.NeoPath1);
 
-                if(!line.NeoPath2.IsNullOrWhiteSpace())
-                    p.Add(line.NeoPath2);
+                //if(!line.NeoPath2.IsNullOrWhiteSpace())
+                //    p.Add(line.NeoPath2);
 
-                if(!line.vNextTargetsPath1.IsNullOrWhiteSpace())
-                    p.Add(line.vNextTargetsPath1);
+                //if(!line.vNextTargetsPath1.IsNullOrWhiteSpace())
+                //    p.Add(line.vNextTargetsPath1);
 
-                if(!line.vNextTargetsPath2.IsNullOrWhiteSpace())
-                    p.Add(line.vNextTargetsPath2);
+                //if(!line.vNextTargetsPath2.IsNullOrWhiteSpace())
+                //    p.Add(line.vNextTargetsPath2);
 
-                bool equal = true;
-                for (int i = 0; i < p.Count; i++)
-                {
-                    for (int j = i + 1; j < p.Count; j++)
-                    {
-                        if(p[i] != p[j])
-                        {
-                            equal = false;
-                            break;
-                        }
-                    }
+                //bool equal = true;
+                //for (int i = 0; i < p.Count; i++)
+                //{
+                //    for (int j = i + 1; j < p.Count; j++)
+                //    {
+                //        if(p[i] != p[j])
+                //        {
+                //            equal = false;
+                //            break;
+                //        }
+                //    }
 
-                    if (!equal) break;
-                }
+                //    if (!equal) break;
+                //}
 
-                line.FileMoved = equal;
+                //line.FileMoved = equal;
+
+                if (line.ExistsInvNextTargets1)
+                    line.WhatToDo += "Include. ";
+
+                if (line.HasDuplicate)
+                    line.WhatToDo += "Merge? ";
+
+                if ((line.IsRhino1 || line.IsRhino2) && line.ExistsInvNextTargets1)
+                    line.WhatToDo += "Rhino. ";
             }
 
-            string cvs = "SEP=;" + Environment.NewLine + report.ToCvs("; ");
+            string cvs = "SEP=;" + Environment.NewLine + report.ToCvs(";");
 
             return cvs;
         }
