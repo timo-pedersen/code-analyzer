@@ -8,23 +8,15 @@ using WinFormUtils;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.IO.Enumeration;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
-using System.Windows.Automation;
+using System.Windows;
 using CodeAnalyzer;
-using System.Windows.Threading;
-//using CodeAnalyzer.Data;
 using MessageBox = System.Windows.MessageBox;
-using System.Windows.Documents;
-using Microsoft.CodeAnalysis.CSharp;
-using WpfAnalyserGUI.FlowDoc;
-using System.Windows.Controls;
 using CodeAnalyzer.Data;
-using Microsoft.Build.Locator;
-using Microsoft.CodeAnalysis.MSBuild;
 using WpfAnalyserGUI.Reports;
+using Path = System.IO.Path;
 
 namespace WpfAnalyserGUI.VMs
 {
@@ -155,8 +147,7 @@ namespace WpfAnalyserGUI.VMs
 
         #endregion ------------------------------------------
 
-        private Solution? _solution1;
-        private Solution? _solution2;
+        private Dictionary<string, bool> _PRFiles;
 
         public SolutionComparer()
         {
@@ -227,11 +218,35 @@ namespace WpfAnalyserGUI.VMs
 
             string cvs = await GenerateCvsFileReport(SolutionPath1, SolutionPath2);
 
-            if(File.Exists(savePath))
-                File.Delete(savePath);
+            bool ok = false;
+            while (!ok)
+            {
+                try
+                {
+                    if (File.Exists(savePath))
+                        File.Delete(savePath);
+
+                    ok = true;
+                }
+                catch
+                {
+                    MessageBox.Show("Failed to delete existing file.", "Oups");
+                }
+            }
 
             await File.WriteAllTextAsync(savePath, cvs);
-            MessageBox.Show("Done");
+            
+            MessageBoxResult result = MessageBox.Show($"Saved to: {savePath}{Constants.Const.NL}Open in associated application?", "Done", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+            {
+                new Process
+                {
+                    StartInfo = new ProcessStartInfo(savePath)
+                    {
+                        UseShellExecute = true
+                    }
+                }.Start();
+            }
         }
 
 
@@ -311,6 +326,8 @@ namespace WpfAnalyserGUI.VMs
             if (folder1.IsNullOrWhiteSpace() || folder2.IsNullOrWhiteSpace())
                 return "ERROR: Invalid folders";
 
+            LoadPRFiles();
+
             const string neoShortName1 = "N1";
             const string neoShortName2 = "N2";
             const string vnextTargetsShortName1 = "V1";
@@ -361,7 +378,7 @@ namespace WpfAnalyserGUI.VMs
                             FileName = document.Name,
                             Project = $"{vnextTargetsShortName1}/{proj.Name}",
                             vNextTargetsPath1 = documentPath,
-                            ExistsInvNextTargets1 = true,
+                            In_V1 = true,
                             IsRhino1 = document.IsRhino,
                         };
 
@@ -393,7 +410,7 @@ namespace WpfAnalyserGUI.VMs
                             FileName = document.Name,
                             Project = $"{neoShortName1}/{proj.Name}",
                             NeoPath1 = documentPath,
-                            ExistsInNeo1 = true,
+                            In_N1 = true,
                             IsRhino1 = document.IsRhino,
                         };
 
@@ -402,10 +419,10 @@ namespace WpfAnalyserGUI.VMs
                     else if (found.Count == 1)
                     {
                         FileReport fr = found[0];
-                        fr.ExistsInNeo1 = true;
+                        fr.In_N1 = true;
                         fr.Project += $", {neoShortName1}/{proj.Name}";
                         fr.NeoPath1 = documentPath;
-                        if(!fr.ExistsInvNextTargets1 && fr.IsRhino1 != document.IsRhino)
+                        if(!fr.In_V1 && fr.IsRhino1 != document.IsRhino)
                             fr.Comment += $"# Neo1 - Rhino status differs. Neo1 doc isRhino: {document.IsRhino}. ";
                     }
                     else // found more than one - surely an error
@@ -437,7 +454,7 @@ namespace WpfAnalyserGUI.VMs
                             FileName = document.Name,
                             Project = $"{vnextTargetsShortName2}/{proj.Name}",
                             vNextTargetsPath2 = documentPath,
-                            ExistsInvNextTargets2 = true,
+                            In_V2 = true,
                             IsRhino2 = document.IsRhino,
                         };
 
@@ -448,7 +465,7 @@ namespace WpfAnalyserGUI.VMs
                         FileReport fr = found[0];
                         fr.Project += $", {vnextTargetsShortName2}/{proj.Name}";
                         fr.vNextTargetsPath2 = documentPath;
-                        fr.ExistsInvNextTargets2 = true;
+                        fr.In_V2 = true;
                         fr.IsRhino2 = document.IsRhino;
                     }
                     else // found more than one - surely an error
@@ -482,7 +499,7 @@ namespace WpfAnalyserGUI.VMs
                             FileName = document.Name,
                             Project = $"{neoShortName2}/{proj.Name}",
                             NeoPath2 = documentPath,
-                            ExistsInNeo2 = true,
+                            In_N2 = true,
                             IsRhino2 = document.IsRhino,
                         };
 
@@ -493,8 +510,8 @@ namespace WpfAnalyserGUI.VMs
                         FileReport fr = found[0];
                         fr.Project += $", {neoShortName2}/{proj.Name}";
                         fr.NeoPath2 = documentPath;
-                        fr.ExistsInNeo2 = true;
-                        if (!fr.ExistsInvNextTargets2)
+                        fr.In_N2 = true;
+                        if (!fr.In_V2)
                             fr.IsRhino2 = document.IsRhino;
                         else
                             if(fr.IsRhino2 != document.IsRhino)
@@ -510,58 +527,165 @@ namespace WpfAnalyserGUI.VMs
                 }
             }
 
-            // Processing results
+            // Processing results. Set 'Consider' flag.
             foreach (var line in report)
             {
-                List<FileReport> found = report.Where(x => x.FileName == line.FileName && !x.HasDuplicate).ToList();
-                if(found.Count > 1)
+                List<FileReport> found = report.Where(x => x.FileName == line.FileName).ToList();
+                int duplicates = found.Count;
+                if(duplicates > 1)
                     foreach (var foundLine in found)
-                        foundLine.HasDuplicate = true;
+                        foundLine.Duplicates = duplicates - 1;
 
-                // Compare all found paths if not empty
-                //List<string> p = new List<string>();
-                //if(!line.NeoPath1.IsNullOrWhiteSpace())
-                //    p.Add(line.NeoPath1);
+                bool refFileFoundInPR = 
+                    _PRFiles.ContainsKey(line.vNextTargetsPath1) 
+                    || _PRFiles.ContainsKey(line.NeoPath1);
+                bool masterFileFoundInPR = 
+                     _PRFiles.ContainsKey(line.vNextTargetsPath2) 
+                    || _PRFiles.ContainsKey(line.NeoPath2);
 
-                //if(!line.NeoPath2.IsNullOrWhiteSpace())
-                //    p.Add(line.NeoPath2);
+                // If file is referenced in the PR, then automatically consider
+                if(refFileFoundInPR || masterFileFoundInPR)
+                {
+                    line.InPR = true;
+                    line.Consider = true;
+                    // Mark as found
+                    _ = _PRFiles[line.vNextTargetsPath1.IsNullOrWhiteSpace() ? line.NeoPath1 : line.vNextTargetsPath1] = true;
+                }
 
-                //if(!line.vNextTargetsPath1.IsNullOrWhiteSpace())
-                //    p.Add(line.vNextTargetsPath1);
+                if (line.InPR)
+                    line.WhatToDo += "Include (present in PR). ";
+                else if (line.In_V1 && !line.In_V2)
+                {
+                    line.WhatToDo += "Include (not present in PR). ";
+                    line.Consider = true;
+                }
 
-                //if(!line.vNextTargetsPath2.IsNullOrWhiteSpace())
-                //    p.Add(line.vNextTargetsPath2);
-
-                //bool equal = true;
-                //for (int i = 0; i < p.Count; i++)
-                //{
-                //    for (int j = i + 1; j < p.Count; j++)
-                //    {
-                //        if(p[i] != p[j])
-                //        {
-                //            equal = false;
-                //            break;
-                //        }
-                //    }
-
-                //    if (!equal) break;
-                //}
-
-                //line.FileMoved = equal;
-
-                if (line.ExistsInvNextTargets1)
-                    line.WhatToDo += "Include. ";
-
-                if (line.HasDuplicate)
-                    line.WhatToDo += "Merge? ";
-
-                if ((line.IsRhino1 || line.IsRhino2) && line.ExistsInvNextTargets1)
+                if ((line.IsRhino1 || line.IsRhino2) && line.In_V1)
                     line.WhatToDo += "Rhino. ";
+
+            }
+
+            // Catch all files in PR not (so far) included in report
+            foreach (var prFilePath in _PRFiles.Where(x => !x.Value).Select(x => x.Key))
+            {
+                FileReport fr = new ()
+                {
+                    PRPath = prFilePath,
+                    InPR = true,
+                    Comment = "### Was not included in report. ",
+                    WhatToDo = "Consider. ",
+                    Consider = true, // Automatically consider
+                };
+                string fileName = Path.GetFileName(prFilePath);
+                string ext = Path.GetExtension(prFilePath);
+                if (ext == ".cs")
+                {
+                    fr.FileName = $"# ATT: {fileName}";
+                }
+                else if (ext == ".csproj" || ext == ".sln")
+                {
+                    fr.FileName = "# PROJ / SLN";
+                }
+                else if (ext == ".c" || ext == ".h" || ext == ".cpp" || ext == ".hpp")
+                {
+                    fr.FileName = "# C/CPP";
+                }
+                else
+                {
+                    fr.FileName = $"# UNKNOWN: {ext}";
+                }
+
+                report.Add(fr);
+            }
+
+            // Check if file in Ref differs from file in master
+            foreach (FileReport line in report)
+            {
+                string filePath = line.vNextTargetsPath1.IsNullOrWhiteSpace() ? line.NeoPath1 : line.vNextTargetsPath1;
+                if (filePath.IsNullOrWhiteSpace())
+                    filePath = line.PRPath;
+                
+                if (filePath.IsNullOrWhiteSpace())
+                    continue; // Nothing to compare
+
+                line.HasDiff = !AreFileEqualInRefAndMaster(filePath);
+            }
+
+            // Now deal with duplicates
+            // Grab files present in sln 1
+            foreach (FileReport line in report.Where(x => x.Duplicates > 0 
+                                                          && (!x.vNextTargetsPath1.IsNullOrWhiteSpace() 
+                                                              || !x.NeoPath1.IsNullOrWhiteSpace())
+                         ))
+            {
+                // If there are many duplicates, bail out
+                if (line.Duplicates > 1)
+                {
+                    line.Comment += "# Has more than one duplicate. ";
+                    continue;
+                }
+
+                FileReport foundLine = report.Single(x => x.FileName == line.FileName);
+
+                //bool diff = AreFilesEqual(lin)
             }
 
             string cvs = "SEP=;" + Environment.NewLine + report.ToCvs(";");
-
             return cvs;
+        }
+
+        // Read file dump from PR web page into list _PRFiles.
+        private void LoadPRFiles()
+        {
+            string path = Path.Combine(Fs.ApplicationPath, "PR7398_Files.txt");
+
+            _PRFiles = File.ReadAllLines(path).Select(s => s.Replace("/", "\\")).ToDictionary(x => x, _ => false);
+
+        }
+
+        // Compares a file in both solutions, if it exists in both solutions. 
+        // Will only return false if file
+        // 1. Exists in both solutions, and
+        // 2. Differs
+        private bool AreFileEqualInRefAndMaster(string fileSlnPath)
+        {
+            string filePath1 = Path.Combine(SolutionPath1, fileSlnPath);
+            string filePath2 = Path.Combine(SolutionPath2, fileSlnPath);
+
+            FileInfo file1Info = new FileInfo(filePath1);
+            FileInfo file2Info = new FileInfo(filePath2);
+
+            // No comparison if either or both of the files do not exist
+            if (!file1Info.Exists || !file2Info.Exists)
+                return true;
+
+            return AreFilesEqual(filePath1, filePath2);
+        }
+
+        // Compare two files using hash. 
+        private bool AreFilesEqual(string file1, string file2)
+        {
+            FileInfo file1Info = new FileInfo(file1);
+            FileInfo file2Info = new FileInfo(file2);
+
+            if (!file1Info.Exists && !file2Info.Exists)
+                return true;
+            if ((!file1Info.Exists && file2Info.Exists) || (file1Info.Exists && !file2Info.Exists))
+                return false;
+            if (file1Info.Length != file2Info.Length)
+                return false;
+
+            using FileStream file1Stream = file1Info.OpenRead();
+            using FileStream file2Stream = file2Info.OpenRead();
+            byte[] firstHash = MD5.Create().ComputeHash(file1Stream);
+            byte[] secondHash = MD5.Create().ComputeHash(file2Stream);
+            for (int i = 0; i < firstHash.Length; i++)
+            {
+                if (i >= secondHash.Length || firstHash[i] != secondHash[i])
+                    return false;
+            }
+
+            return true;
         }
 
         #region INotifyPropertyChanged ------------------
