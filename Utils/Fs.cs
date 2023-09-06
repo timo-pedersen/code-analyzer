@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Security.Cryptography;
 
 namespace Utils;
 
@@ -83,4 +84,37 @@ public static class Fs
             return (false, string.Empty);
         }
     }
+
+    // Compare two files using hash. 
+    public static bool AreFilesEqual(string file1, string file2)
+    {
+        FileInfo fileInfo1 = new FileInfo(file1);
+        FileInfo fileInfo2 = new FileInfo(file2);
+
+        return AreFilesEqual(fileInfo1, fileInfo2);
+    }
+
+    // Compare two files using hash. 
+    public static bool AreFilesEqual(FileInfo fileInfo1, FileInfo fileInfo2)
+    {
+        if (!fileInfo1.Exists && !fileInfo2.Exists)
+            return true;
+        if ((!fileInfo1.Exists && fileInfo2.Exists) || (fileInfo1.Exists && !fileInfo2.Exists))
+            return false;
+        if (fileInfo1.Length != fileInfo2.Length)
+            return false;
+
+        using FileStream file1Stream = fileInfo1.OpenRead();
+        using FileStream file2Stream = fileInfo2.OpenRead();
+        byte[] firstHash = MD5.Create().ComputeHash(file1Stream);
+        byte[] secondHash = MD5.Create().ComputeHash(file2Stream);
+        for (int i = 0; i < firstHash.Length; i++)
+        {
+            if (i >= secondHash.Length || firstHash[i] != secondHash[i])
+                return false;
+        }
+
+        return true;
+    }
+
 }

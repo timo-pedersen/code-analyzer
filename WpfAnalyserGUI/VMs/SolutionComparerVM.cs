@@ -12,6 +12,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Shapes;
 using CodeAnalyzer;
 using MessageBox = System.Windows.MessageBox;
 using CodeAnalyzer.Data;
@@ -20,7 +21,7 @@ using Path = System.IO.Path;
 
 namespace WpfAnalyserGUI.VMs
 {
-    internal class SolutionComparer  : INotifyPropertyChanged
+    internal class SolutionComparerVM  : INotifyPropertyChanged
     {
         #region Backing vars ----------------------------
         private string m_SolutionPath1 = "d:\\git4\\vNextRef";
@@ -38,7 +39,8 @@ namespace WpfAnalyserGUI.VMs
         #region RelayCommands ------------------------------
         public ICommand BrowseSolutionCommand { get; }
         public ICommand ScanSolutionCommand { get; }
-        public ICommand GenerateFullCvsCommand { get; } 
+        public ICommand GenerateFullCsvCommand { get; }
+        public ICommand GenerateSlnCsvCommand { get; }
         #endregion Commands --------------------------------
 
         #region Observables ---------------------------------
@@ -149,11 +151,12 @@ namespace WpfAnalyserGUI.VMs
 
         private Dictionary<string, bool> _PRFiles;
 
-        public SolutionComparer()
+        public SolutionComparerVM()
         {
             BrowseSolutionCommand = new RelayCommand(BrowseSolution);
             ScanSolutionCommand = new RelayCommand(ScanSolution);
-            GenerateFullCvsCommand = new RelayCommand(GenerateFullCvs);
+            GenerateFullCsvCommand = new RelayCommand(GenerateFullCvs);
+            GenerateSlnCsvCommand = new RelayCommand(GenerateSlnCsv);
         }
 
 
@@ -214,7 +217,7 @@ namespace WpfAnalyserGUI.VMs
             //(string savePath, bool ok) = Dlg.OpenSaveFileBrowser(Fs.MyDocumentsDir, "Save CVS report");
             //if (!ok) return;
 
-            string savePath = @"C:\Users\TIMPE\Documents\aa.xls";
+            string savePath = @"C:\Users\TIMPE\Documents\aaa.csv";
 
             string cvs = await GenerateCvsFileReport(SolutionPath1, SolutionPath2);
 
@@ -249,6 +252,17 @@ namespace WpfAnalyserGUI.VMs
             }
         }
 
+        private async void GenerateSlnCsv(object? obj)
+        {
+            int solutionNo = Convert.ToInt32(obj);
+            if (solutionNo < 1 || solutionNo > 2)
+                return;
+
+            string savePath = $"C:\\Users\\TIMPE\\Documents\\aCsv{solutionNo}.csv";
+
+
+
+        }
 
         #endregion Command Implementations ----------------------
 
@@ -308,6 +322,63 @@ namespace WpfAnalyserGUI.VMs
             return result;
         }
 
+        /// <summary>
+        /// Generate a simple list of documents contained in a solution
+        /// </summary>
+        /// <param name="solutionPath">Path to solution. Can be path to sln file.</param>
+        /// <param name="solutionNo">Solution no as provided by GUI</param>
+        /// <returns></returns>
+        public async Task<List<SimpleSolutionReport>> GenerateSimpleSolutionReport(string solutionPath)
+        {
+            var result = new List<SimpleSolutionReport>();
+
+            var sw = Stopwatch.StartNew();
+            CodeAnalyzer.Data.Solution slnData = await Analyzer.GetAllTestInSolutionAsync(solutionPath);
+            sw.Stop();
+
+            string solutionFolder = solutionPath;
+            if (solutionPath.EndsWith(".sln"))
+                solutionFolder = Path.GetDirectoryName(solutionFolder) ?? "";
+            int folderLength = solutionFolder.Length + 1;
+
+            int docCount = 0;
+            int rhinoCount = 0;
+            foreach (var project in slnData.Projects.OrderBy(x => x.Name))
+            {
+                foreach (var projectDocument in project.Documents.OrderBy(x => x.Name))
+                {
+                    SimpleSolutionReport sr = new()
+                    {
+                        Project = project.Name,
+                        DocumentName = projectDocument.Name,
+                        Path = projectDocument.Path[folderLength..],
+                        IsRhino = projectDocument.IsRhino,
+                    };
+                    
+                    result.Add(sr);
+
+                    docCount++;
+                    if(projectDocument.IsRhino)
+                        rhinoCount++;
+                }
+            }
+
+            //if(solutionNo == 1)
+            //{
+            //    ProjectCount1 = slnData.ProjectCount;
+            //    TotalDocsCount1 = docCount;
+            //    RhinoDocsCount1 = rhinoCount;
+            //}
+            //else
+            //{
+            //    ProjectCount2 = slnData.ProjectCount;
+            //    TotalDocsCount2 = docCount;
+            //    RhinoDocsCount2 = rhinoCount;
+            //}
+
+            return result;
+        }
+
 
         /// <summary>
         /// Generate a cvs doc based on the two solutions
@@ -316,11 +387,14 @@ namespace WpfAnalyserGUI.VMs
         /// Fields: <see cref="FileReport"/>
         /// </summary>
         /// <returns></returns>
-        private async Task<string> GenerateCvsFileReport(string folder1, string folder2)
+        private async Task<string> GenerateCvsFileReport(string sln1, string sln2)
         {
-            if (folder1.EndsWith(".sln"))
+            string folder1 = sln1;
+            string folder2 = sln2;
+
+            if (sln1.EndsWith(".sln"))
                 folder1 = Path.GetDirectoryName(folder1) ?? "";
-            if (folder2.EndsWith(".sln"))
+            if (sln2.EndsWith(".sln"))
                 folder2 = Path.GetDirectoryName(folder2) ?? "";
 
             if (folder1.IsNullOrWhiteSpace() || folder2.IsNullOrWhiteSpace())
@@ -356,181 +430,19 @@ namespace WpfAnalyserGUI.VMs
 
             // Scanning the four solutions, starting with vNextTargets 1 (the reference),
             // in order to build up the report.
-            // Beware - ugly code below.
 
             int folderLength1 = folder1.Length + 1;
             int folderLength2 = folder2.Length + 1;
-            string documentPath = "";
 
-            // SCAN vNextTargets 1 (assumed to be reference solution)
-            foreach (var proj in vNextTargetsSln1.Projects)
-            {
-                foreach (Document document in proj.Documents)
-                {
-                    documentPath = document.Path[folderLength1..];
-                    //List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
-                    List<FileReport> found = report.Where(x => x.vNextTargetsPath1 == documentPath).ToList();
-                    
-                    if (!found.Any())
-                    {
-                        FileReport fr = new()
-                        {
-                            FileName = document.Name,
-                            Project = $"{vnextTargetsShortName1}/{proj.Name}",
-                            vNextTargetsPath1 = documentPath,
-                            In_V1 = true,
-                            IsRhino1 = document.IsRhino,
-                        };
-
-                        report.Add(fr);
-                    }
-                    else
-                    {
-                        foreach (var fr in found)
-                        {
-                            fr.Comment += $"### ERROR: vNextTargets1 - {found.Count} duplicates of {documentPath}. Project: {proj.Name}. ";
-                        }
-                    }
-                }
-            }
-
-            // SCAN Neo 1
-            foreach (var proj in neoSln1.Projects)
-            {
-                foreach (Document document in proj.Documents)
-                {
-                    documentPath = document.Path[folderLength1..];
-                    //List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
-                    List<FileReport> found = report.Where(x => x.vNextTargetsPath1 == documentPath).ToList();
-
-                    if (!found.Any())
-                    {
-                        FileReport fr = new()
-                        {
-                            FileName = document.Name,
-                            Project = $"{neoShortName1}/{proj.Name}",
-                            NeoPath1 = documentPath,
-                            In_N1 = true,
-                            IsRhino1 = document.IsRhino,
-                        };
-
-                        report.Add(fr);
-                    }
-                    else if (found.Count == 1)
-                    {
-                        FileReport fr = found[0];
-                        fr.In_N1 = true;
-                        fr.Project += $", {neoShortName1}/{proj.Name}";
-                        fr.NeoPath1 = documentPath;
-                        if(!fr.In_V1 && fr.IsRhino1 != document.IsRhino)
-                            fr.Comment += $"# Neo1 - Rhino status differs. Neo1 doc isRhino: {document.IsRhino}. ";
-                    }
-                    else // found more than one - surely an error
-                    {
-                        foreach (var fr in found)
-                        {
-                            fr.Comment += $"### ERROR: Neo1 - {found.Count} duplicates of {documentPath}. Project: {proj.Name} ";
-                        }
-                    }
-                }
-            }
-
-            // SCAN vNextTargets 2
-            foreach (var proj in vNextTargetsSln2.Projects)
-            {
-                foreach (Document document in proj.Documents)
-                {
-                    documentPath = document.Path[folderLength2..];
-                    //List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
-                    List<FileReport> found = report.Where(
-                        x => x.vNextTargetsPath1 == documentPath
-                             || x.NeoPath1 == documentPath
-                    ).ToList();
-
-                    if (!found.Any())
-                    {
-                        FileReport fr = new()
-                        {
-                            FileName = document.Name,
-                            Project = $"{vnextTargetsShortName2}/{proj.Name}",
-                            vNextTargetsPath2 = documentPath,
-                            In_V2 = true,
-                            IsRhino2 = document.IsRhino,
-                        };
-
-                        report.Add(fr);
-                    }
-                    else if (found.Count == 1)
-                    {
-                        FileReport fr = found[0];
-                        fr.Project += $", {vnextTargetsShortName2}/{proj.Name}";
-                        fr.vNextTargetsPath2 = documentPath;
-                        fr.In_V2 = true;
-                        fr.IsRhino2 = document.IsRhino;
-                    }
-                    else // found more than one - surely an error
-                    {
-                        foreach (var fr in found)
-                        {
-                            fr.Comment += $"### ERROR: vNextTargets2 - {found.Count} duplicates of {documentPath}. Project: {proj.Name}. ";
-                        }
-                    }
-                }
-            }
-
-
-            // SCAN Neo 2
-            foreach (var proj in neoSln2.Projects)
-            {
-                foreach (Document document in proj.Documents.OrderBy(x => x.Name))
-                {
-                    documentPath = document.Path[folderLength2..];
-                    //List<FileReport> found = report.Where(x => x.FileName == document.Name).ToList();
-                    List<FileReport> found = report.Where(
-                        x => x.vNextTargetsPath1 == documentPath
-                        || x.NeoPath1 == documentPath
-                        || x.vNextTargetsPath2 == documentPath
-                        ).ToList();
-                    
-                    if (!found.Any())
-                    {
-                        FileReport fr = new()
-                        {
-                            FileName = document.Name,
-                            Project = $"{neoShortName2}/{proj.Name}",
-                            NeoPath2 = documentPath,
-                            In_N2 = true,
-                            IsRhino2 = document.IsRhino,
-                        };
-
-                        report.Add(fr);
-                    }
-                    else if (found.Count == 1)
-                    {
-                        FileReport fr = found[0];
-                        fr.Project += $", {neoShortName2}/{proj.Name}";
-                        fr.NeoPath2 = documentPath;
-                        fr.In_N2 = true;
-                        if (!fr.In_V2)
-                            fr.IsRhino2 = document.IsRhino;
-                        else
-                            if(fr.IsRhino2 != document.IsRhino)
-                                fr.Comment += $"# Neo2 - Rhino status differs. Neo2 IsRhino: {document.IsRhino}. ";
-                    }
-                    else // found more than one - surely an error
-                    {
-                        foreach (var fr in found)
-                        {
-                            fr.Comment += $"### ERROR: Neo2 - {found.Count} duplicate of {documentPath}. Project: {proj.Name}. ";
-                        }
-                    }
-                }
-            }
+            SolutionComparerHelper.ScanvNextTargets1(report, vNextTargetsSln1, folderLength1, vnextTargetsShortName1);
+            SolutionComparerHelper.ScanNeo1(report, neoSln1, folderLength1, neoShortName1);
+            SolutionComparerHelper.ScanvNextTargets2(report, vNextTargetsSln2, folderLength2, vnextTargetsShortName2);
+            SolutionComparerHelper.ScanNeo2(report, neoSln2, folderLength2, neoShortName2);
 
             // Processing results. Set 'Consider' flag.
             foreach (var line in report)
             {
-                List<FileReport> found = report.Where(x => x.FileName == line.FileName).ToList();
+                List<FileReport> found = report.Where(x => x.DocumentName == line.DocumentName).ToList();
                 int duplicates = found.Count;
                 if(duplicates > 1)
                     foreach (var foundLine in found)
@@ -580,19 +492,19 @@ namespace WpfAnalyserGUI.VMs
                 string ext = Path.GetExtension(prFilePath);
                 if (ext == ".cs")
                 {
-                    fr.FileName = $"# ATT: {fileName}";
+                    fr.DocumentName = $"# ATT: {fileName}";
                 }
                 else if (ext == ".csproj" || ext == ".sln")
                 {
-                    fr.FileName = "# PROJ / SLN";
+                    fr.DocumentName = "# PROJ / SLN";
                 }
                 else if (ext == ".c" || ext == ".h" || ext == ".cpp" || ext == ".hpp")
                 {
-                    fr.FileName = "# C/CPP";
+                    fr.DocumentName = "# C/CPP";
                 }
                 else
                 {
-                    fr.FileName = $"# UNKNOWN: {ext}";
+                    fr.DocumentName = $"# UNKNOWN: {ext}";
                 }
 
                 report.Add(fr);
@@ -612,11 +524,11 @@ namespace WpfAnalyserGUI.VMs
             }
 
             // Now deal with duplicates
-            // Grab files present in sln 1
-            foreach (FileReport line in report.Where(x => x.Duplicates > 0 
-                                                          && (!x.vNextTargetsPath1.IsNullOrWhiteSpace() 
-                                                              || !x.NeoPath1.IsNullOrWhiteSpace())
-                         ))
+            // Grab files present in sln 1 only
+            var linesWithDuplicates = report.Where(x => 
+                x.Duplicates > 0
+                && (x.In_V1 || x.In_N1));
+            foreach (FileReport line in linesWithDuplicates)
             {
                 // If there are many duplicates, bail out
                 if (line.Duplicates > 1)
@@ -625,16 +537,78 @@ namespace WpfAnalyserGUI.VMs
                     continue;
                 }
 
-                FileReport foundLine = report.Single(x => x.FileName == line.FileName);
+                // Grab only files existing in sln2
+                var foundLines = report.Where(x => 
+                    x.DocumentName == line.DocumentName
+                    && (x.In_V2 || x.In_N2)
+                    );
 
-                //bool diff = AreFilesEqual(lin)
+                foreach (FileReport foundLine in foundLines)
+                {
+                    if(foundLine.In_V1 || foundLine.In_N1)
+                        continue;
+
+                    // Merge lines
+                    line.Comment += $"# Line has been merged with: {(foundLine.vNextTargetsPath2.IsNullOrWhiteSpace() ? "N2:" + foundLine.NeoPath2 : "V2:" + foundLine.vNextTargetsPath2)} ";
+                    foundLine.PRPath = "### DUPLICATE: " + foundLine.DocumentName;
+                    line.In_N2 = foundLine.In_N2;
+                    line.In_V2 = foundLine.In_V2;
+                    line.IsRhino2 = foundLine.IsRhino2;
+                    line.vNextTargetsPath2 = foundLine.vNextTargetsPath2;
+                    line.NeoPath2 = foundLine.NeoPath2;
+
+                    string pathFromN2 = foundLine.vNextTargetsPath2.IsNullOrWhiteSpace()
+                        ? foundLine.NeoPath2
+                        : foundLine.vNextTargetsPath2;
+                    string pathFromN1 = line.vNextTargetsPath1.IsNullOrWhiteSpace()
+                        ? line.NeoPath1
+                        : line.vNextTargetsPath1;
+
+                    line.HasDiff = !Fs.AreFilesEqual(Path.Combine(SolutionPath1, pathFromN1), Path.Combine(SolutionPath2, pathFromN2));
+                    foundLine.DocumentName = "OVEREMOTIONAL"; // As suggested by spell check
+                    line.Duplicates -= 1;
+                }
             }
 
-            string cvs = "SEP=;" + Environment.NewLine + report.ToCvs(";");
+            // Clean up duplicates
+            var linesToRemove = report.Where(x => x.DocumentName == "OVEREMOTIONAL").ToList();
+            foreach (FileReport lineToRemove in linesToRemove)
+                report.Remove(lineToRemove);
+
+            // Finally double check result against files in solution V1
+            // Add lines missing to report, and set Consider flag
+            var filesInvNextTargets1 = await GenerateSimpleSolutionReport(vNextTargetsPath1);
+            //var filesInvNeo1 = await GenerateSimpleSolutionReport(neoPath1);
+            foreach (var v1File in filesInvNextTargets1)
+            {
+                //string fileName = Path.GetFileName(v1File.Path ?? "");
+                if (report.All(x => x.DocumentName != v1File.DocumentName))
+                {
+                    FileReport fr = new ()
+                    {
+                        Comment = "### File not found in report but found in solution V1. ",
+                        WhatToDo = "Consider. ",
+                        Consider = true,
+                        DocumentName = v1File.DocumentName,
+                        vNextTargetsPath1 = v1File.Path,
+                        In_V1 = true,
+                        NeoPath1 = "<not checked>",
+                        vNextTargetsPath2 = "<not checked>",
+                        NeoPath2 = "<not checked>",
+                    };
+
+                    report.Add(fr);
+                }
+            }
+
+            // And return as Csv
+            string cvs = "SEP=;" + Environment.NewLine + report.ToCSV(";");
             return cvs;
         }
 
+
         // Read file dump from PR web page into list _PRFiles.
+        // ReSharper disable once InconsistentNaming
         private void LoadPRFiles()
         {
             string path = Path.Combine(Fs.ApplicationPath, "PR7398_Files.txt");
@@ -659,34 +633,9 @@ namespace WpfAnalyserGUI.VMs
             if (!file1Info.Exists || !file2Info.Exists)
                 return true;
 
-            return AreFilesEqual(filePath1, filePath2);
+            return Fs.AreFilesEqual(filePath1, filePath2);
         }
 
-        // Compare two files using hash. 
-        private bool AreFilesEqual(string file1, string file2)
-        {
-            FileInfo file1Info = new FileInfo(file1);
-            FileInfo file2Info = new FileInfo(file2);
-
-            if (!file1Info.Exists && !file2Info.Exists)
-                return true;
-            if ((!file1Info.Exists && file2Info.Exists) || (file1Info.Exists && !file2Info.Exists))
-                return false;
-            if (file1Info.Length != file2Info.Length)
-                return false;
-
-            using FileStream file1Stream = file1Info.OpenRead();
-            using FileStream file2Stream = file2Info.OpenRead();
-            byte[] firstHash = MD5.Create().ComputeHash(file1Stream);
-            byte[] secondHash = MD5.Create().ComputeHash(file2Stream);
-            for (int i = 0; i < firstHash.Length; i++)
-            {
-                if (i >= secondHash.Length || firstHash[i] != secondHash[i])
-                    return false;
-            }
-
-            return true;
-        }
 
         #region INotifyPropertyChanged ------------------
 

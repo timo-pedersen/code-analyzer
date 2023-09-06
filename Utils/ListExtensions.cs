@@ -4,7 +4,8 @@ namespace Utils;
 
 public static class ListExtensions
 {
-    public static string ToCvs<T>(this List<T> me, string separator = ", ")
+    // ReSharper disable once InconsistentNaming
+    public static string ToCSV<T>(this List<T> me, string separator = ", ")
     {
         PropertyInfo[] properties = typeof(T).GetProperties();
         string header = string.Empty;

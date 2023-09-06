@@ -11,7 +11,7 @@
         Title="Solution Comparer" Height="450" Width="800"
         FontFamily="Arial" FontSize="14">
   <Window.Resources>
-    <vm:SolutionComparer x:Key="Vm" />
+    <vm:SolutionComparerVM x:Key="Vm" />
     <converters:BoolToVisibilityConverter
       x:Key="BoolToHiddenConverter"
       TrueValue="Visible" FalseValue="Hidden" />
@@ -121,10 +121,14 @@
       </Grid.ColumnDefinitions>
       
       <DockPanel Grid.Column="0">
-        <Button DockPanel.Dock="Left" ToolTip="Export CVS for solution 1">Export CVS</Button>
+        <Button DockPanel.Dock="Left" ToolTip="Export CSV for solution 1" 
+                Command="{Binding ExportSlnCsvCommand}"
+                CommandParameter="1">Export CSV</Button>
       </DockPanel>
       <DockPanel Grid.Column="2">
-        <Button DockPanel.Dock="Left" ToolTip="Export CVS for solution 2">Export CVS</Button>
+        <Button DockPanel.Dock="Left" ToolTip="Export CSV for solution 2"
+                Command="{Binding ExportSlnCsvCommand}"
+                CommandParameter="2">Export CSV</Button>
       </DockPanel>
     </Grid>
     
@@ -142,7 +146,7 @@
           </i:Interaction.Triggers>
         </Button>
         <Rectangle DockPanel.Dock="Right" Width="5"/>
-        <Button DockPanel.Dock="Right" Command="{Binding GenerateFullCvsCommand}">Export combined CVS</Button>
+        <Button DockPanel.Dock="Right" Command="{Binding GenerateFullCsvCommand}">Export combined CSV</Button>
         <Rectangle/>
       </DockPanel>
     </Grid>
